@@ -1,6 +1,6 @@
 #!/bin/bash
 
-name="simulator"
+name="markowitz"
 
 poetry install
 poetry run pip install ipykernel

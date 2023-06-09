@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: cvxsimulator
+title: cvxmarkowitz
 author: Thomas Schmelzer
 only_build_toc_files: true
 
@@ -27,7 +27,7 @@ sphinx:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/cvxgrp/simulator
+  url: https://github.com/cvxgrp/cvxmarkowitz
   path_to_book: book
   branch: main
 

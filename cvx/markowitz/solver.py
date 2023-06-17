@@ -5,12 +5,14 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 
+from cvx.risk.model import RiskModel
 
-def to_vector(assets, dictionary=None, value=0.0):
-    if dictionary is None:
-        return np.zeros(len(assets))
 
-    return np.array([dictionary.get(asset, value) for asset in assets])
+# def to_vector(assets, dictionary=None, value=0.0):
+#    if dictionary is None:
+#        return np.zeros(len(assets))
+#
+#    return np.array([dictionary.get(asset, value) for asset in assets])
 
 
 # @dataclass
@@ -20,6 +22,7 @@ class Solver:
         self.weights = cp.Variable(shape=(len(self.assets),), name="weights")
         self.constraints = {}
         self.objective = None
+        self._risk_model = None
 
     @property
     def funding(self):
@@ -36,3 +39,19 @@ class Solver:
         problem = self.build()
         problem.solve(**kwargs)
         return pd.Series(index=self.assets, data=self.weights.value)
+
+    @property
+    def risk_model(self):
+        return self._risk_model
+
+    @risk_model.setter
+    def risk_model(self, value):
+        assert isinstance(value, RiskModel)
+        self._risk_model = value
+
+    @property
+    def risk(self):
+        return self.risk_model.estimate_risk(self.weights)
+
+    def expected_return(self, returns):
+        return returns @ self.weights

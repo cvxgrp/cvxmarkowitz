@@ -16,6 +16,7 @@ def test_bounds():
     with pytest.raises(FrozenInstanceError):
         b.upper = 2
 
+
 def test_lower_greater_than_upper():
     with pytest.raises(AssertionError):
         Bounds(upper=0, lower=1)

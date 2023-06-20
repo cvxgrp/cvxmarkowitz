@@ -1,14 +1,19 @@
-import pandas as pd
-import numpy as np
+# -*- coding: utf-8 -*-
+from __future__ import annotations
+
 import cvxpy as cp
+import numpy as np
+import pandas as pd
 
 from cvx.risk.factor import FactorModel
 from cvx.risk.linalg import pca
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # create a cvxpy problem
-    prices = pd.read_csv("data/stock_prices.csv", index_col=0, header=0, parse_dates=True)
-    returns = prices.pct_change().dropna(axis=0, how='all')
+    prices = pd.read_csv(
+        "data/stock_prices.csv", index_col=0, header=0, parse_dates=True
+    )
+    returns = prices.pct_change().dropna(axis=0, how="all")
 
     # compute 10 components
     components = pca(returns=returns, n_components=10)
@@ -23,7 +28,7 @@ if __name__ == '__main__':
         exposure=components.exposure.values,
         idiosyncratic_risk=components.idiosyncratic.std().values,
         lower=lower,
-        upper=upper
+        upper=upper,
     )
 
     weights = cp.Variable(20)
@@ -31,8 +36,14 @@ if __name__ == '__main__':
 
     mu = np.random.rand(20) / 100.0
 
-    objective = cp.Minimize(-mu @ weights + cp.pos(model.estimate_risk(weights, y=factor_weights) - 0.01))
-    constraints = [cp.sum(weights) == 1.0, weights >= 0, factor_weights == model.exposure @ weights]
+    objective = cp.Minimize(
+        -mu @ weights + cp.pos(model.estimate_risk(weights, y=factor_weights) - 0.01)
+    )
+    constraints = [
+        cp.sum(weights) == 1.0,
+        weights >= 0,
+        factor_weights == model.exposure @ weights,
+    ]
 
     problem = cp.Problem(objective, constraints)
     problem.solve()
@@ -41,5 +52,6 @@ if __name__ == '__main__':
     weights = pd.Series(index=returns.columns, data=weights.value)
     print(weights)
     print(model.estimate_risk(weights.values).value)
+    assert problem.is_dpp()
 
     # fill in data

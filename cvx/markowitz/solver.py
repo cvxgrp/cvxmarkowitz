@@ -55,3 +55,6 @@ class Solver:
 
     def expected_return(self, returns):
         return returns @ self.weights
+
+    def update_data(self, **kwargs):
+        self.risk_model.update_data(**kwargs)

@@ -31,9 +31,12 @@ def test_solver_with_risk(solver):
     solver.constraints["Risk"] = solver.risk <= 0.9
     print(solver.constraints["Risk"])
 
-    solver.risk_model.cov.value = np.array(
-        [[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]
+    solver.update_data(
+        cov=np.array([[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]),
+        lower=np.zeros(3),
+        upper=np.ones(3),
     )
+
     # todo: constraint is correctly updated, no need to set again
     print(solver.constraints["Risk"])
 
@@ -42,7 +45,7 @@ def test_solver_with_risk(solver):
         x,
         pd.Series(
             index=["a", "b", "c"],
-            data=np.array([0, 0.11270166835681932, 0.8872983296418446]),
+            data=np.array([0, 0.2550510227776129, 0.7449489746327344]),
         ),
     )
 

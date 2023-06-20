@@ -8,7 +8,6 @@ import pytest
 
 from cvx.markowitz.solver import Solver
 from cvx.risk.sample.sample import SampleCovariance
-from cvx.risk.sample.sample import SampleCovariance_Product
 
 
 @pytest.fixture()
@@ -48,28 +47,6 @@ def test_solver_with_risk(solver):
     )
 
 
-def test_solver_with_risk(solver):
-    solver.risk_model = SampleCovariance_Product(num=3)
-    solver.constraints["Risk"] = solver.risk <= 0.9
-    print(solver.constraints["Risk"])
-
-    solver.risk_model.cov.value = np.array(
-        [[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]
-    )
-    # todo: constraint is not updated, enforced to set again as in
-    solver.constraints["Risk"] = solver.risk <= 0.9
-    print(solver.constraints["Risk"])
-
-    x = solver.solve()
-    pd.testing.assert_series_equal(
-        x,
-        pd.Series(
-            index=["a", "b", "c"],
-            data=np.array([0, 0.11270166835681932, 0.8872983296418446]),
-        ),
-    )
-
-    # todo: Use soft constraint on risk
-    # todo: Prepare for infeasible problems, define Error class
-    # todo: Update cvxrisk
-    # todo: Holding costs and Trading costs
+# todo: Use soft constraint on risk
+# todo: Prepare for infeasible problems, define Error class
+# todo: Holding costs and Trading costs

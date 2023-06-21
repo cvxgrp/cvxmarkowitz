@@ -7,10 +7,14 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import pca
+from cvx.markowitz.model import Model
 from cvx.risk.factor import FactorModel
 
 
-class ExpectedReturns:
+class ExpectedReturns(Model):
+    def constraints(self, weights, **kwargs):
+        raise NotImplementedError("ExpectedReturns does not have constraints")
+
     def __init__(self, assets):
         self.assets = assets
 
@@ -21,7 +25,7 @@ class ExpectedReturns:
     def estimate(self, weights, **kwargs):
         return self.mu @ weights
 
-    def update_data(self, **kwargs):
+    def update(self, **kwargs):
         mu = kwargs.get("mu", np.zeros(self.assets))
         k = len(mu)
         self.mu.value[:k] = kwargs.get("mu", np.zeros(self.assets))
@@ -85,7 +89,7 @@ class Solver:
 
     def update(self, **kwargs):
         self.risk_model.update(**kwargs)
-        self.expected_returns_model.update_data(**kwargs)
+        self.expected_returns_model.update(**kwargs)
 
 
 if __name__ == "__main__":

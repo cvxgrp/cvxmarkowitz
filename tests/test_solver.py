@@ -31,11 +31,7 @@ def test_solver_with_risk(solver):
     solver.constraints["Risk"] = solver.risk <= 0.9
     print(solver.constraints["Risk"])
 
-    solver.update_data(
-        cov=np.array([[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]),
-        lower=np.zeros(3),
-        upper=np.ones(3),
-    )
+    solver.update(cov=np.array([[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]))
 
     # todo: constraint is correctly updated, no need to set again
     print(solver.constraints["Risk"])

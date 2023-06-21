@@ -5,8 +5,8 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 
+from cvx.linalg import pca
 from cvx.risk.factor import FactorModel
-from cvx.risk.linalg import pca
 
 if __name__ == "__main__":
     # create a cvxpy problem
@@ -20,15 +20,10 @@ if __name__ == "__main__":
 
     model = FactorModel(assets=20, k=10)
 
-    lower = np.zeros(20)
-    upper = np.ones(20)
-
-    model.update_data(
+    model.update(
         cov=components.cov.values,
         exposure=components.exposure.values,
         idiosyncratic_risk=components.idiosyncratic.std().values,
-        lower=lower,
-        upper=upper,
     )
 
     weights = cp.Variable(20)
@@ -37,13 +32,14 @@ if __name__ == "__main__":
     mu = np.random.rand(20) / 100.0
 
     objective = cp.Minimize(
-        -mu @ weights + cp.pos(model.estimate_risk(weights, y=factor_weights) - 0.01)
+        -mu @ weights + cp.pos(model.estimate(weights, y=factor_weights) - 0.01)
     )
-    constraints = [
-        cp.sum(weights) == 1.0,
-        weights >= 0,
-        factor_weights == model.exposure @ weights,
-    ]
+    constraints = [cp.sum(weights) == 1.0, weights >= 0] + model.constraints(
+        weights, y=factor_weights
+    )
+
+    #    factor_weights == model.exposure @ weights,
+    # ]
 
     problem = cp.Problem(objective, constraints)
     problem.solve()
@@ -51,7 +47,7 @@ if __name__ == "__main__":
     print(np.sum(weights.value))
     weights = pd.Series(index=returns.columns, data=weights.value)
     print(weights)
-    print(model.estimate_risk(weights.values).value)
+    print(model.estimate(weights.values).value)
     assert problem.is_dpp()
 
     # fill in data

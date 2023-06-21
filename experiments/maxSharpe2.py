@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+from cvx.linalg import pca
 from cvx.risk.factor import FactorModel
-from cvx.risk.linalg import pca
 
 
 class ExpectedReturns:
@@ -45,7 +45,7 @@ class Solver:
         self._risk_model = FactorModel(assets=assets, k=k)
 
         self.constraints["factors"] = (
-            self.factor_weights == self.risk_model.exposure @ self.weights
+            self.factor_weights == self.risk_model.parameter["exposure"] @ self.weights
         )
 
     @property
@@ -78,13 +78,13 @@ class Solver:
 
     @property
     def risk(self):
-        return self.risk_model.estimate_risk(self.weights, y=self.factor_weights)
+        return self.risk_model.estimate(self.weights, y=self.factor_weights)
 
     def expected_return(self, returns):
         return returns @ self.weights
 
-    def update_data(self, **kwargs):
-        self.risk_model.update_data(**kwargs)
+    def update(self, **kwargs):
+        self.risk_model.update(**kwargs)
         self.expected_returns_model.update_data(**kwargs)
 
 
@@ -100,12 +100,10 @@ if __name__ == "__main__":
 
     solver = Solver(assets=20, k=10)
 
-    solver.update_data(
+    solver.update(
         cov=components.cov.values,
         exposure=components.exposure.values,
         idiosyncratic_risk=components.idiosyncratic.std().values,
-        lower=np.zeros(20),
-        upper=np.ones(20),
         mu=np.random.rand(20) / 100.0,
     )
 
@@ -123,7 +121,7 @@ if __name__ == "__main__":
     print(np.sum(solver.weights.value))
     weights = pd.Series(index=returns.columns, data=solver.weights.value)
     print(weights)
-    print(solver.risk_model.estimate_risk(weights.values).value)
+    print(solver.risk_model.estimate(weights.values).value)
     assert problem.is_dpp()
 
     # todo: constraints on solver.factor_weights, maybe in risk model?

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import cvxpy as cp
-import numpy as np
 import pandas as pd
 
 from cvx.risk.model import RiskModel
@@ -51,10 +50,10 @@ class Solver:
 
     @property
     def risk(self):
-        return self.risk_model.estimate_risk(self.weights)
+        return self.risk_model.estimate(self.weights)
 
     def expected_return(self, returns):
         return returns @ self.weights
 
-    def update_data(self, **kwargs):
-        self.risk_model.update_data(**kwargs)
+    def update(self, **kwargs):
+        self.risk_model.update(**kwargs)

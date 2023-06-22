@@ -37,8 +37,8 @@ class FactorModel(Model):
             value=np.zeros((self.k, self.k)),
         )
 
-        self.bounds_assets = Bounds(m=self.assets, name="assets")
-        self.bounds_factors = Bounds(m=self.k, name="factors")
+        self.bounds_assets = Bounds(assets=self.assets, name="assets")
+        self.bounds_factors = Bounds(assets=self.k, name="factors")
 
     def estimate(self, weights, **kwargs):
         """

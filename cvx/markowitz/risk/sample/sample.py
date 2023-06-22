@@ -25,7 +25,7 @@ class SampleCovariance(Model):
             name="cholesky of covariance",
             value=np.zeros((self.assets, self.assets)),
         )
-        self.bounds = Bounds(m=self.assets, name="assets")
+        self.bounds = Bounds(assets=self.assets, name="assets")
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""

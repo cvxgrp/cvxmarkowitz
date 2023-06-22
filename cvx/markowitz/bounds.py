@@ -12,7 +12,7 @@ from .model import Model
 
 @dataclass
 class Bounds(Model):
-    m: int = 0
+    assets: int = 0
     name: str = ""
 
     def estimate(self, weights, **kwargs):
@@ -24,23 +24,23 @@ class Bounds(Model):
 
     def __post_init__(self):
         self.data[self._f("lower")] = cp.Parameter(
-            shape=self.m,
+            shape=self.assets,
             name="lower bound",
-            value=np.zeros(self.m),
+            value=np.zeros(self.assets),
         )
         self.data[self._f("upper")] = cp.Parameter(
-            shape=self.m,
+            shape=self.assets,
             name="upper bound",
-            value=np.ones(self.m),
+            value=np.ones(self.assets),
         )
 
     def update(self, **kwargs):
         lower = kwargs[self._f("lower")]
-        self.data[self._f("lower")].value = np.zeros(self.m)
+        self.data[self._f("lower")].value = np.zeros(self.assets)
         self.data[self._f("lower")].value[: len(lower)] = lower
 
-        upper = kwargs[self._f("upper")]  # .get("upper", np.ones(self.m))
-        self.data[self._f("upper")].value = np.zeros(self.m)
+        upper = kwargs[self._f("upper")]
+        self.data[self._f("upper")].value = np.zeros(self.assets)
         self.data[self._f("upper")].value[: len(upper)] = upper
 
     def constraints(self, weights, **kwargs):
@@ -48,7 +48,3 @@ class Bounds(Model):
             f"lower bound {self.name}": weights >= self.data[self._f("lower")],
             f"upper bound {self.name}": weights <= self.data[self._f("upper")],
         }
-
-    @property
-    def assets(self):
-        return self.m

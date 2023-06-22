@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from cvx.linalg import pca
-from cvx.risk.factor import FactorModel
+from cvx.markowitz.risk import FactorModel
 
 if __name__ == "__main__":
     # create a cvxpy problem
@@ -24,6 +24,10 @@ if __name__ == "__main__":
         cov=components.cov.values,
         exposure=components.exposure.values,
         idiosyncratic_risk=components.idiosyncratic.std().values,
+        lower_assets=np.zeros(20),
+        upper_assets=np.ones(20),
+        lower_factors=np.zeros(10),
+        upper_factors=np.ones(10),
     )
 
     weights = cp.Variable(20)

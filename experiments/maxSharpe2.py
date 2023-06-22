@@ -8,7 +8,7 @@ from loguru import logger
 
 from cvx.linalg import pca
 from cvx.markowitz.model import Model
-from cvx.risk.factor import FactorModel
+from cvx.markowitz.risk import FactorModel
 
 
 class ExpectedReturns(Model):
@@ -109,6 +109,10 @@ if __name__ == "__main__":
         exposure=components.exposure.values,
         idiosyncratic_risk=components.idiosyncratic.std().values,
         mu=np.random.rand(20) / 100.0,
+        lower_assets=np.zeros(20),
+        upper_assets=np.ones(20),
+        lower_factors=np.zeros(10),
+        upper_factors=np.ones(10),
     )
 
     solver.constraints["funding"] = solver.funding == 1.0

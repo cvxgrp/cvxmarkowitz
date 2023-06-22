@@ -620,48 +620,6 @@ tomli = {version = "*", optional = true, markers = "python_full_version <= \"3.1
 toml = ["tomli"]
 
 [[package]]
-name = "cryptography"
-version = "41.0.1"
-description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "cryptography-41.0.1-cp37-abi3-macosx_10_12_universal2.whl", hash = "sha256:f73bff05db2a3e5974a6fd248af2566134d8981fd7ab012e5dd4ddb1d9a70699"},
-    {file = "cryptography-41.0.1-cp37-abi3-macosx_10_12_x86_64.whl", hash = "sha256:1a5472d40c8f8e91ff7a3d8ac6dfa363d8e3138b961529c996f3e2df0c7a411a"},
-    {file = "cryptography-41.0.1-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7fa01527046ca5facdf973eef2535a27fec4cb651e4daec4d043ef63f6ecd4ca"},
-    {file = "cryptography-41.0.1-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b46e37db3cc267b4dea1f56da7346c9727e1209aa98487179ee8ebed09d21e43"},
-    {file = "cryptography-41.0.1-cp37-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:d198820aba55660b4d74f7b5fd1f17db3aa5eb3e6893b0a41b75e84e4f9e0e4b"},
-    {file = "cryptography-41.0.1-cp37-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:948224d76c4b6457349d47c0c98657557f429b4e93057cf5a2f71d603e2fc3a3"},
-    {file = "cryptography-41.0.1-cp37-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:059e348f9a3c1950937e1b5d7ba1f8e968508ab181e75fc32b879452f08356db"},
-    {file = "cryptography-41.0.1-cp37-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:b4ceb5324b998ce2003bc17d519080b4ec8d5b7b70794cbd2836101406a9be31"},
-    {file = "cryptography-41.0.1-cp37-abi3-win32.whl", hash = "sha256:8f4ab7021127a9b4323537300a2acfb450124b2def3756f64dc3a3d2160ee4b5"},
-    {file = "cryptography-41.0.1-cp37-abi3-win_amd64.whl", hash = "sha256:1fee5aacc7367487b4e22484d3c7e547992ed726d14864ee33c0176ae43b0d7c"},
-    {file = "cryptography-41.0.1-pp38-pypy38_pp73-macosx_10_12_x86_64.whl", hash = "sha256:9a6c7a3c87d595608a39980ebaa04d5a37f94024c9f24eb7d10262b92f739ddb"},
-    {file = "cryptography-41.0.1-pp38-pypy38_pp73-manylinux_2_28_aarch64.whl", hash = "sha256:5d092fdfedaec4cbbffbf98cddc915ba145313a6fdaab83c6e67f4e6c218e6f3"},
-    {file = "cryptography-41.0.1-pp38-pypy38_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:1a8e6c2de6fbbcc5e14fd27fb24414507cb3333198ea9ab1258d916f00bc3039"},
-    {file = "cryptography-41.0.1-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:cb33ccf15e89f7ed89b235cff9d49e2e62c6c981a6061c9c8bb47ed7951190bc"},
-    {file = "cryptography-41.0.1-pp39-pypy39_pp73-macosx_10_12_x86_64.whl", hash = "sha256:5f0ff6e18d13a3de56f609dd1fd11470918f770c6bd5d00d632076c727d35485"},
-    {file = "cryptography-41.0.1-pp39-pypy39_pp73-manylinux_2_28_aarch64.whl", hash = "sha256:7bfc55a5eae8b86a287747053140ba221afc65eb06207bedf6e019b8934b477c"},
-    {file = "cryptography-41.0.1-pp39-pypy39_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:eb8163f5e549a22888c18b0d53d6bb62a20510060a22fd5a995ec8a05268df8a"},
-    {file = "cryptography-41.0.1-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:8dde71c4169ec5ccc1087bb7521d54251c016f126f922ab2dfe6649170a3b8c5"},
-    {file = "cryptography-41.0.1.tar.gz", hash = "sha256:d34579085401d3f49762d2f7d6634d6b6c2ae1242202e860f4d26b046e3a1006"},
-]
-
-[package.dependencies]
-cffi = ">=1.12"
-
-[package.extras]
-docs = ["sphinx (>=5.3.0)", "sphinx-rtd-theme (>=1.1.1)"]
-docstest = ["pyenchant (>=1.6.11)", "sphinxcontrib-spelling (>=4.0.1)", "twine (>=1.12.0)"]
-nox = ["nox"]
-pep8test = ["black", "check-sdist", "mypy", "ruff"]
-sdist = ["build"]
-ssh = ["bcrypt (>=3.1.5)"]
-test = ["pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-xdist"]
-test-randomorder = ["pytest-randomly"]
-
-[[package]]
 name = "cvxpy"
 version = "1.3.1"
 description = "A domain-specific language for modeling convex optimization problems in Python."
@@ -721,23 +679,6 @@ scip = ["PySCIPOpt"]
 scipy = ["scipy"]
 scs = ["setuptools (>65.5.1)"]
 xpress = ["xpress"]
-
-[[package]]
-name = "cvxrisk"
-version = "0.0.5"
-description = "Simple riskengine for cvxpy"
-category = "main"
-optional = false
-python-versions = ">=3.8,<4.0"
-files = [
-    {file = "cvxrisk-0.0.5-py3-none-any.whl", hash = "sha256:e4a4bae8d916ca48458d574006d6ca5c1a038fbba4d727f84f362d152eca5eb2"},
-    {file = "cvxrisk-0.0.5.tar.gz", hash = "sha256:1a394b2cf15184757fbf8fda9e1e73c6d3e1764c156bc96875faa2b540c3caa2"},
-]
-
-[package.dependencies]
-cvxpy = "*"
-pandas = "*"
-scikit-learn = "*"
 
 [[package]]
 name = "cvxsimulator"
@@ -4188,20 +4129,19 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 
 [[package]]
 name = "yfinance"
-version = "0.2.20"
+version = "0.2.21"
 description = "Download market data from Yahoo! Finance API"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "yfinance-0.2.20-py2.py3-none-any.whl", hash = "sha256:c35d6f9c3d55dc6eec6505deacf82f80ed1438da50e5a00cb5c662a082a270f6"},
-    {file = "yfinance-0.2.20.tar.gz", hash = "sha256:b9e95fba60c34a9f814b90eb59ec3f4118a32376cc8dd90ebb56f95d0811155d"},
+    {file = "yfinance-0.2.21-py2.py3-none-any.whl", hash = "sha256:aa6c8a1820917e5de3bba67b01dc7191d3ca4684aedd31086e0e584b4588fa96"},
+    {file = "yfinance-0.2.21.tar.gz", hash = "sha256:9e59ac03b78fc3442ee51aecff03fc1cd915a9139678b57fc188d91c6d492bc0"},
 ]
 
 [package.dependencies]
 appdirs = ">=1.4.4"
 beautifulsoup4 = ">=4.11.1"
-cryptography = ">=3.3.2"
 frozendict = ">=2.3.4"
 html5lib = ">=1.1"
 lxml = ">=4.9.1"
@@ -4230,4 +4170,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "5df4749a77ee3e478210cae3d8e8af5c5d99c06534c96ecabc67f0e19feaf535"
+content-hash = "e45dd1348fe41b3de6d9b8baa11948d28fa76d9ba074ef349b428f58a0661f92"

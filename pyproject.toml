@@ -9,7 +9,11 @@ packages = [{include = "cvx"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
-cvxrisk = "*"
+cvxpy = "*"
+pandas = "*"
+scikit-learn = "*"
+
+#cvxrisk = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.2.0"
@@ -17,7 +21,7 @@ pytest-cov = "4.0.0"
 yfinance = "*"
 quantstats = "*"
 plotly = "*"
-cvxpy = "*"
+#cvxpy = "*"
 jupyterlab = "*"
 loguru = "*"
 cvxsimulator = "*"

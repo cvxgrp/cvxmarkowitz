@@ -44,7 +44,3 @@ class SampleCovariance(Model):
     @property
     def variables(self):
         return cp.Variable(self.assets), None
-
-    # @property
-    # def assets(self):
-    #    return self.assets

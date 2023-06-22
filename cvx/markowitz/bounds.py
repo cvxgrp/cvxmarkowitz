@@ -23,12 +23,12 @@ class Bounds(Model):
         return f"{str}_{self.name}"
 
     def __post_init__(self):
-        self.parameter[self._f("lower")] = cp.Parameter(
+        self.data[self._f("lower")] = cp.Parameter(
             shape=self.m,
             name="lower bound",
             value=np.zeros(self.m),
         )
-        self.parameter[self._f("upper")] = cp.Parameter(
+        self.data[self._f("upper")] = cp.Parameter(
             shape=self.m,
             name="upper bound",
             value=np.ones(self.m),
@@ -36,17 +36,17 @@ class Bounds(Model):
 
     def update(self, **kwargs):
         lower = kwargs[self._f("lower")]
-        self.parameter[self._f("lower")].value = np.zeros(self.m)
-        self.parameter[self._f("lower")].value[: len(lower)] = lower
+        self.data[self._f("lower")].value = np.zeros(self.m)
+        self.data[self._f("lower")].value[: len(lower)] = lower
 
         upper = kwargs[self._f("upper")]  # .get("upper", np.ones(self.m))
-        self.parameter[self._f("upper")].value = np.zeros(self.m)
-        self.parameter[self._f("upper")].value[: len(upper)] = upper
+        self.data[self._f("upper")].value = np.zeros(self.m)
+        self.data[self._f("upper")].value[: len(upper)] = upper
 
     def constraints(self, weights, **kwargs):
         return {
-            f"lower bound {self.name}": weights >= self.parameter[self._f("lower")],
-            f"upper bound {self.name}": weights <= self.parameter[self._f("upper")],
+            f"lower bound {self.name}": weights >= self.data[self._f("lower")],
+            f"upper bound {self.name}": weights <= self.data[self._f("upper")],
         }
 
     @property

@@ -23,11 +23,7 @@ def test_constraints():
         lower_assets=np.array([0.1, 0.2]), upper_assets=np.array([0.3, 0.4, 0.5])
     )
 
-    assert bounds.parameter["lower_assets"].value == pytest.approx(
-        np.array([0.1, 0.2, 0])
-    )
-    assert bounds.parameter["upper_assets"].value == pytest.approx(
-        np.array([0.3, 0.4, 0.5])
-    )
+    assert bounds.data["lower_assets"].value == pytest.approx(np.array([0.1, 0.2, 0]))
+    assert bounds.data["upper_assets"].value == pytest.approx(np.array([0.3, 0.4, 0.5]))
 
     assert len(bounds.constraints(weights)) == 2

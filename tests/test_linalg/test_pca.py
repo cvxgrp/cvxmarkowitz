@@ -36,4 +36,11 @@ def test_pca(returns):
             ]
         ),
     )
-    # assert False
+
+
+def test_idiosyncratic(returns):
+    # as many components as vectors, hence the residual should be zero
+    xxx = pca(returns, n_components=20)
+    pd.testing.assert_series_equal(
+        xxx.idiosyncratic.std(), pd.Series(np.zeros(20), index=returns.columns)
+    )

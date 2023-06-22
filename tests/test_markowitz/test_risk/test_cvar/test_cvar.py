@@ -12,7 +12,7 @@ from cvx.markowitz.risk import CVar
 
 def test_estimate_risk():
     """Test the estimate() method"""
-    model = CVar(alpha=0.95, n=50, m=14)
+    model = CVar(alpha=0.95, n=50, assets=14)
 
     np.random.seed(42)
 

@@ -16,14 +16,16 @@ class CVar(Model):
 
     alpha: float = 0.95
     n: int = 0
-    m: int = 0
+    assets: int = 0
 
     def __post_init__(self):
         self.k = int(self.n * (1 - self.alpha))
         self.data["R"] = cp.Parameter(
-            shape=(self.n, self.m), name="returns", value=np.zeros((self.n, self.m))
+            shape=(self.n, self.assets),
+            name="returns",
+            value=np.zeros((self.n, self.assets)),
         )
-        self.bounds = Bounds(m=self.m, name="assets")
+        self.bounds = Bounds(m=self.assets, name="assets")
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
@@ -43,12 +45,6 @@ class CVar(Model):
 
     def constraints(self, weights, **kwargs):
         return self.bounds.constraints(weights)
-
-    @property
-    def assets(self):
-        return self.m
-
-    # Path: cvx/markowitz/risk/cvar/cvar.py
 
     def variables(self):
         return cp.Variable(self.assets), None

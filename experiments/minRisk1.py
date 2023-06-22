@@ -58,11 +58,8 @@ if __name__ == "__main__":
 
     # You can define the problem for up to 25 assets and 15 factors
     model = FactorModel(assets=25, k=15)
-
     # model = SampleCovariance(assets=25)
     minvar = MinVar(riskmodel=model)
-
-    logger.info(f"Assets: {minvar.model.assets}")
 
     # You can add constraints before you build the problem
     minvar.constraints["concentration"] = (
@@ -79,6 +76,8 @@ if __name__ == "__main__":
     # cov = returns.cov()  # else pca.cov
     cov = pca.cov
 
+    # distinguish between data and parameters
+    # clean up at the end, e.g. integer lots
     minvar.update(
         cov=cov.values,
         exposure=pca.exposure.values,

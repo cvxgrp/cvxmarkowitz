@@ -94,7 +94,7 @@ def test_estimate_risk():
     assert np.array(weights.value[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert model.parameter["exposure"].value @ weights.value == pytest.approx(
+    assert model.data["exposure"].value @ weights.value == pytest.approx(
         y.value, abs=1e-6
     )
 

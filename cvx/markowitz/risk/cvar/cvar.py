@@ -20,7 +20,7 @@ class CVar(Model):
 
     def __post_init__(self):
         self.k = int(self.n * (1 - self.alpha))
-        self.parameter["R"] = cp.Parameter(
+        self.data["R"] = cp.Parameter(
             shape=(self.n, self.m), name="returns", value=np.zeros((self.n, self.m))
         )
         self.bounds = Bounds(m=self.m, name="assets")
@@ -32,13 +32,13 @@ class CVar(Model):
         # k is the number of returns in the left tail
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
-        return -cp.sum_smallest(self.parameter["R"] @ weights, k=self.k) / self.k
+        return -cp.sum_smallest(self.data["R"] @ weights, k=self.k) / self.k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
         m = ret.shape[1]
 
-        self.parameter["R"].value[:, :m] = kwargs["returns"]
+        self.data["R"].value[:, :m] = kwargs["returns"]
         self.bounds.update(**kwargs)
 
     def constraints(self, weights, **kwargs):

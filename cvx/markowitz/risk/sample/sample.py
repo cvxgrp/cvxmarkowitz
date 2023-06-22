@@ -20,7 +20,7 @@ class SampleCovariance(Model):
     assets: int = 0
 
     def __post_init__(self):
-        self.parameter["chol"] = cp.Parameter(
+        self.data["chol"] = cp.Parameter(
             shape=(self.assets, self.assets),
             name="cholesky of covariance",
             value=np.zeros((self.assets, self.assets)),
@@ -29,13 +29,13 @@ class SampleCovariance(Model):
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
-        return cp.norm2(self.parameter["chol"] @ weights)
+        return cp.norm2(self.data["chol"] @ weights)
 
     def update(self, **kwargs):
         cov = kwargs["cov"]
         n = cov.shape[0]
 
-        self.parameter["chol"].value[:n, :n] = cholesky(cov)
+        self.data["chol"].value[:n, :n] = cholesky(cov)
         self.bounds.update(**kwargs)
 
     def constraints(self, weights, **kwargs):

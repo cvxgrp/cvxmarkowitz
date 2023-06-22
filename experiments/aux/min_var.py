@@ -10,7 +10,7 @@ from cvx.markowitz.risk import SampleCovariance
 class MinVar:
     def __init__(self, assets: int, factors: int = None):
         if factors is not None:
-            self.model = FactorModel(assets=assets, k=factors)
+            self.model = FactorModel(assets=assets, factors=factors)
         else:
             self.model = SampleCovariance(assets=assets)
 

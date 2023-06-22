@@ -24,7 +24,7 @@ def test_timeseries_model(returns):
     # Here we compute the factors and regress the returns on them
     factors = principal_components(returns=returns, n_components=10)
 
-    model = FactorModel(assets=25, k=10)
+    model = FactorModel(assets=25, factors=10)
 
     model.update(
         cov=factors.cov.values,
@@ -47,7 +47,7 @@ def test_minvar(returns):
     weights = cp.Variable(20)
     y = cp.Variable(10)
 
-    model = FactorModel(assets=20, k=10)
+    model = FactorModel(assets=20, factors=10)
 
     problem = minrisk_problem(model, weights, factor_weights=y)
 
@@ -56,7 +56,7 @@ def test_minvar(returns):
 
 def test_estimate_risk():
     """Test the estimate() method"""
-    model = FactorModel(assets=25, k=12)
+    model = FactorModel(assets=25, factors=12)
 
     np.random.seed(42)
 

@@ -46,7 +46,7 @@ class Solver:
 
         self.constraints = {}
         self._expected_returns_model = ExpectedReturns(assets=assets)
-        self._risk_model = FactorModel(assets=assets, k=k)
+        self._risk_model = FactorModel(assets=assets, factors=k)
 
         self.constraints["factors"] = (
             self.factor_weights == self.risk_model.parameter["exposure"] @ self.weights

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # compute 10 components
     components = pca(returns=returns, n_components=10)
 
-    model = FactorModel(assets=20, k=10)
+    model = FactorModel(assets=20, factors=10)
 
     model.update(
         cov=components.cov.values,

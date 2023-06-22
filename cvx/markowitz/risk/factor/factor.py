@@ -18,13 +18,13 @@ class FactorModel(Model):
     """Factor risk model"""
 
     assets: int = 0
-    k: int = 0
+    factors: int = 0
 
     def __post_init__(self):
         self.data["exposure"] = cp.Parameter(
-            shape=(self.k, self.assets),
+            shape=(self.factors, self.assets),
             name="exposure",
-            value=np.zeros((self.k, self.assets)),
+            value=np.zeros((self.factors, self.assets)),
         )
 
         self.data["idiosyncratic_risk"] = cp.Parameter(
@@ -32,13 +32,13 @@ class FactorModel(Model):
         )
 
         self.data["chol"] = cp.Parameter(
-            shape=(self.k, self.k),
+            shape=(self.factors, self.factors),
             name="cholesky of covariance",
-            value=np.zeros((self.k, self.k)),
+            value=np.zeros((self.factors, self.factors)),
         )
 
         self.bounds_assets = Bounds(assets=self.assets, name="assets")
-        self.bounds_factors = Bounds(assets=self.k, name="factors")
+        self.bounds_factors = Bounds(assets=self.factors, name="factors")
 
     def estimate(self, weights, **kwargs):
         """
@@ -73,4 +73,4 @@ class FactorModel(Model):
 
     @property
     def variables(self):
-        return cp.Variable(self.assets), cp.Variable(self.k)
+        return cp.Variable(self.assets), cp.Variable(self.factors)

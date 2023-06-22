@@ -7,7 +7,6 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import pca as principal_components
-from cvx.markowitz.portfolio.min_risk import minrisk_problem
 from cvx.markowitz.risk import FactorModel
 
 
@@ -18,9 +17,21 @@ class MinVar:
         self.model = FactorModel(assets=assets, k=self.factors)
         self.weights_assets = cp.Variable(self.assets)
         self.weights_factor = cp.Variable(self.factors)
-        self.problem = minrisk_problem(
-            self.model, self.weights_assets, y=self.weights_factor
+        self.constraints = {
+            **{
+                "long-only": self.weights_assets >= 0,
+                "funding": cp.sum(self.weights_assets) == 1.0,
+            },
+            **self.model.constraints(self.weights_assets, y=self.weights_factor),
+        }
+
+        self.objective = cp.Minimize(
+            self.model.estimate(self.weights_assets, y=self.weights_factor)
         )
+
+    @property
+    def problem(self):
+        return cp.Problem(self.objective, list(self.constraints.values()))
 
 
 if __name__ == "__main__":
@@ -49,8 +60,10 @@ if __name__ == "__main__":
     logger.info(f"Assets: {minvar.assets}")
     logger.info(f"Factors: {minvar.factors}")
 
-    assert minvar.problem.is_dpp()
-    logger.info(f"Problem is DPP: {minvar.problem.is_dpp()}")
+    problem = minvar.problem
+
+    assert problem.is_dpp()
+    logger.info(f"Problem is DPP: {problem.is_dpp()}")
 
     minvar.model.update(
         cov=pca.cov.values,
@@ -65,12 +78,30 @@ if __name__ == "__main__":
     logger.info(f"Factor covariance: {pca.cov}")
 
     logger.info("Start solving problems...")
-    x = minvar.problem.solve()
+    x = problem.solve()
     logger.info(f"Minimum variance: {x}")
 
-    x = minvar.problem.solve()
+    # second solve, should be a lot faster as the problem is DPP
+    minvar.model.update(
+        cov=pca.cov.values,
+        exposure=pca.exposure.values,
+        idiosyncratic_risk=pca.idiosyncratic.std().values,
+        lower_assets=np.zeros(20),
+        upper_assets=np.ones(20),
+        lower_factors=np.zeros(10),
+        upper_factors=np.ones(10),
+    )
+    x = problem.solve()
     logger.info(f"Minimum variance: {x}")
 
-    print(minvar.weights_assets.value)
-    print(minvar.weights_factor.value)
-    print(minvar.problem)
+    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+    logger.info(f"weights factor:\n{minvar.weights_factor.value}")
+    logger.info(f"{minvar.problem}")
+
+    for name, constraint in minvar.constraints.items():
+        logger.info(f"{name}: {constraint.value}")
+
+    # todo: understand DPP
+    # todo: make DPP working for very large number of parameters
+    # todo: include transaction costs
+    # todo: include holding costs

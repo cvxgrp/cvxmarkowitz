@@ -69,8 +69,13 @@ class FactorModel(Model):
     def constraints(self, weights, **kwargs):
         y = kwargs.get("y", self.parameter["exposure"] @ weights)
 
-        return (
-            self.bounds_assets.constraints(weights)
-            + self.bounds_factors.constraints(y)
-            + [y == self.parameter["exposure"] @ weights]
-        )
+        factor = {"factors": y == self.parameter["exposure"] @ weights}
+
+        return {
+            **self.bounds_assets.constraints(weights),
+            **self.bounds_factors.constraints(y),
+            **factor,
+        }
+        #
+        #    + [y == self.parameter["exposure"] @ weights]
+        #        }

@@ -47,7 +47,10 @@ class Bounds(Model):
         ] = upper  # kwargs.get("upper", np.ones(m))
 
     def constraints(self, weights, **kwargs):
-        return [
-            weights >= self.parameter[self._f("lower")],
-            weights <= self.parameter[self._f("upper")],
-        ]
+        return {
+            f"lower bound {self.name}": weights >= self.parameter[self._f("lower")],
+            f"upper bound {self.name}": weights <= self.parameter[self._f("upper")],
+        }
+        # weights >= self.parameter[self._f("lower")],
+        # weights <= self.parameter[self._f("upper")],
+        # ]

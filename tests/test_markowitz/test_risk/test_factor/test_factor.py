@@ -44,12 +44,11 @@ def test_timeseries_model(returns):
 
 
 def test_minvar(returns):
-    weights = cp.Variable(20)
-    y = cp.Variable(10)
-
     model = FactorModel(assets=20, factors=10)
 
-    problem = minrisk_problem(model, weights, factor_weights=y)
+    weights, factor_weights = model.variables
+
+    problem = minrisk_problem(model, weights, factor_weights=factor_weights)
 
     assert problem.is_dpp()
 
@@ -61,10 +60,9 @@ def test_estimate_risk():
     np.random.seed(42)
 
     # define the problem
-    weights = cp.Variable(25)
-    y = cp.Variable(12)
+    weights, factor_weights = model.variables
 
-    prob = minrisk_problem(model, weights, factor_weights=y)
+    prob = minrisk_problem(model, weights, factor_weights=factor_weights)
     assert prob.is_dpp()
 
     model.update(
@@ -95,10 +93,10 @@ def test_estimate_risk():
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
     assert model.data["exposure"].value @ weights.value == pytest.approx(
-        y.value, abs=1e-6
+        factor_weights.value, abs=1e-6
     )
 
     # test all entries of y are smaller than 0.1
-    assert np.all([y.value <= 0.1 + 1e-6])
+    assert np.all([factor_weights.value <= 0.1 + 1e-6])
     # test all entries of y are larger than -0.1
-    assert np.all([y.value >= -(0.1 + 1e-6)])
+    assert np.all([factor_weights.value >= -(0.1 + 1e-6)])

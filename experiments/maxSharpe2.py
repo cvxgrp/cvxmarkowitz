@@ -132,6 +132,4 @@ if __name__ == "__main__":
     print(solver.risk_model.estimate(weights.values).value)
     assert problem.is_dpp()
 
-    # todo: constraints on solver.factor_weights, maybe in risk model?
-    # todo: rename estimate_risk to estimate
     # todo: parameter for target volatility

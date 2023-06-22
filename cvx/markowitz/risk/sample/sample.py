@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import cvxpy as cvx
+import cvxpy as cp
 import numpy as np
 
 from cvx.linalg import cholesky
@@ -17,19 +17,19 @@ from cvx.markowitz.bounds import Bounds
 class SampleCovariance(Model):
     """Risk model based on the Cholesky decomposition of the sample cov matrix"""
 
-    num: int = 0
+    assets: int = 0
 
     def __post_init__(self):
-        self.parameter["chol"] = cvx.Parameter(
-            shape=(self.num, self.num),
+        self.parameter["chol"] = cp.Parameter(
+            shape=(self.assets, self.assets),
             name="cholesky of covariance",
-            value=np.zeros((self.num, self.num)),
+            value=np.zeros((self.assets, self.assets)),
         )
-        self.bounds = Bounds(m=self.num, name="assets")
+        self.bounds = Bounds(m=self.assets, name="assets")
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
-        return cvx.norm2(self.parameter["chol"] @ weights)
+        return cp.norm2(self.parameter["chol"] @ weights)
 
     def update(self, **kwargs):
         cov = kwargs["cov"]
@@ -38,5 +38,13 @@ class SampleCovariance(Model):
         self.parameter["chol"].value[:n, :n] = cholesky(cov)
         self.bounds.update(**kwargs)
 
-    def constraints(self, weights):
+    def constraints(self, weights, **kwargs):
         return self.bounds.constraints(weights)
+
+    @property
+    def variables(self):
+        return cp.Variable(self.assets), None
+
+    # @property
+    # def assets(self):
+    #    return self.assets

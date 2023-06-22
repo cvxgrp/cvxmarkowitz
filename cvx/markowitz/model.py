@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Abstract cvx model
+"""Abstract cp model
 """
 from __future__ import annotations
 
@@ -34,4 +34,11 @@ class Model(ABC):
     def constraints(self, weights, **kwargs):
         """
         Return the constraints for the risk model
+        """
+
+    @property
+    @abstractmethod
+    def assets(self):
+        """
+        Return the number of assets
         """

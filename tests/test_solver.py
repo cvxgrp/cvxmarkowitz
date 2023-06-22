@@ -27,7 +27,7 @@ def test_solver_no_risk(solver):
 
 
 def test_solver_with_risk(solver):
-    solver.risk_model = SampleCovariance(num=3)
+    solver.risk_model = SampleCovariance(assets=3)
     solver.constraints["Risk"] = solver.risk <= 0.9
     print(solver.constraints["Risk"])
 

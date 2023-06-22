@@ -49,7 +49,7 @@ def test_minvar(returns):
 
     model = FactorModel(assets=20, k=10)
 
-    problem = minrisk_problem(model, weights, y=y)
+    problem = minrisk_problem(model, weights, factor_weights=y)
 
     assert problem.is_dpp()
 
@@ -64,7 +64,7 @@ def test_estimate_risk():
     weights = cp.Variable(25)
     y = cp.Variable(12)
 
-    prob = minrisk_problem(model, weights, y=y)
+    prob = minrisk_problem(model, weights, factor_weights=y)
     assert prob.is_dpp()
 
     model.update(

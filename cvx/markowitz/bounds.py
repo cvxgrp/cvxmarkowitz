@@ -35,22 +35,20 @@ class Bounds(Model):
         )
 
     def update(self, **kwargs):
-        # lower = kwargs.get("lower", np.zeros(self.m))
         lower = kwargs[self._f("lower")]
         self.parameter[self._f("lower")].value = np.zeros(self.m)
         self.parameter[self._f("lower")].value[: len(lower)] = lower
 
         upper = kwargs[self._f("upper")]  # .get("upper", np.ones(self.m))
         self.parameter[self._f("upper")].value = np.zeros(self.m)
-        self.parameter[self._f("upper")].value[
-            : len(upper)
-        ] = upper  # kwargs.get("upper", np.ones(m))
+        self.parameter[self._f("upper")].value[: len(upper)] = upper
 
     def constraints(self, weights, **kwargs):
         return {
             f"lower bound {self.name}": weights >= self.parameter[self._f("lower")],
             f"upper bound {self.name}": weights <= self.parameter[self._f("upper")],
         }
-        # weights >= self.parameter[self._f("lower")],
-        # weights <= self.parameter[self._f("upper")],
-        # ]
+
+    @property
+    def assets(self):
+        return self.m

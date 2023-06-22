@@ -18,7 +18,7 @@ extensions = [
 ]
 
 
-source_dirs = "cvx"
+source_dirs = "cp"
 autoapi_type = "python"
 autoapi_dirs = ["../../%s" % d for d in source_dirs.split()]
 autoapi_options = [

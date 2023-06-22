@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import cvxpy as cvx
+import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
@@ -20,7 +20,7 @@ class CVar(Model):
 
     def __post_init__(self):
         self.k = int(self.n * (1 - self.alpha))
-        self.parameter["R"] = cvx.Parameter(
+        self.parameter["R"] = cp.Parameter(
             shape=(self.n, self.m), name="returns", value=np.zeros((self.n, self.m))
         )
         self.bounds = Bounds(m=self.m, name="assets")
@@ -32,7 +32,7 @@ class CVar(Model):
         # k is the number of returns in the left tail
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
-        return -cvx.sum_smallest(self.parameter["R"] @ weights, k=self.k) / self.k
+        return -cp.sum_smallest(self.parameter["R"] @ weights, k=self.k) / self.k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
@@ -43,3 +43,12 @@ class CVar(Model):
 
     def constraints(self, weights, **kwargs):
         return self.bounds.constraints(weights)
+
+    @property
+    def assets(self):
+        return self.m
+
+    # Path: cvx/markowitz/risk/cvar/cvar.py
+
+    def variables(self):
+        return cp.Variable(self.assets), None

@@ -7,31 +7,33 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import pca as principal_components
+from cvx.markowitz import Model
 from cvx.markowitz.risk import FactorModel
+from cvx.markowitz.risk import SampleCovariance
 
 
 class MinVar:
-    def __init__(self, assets: int, factors: int = None):
-        self.assets = assets
-        self.factors = factors or self.assets
-        self.model = FactorModel(assets=assets, k=self.factors)
-        self.weights_assets = cp.Variable(self.assets)
-        self.weights_factor = cp.Variable(self.factors)
+    def __init__(self, riskmodel: Model = None):
+        self.model = riskmodel
+        self.weights_assets, self.weights_factor = model.variables
         self.constraints = {
-            **{
-                "long-only": self.weights_assets >= 0,
-                "funding": cp.sum(self.weights_assets) == 1.0,
-            },
-            **self.model.constraints(self.weights_assets, y=self.weights_factor),
-        }
-
-        self.objective = cp.Minimize(
-            self.model.estimate(self.weights_assets, y=self.weights_factor)
+            "long-only": self.weights_assets >= 0,
+            "funding": cp.sum(self.weights_assets) == 1.0,
+        } | self.model.constraints(
+            self.weights_assets, factor_weights=self.weights_factor
         )
 
-    @property
-    def problem(self):
+        # Note that the variables need to be handed over to various models.
+        # It's therefore better to have the estimate and constraints methods to get them explicitly.
+        self.objective = cp.Minimize(
+            self.model.estimate(self.weights_assets, factor_weights=self.weights_factor)
+        )
+
+    def build(self):
         return cp.Problem(self.objective, list(self.constraints.values()))
+
+    def update(self, **kwargs):
+        self.model.update(**kwargs)
 
 
 if __name__ == "__main__":
@@ -55,18 +57,30 @@ if __name__ == "__main__":
     #   - idiosyncratic: pd.DataFrame
 
     # You can define the problem for up to 25 assets and 15 factors
-    minvar = MinVar(assets=25, factors=15)
+    model = FactorModel(assets=25, k=15)
 
-    logger.info(f"Assets: {minvar.assets}")
-    logger.info(f"Factors: {minvar.factors}")
+    # model = SampleCovariance(assets=25)
+    minvar = MinVar(riskmodel=model)
 
-    problem = minvar.problem
+    logger.info(f"Assets: {minvar.model.assets}")
 
+    # You can add constraints before you build the problem
+    minvar.constraints["concentration"] = (
+        cp.sum_largest(minvar.weights_assets, 2) <= 0.4
+    )
+    # this constraint is not needed as the problem is long only and fully-invested
+    minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
+
+    problem = minvar.build()
     assert problem.is_dpp()
+
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
 
-    minvar.model.update(
-        cov=pca.cov.values,
+    # cov = returns.cov()  # else pca.cov
+    cov = pca.cov
+
+    minvar.update(
+        cov=cov.values,
         exposure=pca.exposure.values,
         idiosyncratic_risk=pca.idiosyncratic.std().values,
         lower_assets=np.zeros(20),
@@ -82,7 +96,7 @@ if __name__ == "__main__":
     logger.info(f"Minimum variance: {x}")
 
     # second solve, should be a lot faster as the problem is DPP
-    minvar.model.update(
+    minvar.update(
         cov=pca.cov.values,
         exposure=pca.exposure.values,
         idiosyncratic_risk=pca.idiosyncratic.std().values,
@@ -91,15 +105,17 @@ if __name__ == "__main__":
         lower_factors=np.zeros(10),
         upper_factors=np.ones(10),
     )
+
     x = problem.solve()
     logger.info(f"Minimum variance: {x}")
 
     logger.info(f"weights assets:\n{minvar.weights_assets.value}")
-    logger.info(f"weights factor:\n{minvar.weights_factor.value}")
-    logger.info(f"{minvar.problem}")
+    logger.info(f"{problem}")
 
     for name, constraint in minvar.constraints.items():
         logger.info(f"{name}: {constraint.value}")
+
+    print(cp.sum_largest(minvar.weights_assets, 2).value)
 
     # todo: understand DPP
     # todo: make DPP working for very large number of parameters

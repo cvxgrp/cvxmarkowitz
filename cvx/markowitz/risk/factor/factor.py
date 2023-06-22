@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import cvxpy as cvx
+import cvxpy as cp
 import numpy as np
 
 from cvx.linalg import cholesky
@@ -21,17 +21,17 @@ class FactorModel(Model):
     k: int = 0
 
     def __post_init__(self):
-        self.parameter["exposure"] = cvx.Parameter(
+        self.parameter["exposure"] = cp.Parameter(
             shape=(self.k, self.assets),
             name="exposure",
             value=np.zeros((self.k, self.assets)),
         )
 
-        self.parameter["idiosyncratic_risk"] = cvx.Parameter(
+        self.parameter["idiosyncratic_risk"] = cp.Parameter(
             shape=self.assets, name="idiosyncratic risk", value=np.zeros(self.assets)
         )
 
-        self.parameter["chol"] = cvx.Parameter(
+        self.parameter["chol"] = cp.Parameter(
             shape=(self.k, self.k),
             name="cholesky of covariance",
             value=np.zeros((self.k, self.k)),
@@ -44,15 +44,13 @@ class FactorModel(Model):
         """
         Compute the total variance
         """
-        var_residual = cvx.norm2(
-            cvx.multiply(self.parameter["idiosyncratic_risk"], weights)
+        var_residual = cp.norm2(
+            cp.multiply(self.parameter["idiosyncratic_risk"], weights)
         )
 
-        y = kwargs.get("y", self.parameter["exposure"] @ weights)
+        y = kwargs.get("factor_weights", self.parameter["exposure"] @ weights)
 
-        return cvx.norm2(
-            cvx.vstack([cvx.norm2(self.parameter["chol"] @ y), var_residual])
-        )
+        return cp.norm2(cp.vstack([cp.norm2(self.parameter["chol"] @ y), var_residual]))
 
     def update(self, **kwargs):
         exposure = kwargs["exposure"]
@@ -67,7 +65,7 @@ class FactorModel(Model):
         self.bounds_factors.update(**kwargs)
 
     def constraints(self, weights, **kwargs):
-        y = kwargs.get("y", self.parameter["exposure"] @ weights)
+        y = kwargs.get("factor_weights", self.parameter["exposure"] @ weights)
 
         factor = {"factors": y == self.parameter["exposure"] @ weights}
 
@@ -76,6 +74,7 @@ class FactorModel(Model):
             **self.bounds_factors.constraints(y),
             **factor,
         }
-        #
-        #    + [y == self.parameter["exposure"] @ weights]
-        #        }
+
+    @property
+    def variables(self):
+        return cp.Variable(self.assets), cp.Variable(self.k)

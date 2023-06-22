@@ -9,7 +9,7 @@ from cvx.markowitz.risk import SampleCovariance
 
 
 def test_sample():
-    riskmodel = SampleCovariance(num=2)
+    riskmodel = SampleCovariance(assets=2)
     riskmodel.update(
         cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
         lower_assets=np.zeros(2),
@@ -20,7 +20,7 @@ def test_sample():
 
 
 def test_sample_large():
-    riskmodel = SampleCovariance(num=4)
+    riskmodel = SampleCovariance(assets=4)
     riskmodel.update(
         cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
         lower_assets=np.zeros(2),
@@ -32,7 +32,7 @@ def test_sample_large():
 
 def test_min_variance():
     weights = cp.Variable(4)
-    riskmodel = SampleCovariance(num=4)
+    riskmodel = SampleCovariance(assets=4)
     problem = minrisk_problem(riskmodel, weights)
     assert problem.is_dpp()
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.portfolio.min_risk import minrisk_problem
@@ -31,8 +30,8 @@ def test_sample_large():
 
 
 def test_min_variance():
-    weights = cp.Variable(4)
     riskmodel = SampleCovariance(assets=4)
+    weights, _ = riskmodel.variables
     problem = minrisk_problem(riskmodel, weights)
     assert problem.is_dpp()
 

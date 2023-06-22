@@ -4,7 +4,7 @@ from __future__ import annotations
 import cvxpy as cp
 import pandas as pd
 
-from cvx.risk.model import RiskModel
+from .model import Model
 
 
 # def to_vector(assets, dictionary=None, value=0.0):
@@ -45,7 +45,7 @@ class Solver:
 
     @risk_model.setter
     def risk_model(self, value):
-        assert isinstance(value, RiskModel)
+        assert isinstance(value, Model)
         self._risk_model = value
 
     @property

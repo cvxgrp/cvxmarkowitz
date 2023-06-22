@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from cvx.markowitz.risk import SampleCovariance
 from cvx.markowitz.solver import Solver
-from cvx.risk.sample.sample import SampleCovariance
 
 
 @pytest.fixture()
@@ -31,7 +31,11 @@ def test_solver_with_risk(solver):
     solver.constraints["Risk"] = solver.risk <= 0.9
     print(solver.constraints["Risk"])
 
-    solver.update(cov=np.array([[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]))
+    solver.update(
+        cov=np.array([[1, 0.5, 0.5], [0.5, 1, 0.5], [0.5, 0.5, 1]]),
+        lower_assets=np.array([0, 0, 0]),
+        upper_assets=np.array([1, 1, 1]),
+    )
 
     # todo: constraint is correctly updated, no need to set again
     print(solver.constraints["Risk"])

@@ -44,3 +44,20 @@ def test_idiosyncratic(returns):
     pd.testing.assert_series_equal(
         xxx.idiosyncratic.std(), pd.Series(np.zeros(20), index=returns.columns)
     )
+
+    assert np.allclose(
+        returns.values,
+        xxx.factors.values @ xxx.exposure.values + xxx.idiosyncratic.values,
+    )
+
+
+def test_idiosyncratic(returns):
+    # as many components as vectors, hence the residual should be zero
+    xxx = pca(returns, n_components=15)
+
+    print(xxx.exposure.shape)
+
+    assert np.allclose(
+        returns.values,
+        xxx.factors.values @ xxx.exposure.values + xxx.idiosyncratic.values,
+    )

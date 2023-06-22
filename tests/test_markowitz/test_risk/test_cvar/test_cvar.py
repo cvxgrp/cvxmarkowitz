@@ -2,7 +2,6 @@
 # Import necessary libraries
 from __future__ import annotations
 
-import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -17,7 +16,7 @@ def test_estimate_risk():
     np.random.seed(42)
 
     # define the problem
-    weights = cp.Variable(14)
+    weights, _ = model.variables()
     prob = minrisk_problem(model, weights)
     assert prob.is_dpp()
 

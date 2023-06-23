@@ -34,7 +34,7 @@ class SampleCovariance(Model):
     def update(self, **kwargs):
         cov = kwargs["cov"]
         n = cov.shape[0]
-
+        self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:n, :n] = cholesky(cov)
         self.bounds.update(**kwargs)
 

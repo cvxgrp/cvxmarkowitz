@@ -25,4 +25,3 @@ We install [JupyterLab](https://jupyter.org) within your new virtual environment
 ```
 
 constructs a dedicated [Kernel](https://docs.jupyter.org/en/latest/projects/kernels.html) for the project.
-

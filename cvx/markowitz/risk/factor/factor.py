@@ -56,7 +56,7 @@ class FactorModel(Model):
 
         self.data["exposure"].value = np.zeros((self.factors, self.assets))
         self.data["exposure"].value[:k, :assets] = kwargs["exposure"]
-        self.data["idiosyncratic_risk"].value = np.zeros((self.assets,))
+        self.data["idiosyncratic_risk"].value = np.zeros(self.assets)
         self.data["idiosyncratic_risk"].value[:assets] = kwargs["idiosyncratic_risk"]
         self.data["chol"].value = np.zeros((self.factors, self.factors))
         self.data["chol"].value[:k, :k] = cholesky(kwargs["cov"])

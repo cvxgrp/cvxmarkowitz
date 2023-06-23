@@ -35,11 +35,11 @@ if __name__ == "__main__":
     minvar = MinVar(assets=20, factors=10)
 
     # You can add constraints before you build the problem
-    minvar.constraints["concentration"] = (
-        cp.sum_largest(minvar.weights_assets, 2) <= 0.4
-    )
+    # minvar.constraints["concentration"] = (
+    #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
+    # )
     # this constraint is not needed as the problem is long only and fully-invested
-    minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
+    # minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
 
     problem = minvar.build()
     assert problem.is_dpp()
@@ -65,20 +65,35 @@ if __name__ == "__main__":
     logger.info("Start solving problems...")
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
+    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+
+    for name, parameter in minvar.model.data.items():
+        logger.info(f"{name}: {parameter.value}")
 
     ###########################################################################
     # second solve, should be a lot faster as the problem is DPP
+    returns = returns.iloc[:, :10]
+    pca = principal_components(returns=returns, n_components=5)
+
     minvar.update(
         cov=pca.cov.values,
         exposure=pca.exposure.values,
         idiosyncratic_risk=pca.idiosyncratic.std().values,
-        lower_assets=np.zeros(20),
-        upper_assets=np.ones(20),
-        lower_factors=np.zeros(10),
-        upper_factors=np.ones(10),
+        lower_assets=np.zeros(10),
+        upper_assets=np.ones(10),
+        lower_factors=-np.ones(5),
+        upper_factors=np.ones(5),
     )
+    for name, parameter in minvar.model.data.items():
+        logger.info(f"{name}: {parameter.value}")
 
-    x = problem.solve()
+    for name, parameter in minvar.model.bounds_assets.data.items():
+        logger.info(f"{name}: {parameter.value}")
+
+    for name, parameter in minvar.model.bounds_factors.data.items():
+        logger.info(f"{name}: {parameter.value}")
+
+    x = problem.solve(verbose=True)
     logger.info(f"Minimum standard deviation: {x}")
 
     logger.info(f"weights assets:\n{minvar.weights_assets.value}")

@@ -10,7 +10,7 @@ import numpy as np
 from .model import Model
 
 
-@dataclass
+@dataclass(frozen=True)
 class Bounds(Model):
     name: str = ""
 

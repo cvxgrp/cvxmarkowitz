@@ -9,7 +9,7 @@ import numpy as np
 from cvx.markowitz import Model
 
 
-@dataclass
+@dataclass(frozen=True)
 class TradingCosts(Model):
     def __post_init__(self):
         self.parameter["power"] = cp.Parameter(shape=1, name="power", value=np.ones(1))

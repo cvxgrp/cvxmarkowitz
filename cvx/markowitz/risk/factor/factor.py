@@ -13,11 +13,13 @@ from cvx.markowitz import Model
 from cvx.markowitz.bounds import Bounds
 
 
-@dataclass
+@dataclass(frozen=True)
 class FactorModel(Model):
     """Factor risk model"""
 
     factors: int = 0
+    bounds_assets: Bounds = None
+    bounds_factors: Bounds = None
 
     def __post_init__(self):
         self.data["exposure"] = cp.Parameter(
@@ -36,8 +38,12 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-        self.bounds_assets = Bounds(assets=self.assets, name="assets")
-        self.bounds_factors = Bounds(assets=self.factors, name="factors")
+        object.__setattr__(
+            self, "bounds_assets", Bounds(assets=self.assets, name="assets")
+        )
+        object.__setattr__(
+            self, "bounds_factors", Bounds(assets=self.factors, name="factors")
+        )
 
     def estimate(self, weights, **kwargs):
         """

@@ -10,21 +10,24 @@ from cvx.markowitz import Model
 from cvx.markowitz.bounds import Bounds
 
 
-@dataclass
+@dataclass(frozen=True)
 class CVar(Model):
     """Conditional value at risk model"""
 
     alpha: float = 0.95
     n: int = 0
+    bounds: Bounds = None  # Bounds(assets=Model.assets, name="assets")
 
     def __post_init__(self):
-        self.k = int(self.n * (1 - self.alpha))
+        # self.k = int(self.n * (1 - self.alpha))
         self.data["R"] = cp.Parameter(
             shape=(self.n, self.assets),
             name="returns",
             value=np.zeros((self.n, self.assets)),
         )
-        self.bounds = Bounds(assets=self.assets, name="assets")
+        object.__setattr__(self, "bounds", Bounds(assets=self.assets, name="assets"))
+
+        # self.bounds = Bounds(assets=self.assets, name="assets")
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
@@ -33,7 +36,8 @@ class CVar(Model):
         # k is the number of returns in the left tail
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
-        return -cp.sum_smallest(self.data["R"] @ weights, k=self.k) / self.k
+        k = int(self.n * (1 - self.alpha))
+        return -cp.sum_smallest(self.data["R"] @ weights, k=k) / k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]

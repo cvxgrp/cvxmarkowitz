@@ -9,7 +9,7 @@ import numpy as np
 from cvx.markowitz import Model
 
 
-@dataclass
+@dataclass(frozen=True)
 class ExpectedReturns(Model):
     def __post_init__(self):
         self.data["mu"] = cp.Parameter(

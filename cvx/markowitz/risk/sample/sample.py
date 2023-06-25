@@ -13,9 +13,11 @@ from cvx.markowitz import Model
 from cvx.markowitz.bounds import Bounds
 
 
-@dataclass
+@dataclass(frozen=True)
 class SampleCovariance(Model):
     """Risk model based on the Cholesky decomposition of the sample cov matrix"""
+
+    bounds: Bounds = None  # Bounds(assets=super().assets, name="assets")
 
     def __post_init__(self):
         self.data["chol"] = cp.Parameter(
@@ -23,7 +25,8 @@ class SampleCovariance(Model):
             name="cholesky of covariance",
             value=np.zeros((self.assets, self.assets)),
         )
-        self.bounds = Bounds(assets=self.assets, name="assets")
+        object.__setattr__(self, "bounds", Bounds(assets=self.assets, name="assets"))
+        # self.bounds = Bounds(assets=self.assets, name="assets")
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""

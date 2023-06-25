@@ -16,6 +16,7 @@ import cvxpy as cp
 class Model(ABC):
     """Abstract risk model"""
 
+    assets: int = 0
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
     data: Dict[str, cp.Parameter] = field(default_factory=dict)
 
@@ -37,9 +38,9 @@ class Model(ABC):
         Return the constraints for the risk model
         """
 
-    @property
-    @abstractmethod
-    def assets(self):
-        """
-        Return the number of assets
-        """
+    # @property
+    # @abstractmethod
+    # def assets(self):
+    #     """
+    #     Return the number of assets
+    #     """

@@ -17,8 +17,6 @@ from cvx.markowitz.bounds import Bounds
 class SampleCovariance(Model):
     """Risk model based on the Cholesky decomposition of the sample cov matrix"""
 
-    assets: int = 0
-
     def __post_init__(self):
         self.data["chol"] = cp.Parameter(
             shape=(self.assets, self.assets),

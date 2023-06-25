@@ -54,4 +54,4 @@ if __name__ == "__main__":
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
     logger.info(f"weights assets:\n{minvar.weights_assets.value}")
-    logger.info(cp.sum_largest(minvar.weights_assets, 2).value)
+    logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")

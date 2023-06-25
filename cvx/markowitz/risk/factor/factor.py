@@ -17,7 +17,6 @@ from cvx.markowitz.bounds import Bounds
 class FactorModel(Model):
     """Factor risk model"""
 
-    assets: int = 0
     factors: int = 0
 
     def __post_init__(self):

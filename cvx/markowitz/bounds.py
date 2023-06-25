@@ -12,7 +12,6 @@ from .model import Model
 
 @dataclass
 class Bounds(Model):
-    assets: int = 0
     name: str = ""
 
     def estimate(self, weights, **kwargs):

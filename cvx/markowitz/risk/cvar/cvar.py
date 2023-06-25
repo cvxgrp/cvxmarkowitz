@@ -16,7 +16,6 @@ class CVar(Model):
 
     alpha: float = 0.95
     n: int = 0
-    assets: int = 0
 
     def __post_init__(self):
         self.k = int(self.n * (1 - self.alpha))

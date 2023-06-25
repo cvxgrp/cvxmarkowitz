@@ -27,7 +27,8 @@ class CVar(Model):
         )
         object.__setattr__(self, "bounds", Bounds(assets=self.assets, name="assets"))
 
-        # self.bounds = Bounds(assets=self.assets, name="assets")
+        for name, item in self.bounds.data.items():
+            self.data[name] = item
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""

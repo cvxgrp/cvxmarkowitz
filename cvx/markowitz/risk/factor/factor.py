@@ -45,6 +45,12 @@ class FactorModel(Model):
             self, "bounds_factors", Bounds(assets=self.factors, name="factors")
         )
 
+        for name, item in self.bounds_assets.data.items():
+            self.data[name] = item
+
+        for name, item in self.bounds_factors.data.items():
+            self.data[name] = item
+
     def estimate(self, weights, **kwargs):
         """
         Compute the total variance

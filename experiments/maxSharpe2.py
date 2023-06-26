@@ -11,26 +11,6 @@ from cvx.markowitz.model import Model
 from cvx.markowitz.risk import FactorModel
 
 
-class ExpectedReturns(Model):
-    def constraints(self, weights, **kwargs):
-        raise NotImplementedError("ExpectedReturns does not have constraints")
-
-    def __init__(self, assets):
-        self.assets = assets
-
-        self.mu = cp.Parameter(
-            shape=self.assets, name="mu", value=np.zeros(self.assets)
-        )
-
-    def estimate(self, weights, **kwargs):
-        return self.mu @ weights
-
-    def update(self, **kwargs):
-        mu = kwargs.get("mu", np.zeros(self.assets))
-        k = len(mu)
-        self.mu.value[:k] = kwargs.get("mu", np.zeros(self.assets))
-
-
 class Solver:
     def __init__(self, assets: int, k=None):
         """

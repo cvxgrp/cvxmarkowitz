@@ -2,8 +2,7 @@
 from __future__ import annotations
 
 import numpy as np
-
-from cvx.random import rand_cov
+from aux.random import rand_cov
 
 
 def test_rand_cov():

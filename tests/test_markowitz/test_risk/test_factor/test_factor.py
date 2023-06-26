@@ -5,11 +5,11 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 import pytest
+from aux.random import rand_cov
 
 from cvx.linalg import pca as principal_components
 from cvx.markowitz.portfolio.min_risk import minrisk_problem
 from cvx.markowitz.risk import FactorModel
-from cvx.random import rand_cov
 
 
 @pytest.fixture()

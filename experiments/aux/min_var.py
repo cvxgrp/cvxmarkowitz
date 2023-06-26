@@ -8,6 +8,12 @@ from cvx.markowitz.risk import SampleCovariance
 
 
 class MinVar:
+    """
+    Minimize the standard deviation of the portfolio returns subject to a set of constraints
+    min StdDev(r_p)
+    s.t. w_p >= 0 and sum(w_p) = 1
+    """
+
     def __init__(self, assets: int, factors: int = None):
         if factors is not None:
             self.model = FactorModel(assets=assets, factors=factors)
@@ -29,13 +35,19 @@ class MinVar:
         )
 
     def build(self):
+        """
+        Build the cvxpy problem
+        """
         return cp.Problem(self.objective, list(self.constraints.values()))
 
     def update(self, **kwargs):
+        """
+        Update the model
+        """
         self.model.update(**kwargs)
 
     def solution(self, names):
-        n = len(names)
-        return dict(zip(names, self.weights_assets.value[:n]))
-
-        # return pd.Series(self.weights_assets.value[:,n], index=names)
+        """
+        Return the solution as a dictionary
+        """
+        return dict(zip(names, self.weights_assets.value[: len(names)]))

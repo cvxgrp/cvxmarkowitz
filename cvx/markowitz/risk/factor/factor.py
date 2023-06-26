@@ -10,7 +10,6 @@ import numpy as np
 
 from cvx.linalg import cholesky
 from cvx.markowitz import Model
-from cvx.markowitz.bounds import Bounds
 
 
 @dataclass(frozen=True)
@@ -18,8 +17,6 @@ class FactorModel(Model):
     """Factor risk model"""
 
     factors: int = 0
-    bounds_assets: Bounds = None
-    bounds_factors: Bounds = None
 
     def __post_init__(self):
         self.data["exposure"] = cp.Parameter(
@@ -38,26 +35,13 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-        object.__setattr__(
-            self, "bounds_assets", Bounds(assets=self.assets, name="assets")
-        )
-        object.__setattr__(
-            self, "bounds_factors", Bounds(assets=self.factors, name="factors")
-        )
-
-        for name, item in self.bounds_assets.data.items():
-            self.data[name] = item
-
-        for name, item in self.bounds_factors.data.items():
-            self.data[name] = item
-
     def estimate(self, weights, **kwargs):
         """
         Compute the total variance
         """
         var_residual = cp.norm2(cp.multiply(self.data["idiosyncratic_risk"], weights))
 
-        y = kwargs.get("factor_weights", self.data["exposure"] @ weights)
+        y = kwargs.get("factor_weights", self.factor_weights(weights))
 
         return cp.norm2(cp.vstack([cp.norm2(self.data["chol"] @ y), var_residual]))
 
@@ -71,20 +55,14 @@ class FactorModel(Model):
         self.data["idiosyncratic_risk"].value[:assets] = kwargs["idiosyncratic_risk"]
         self.data["chol"].value = np.zeros((self.factors, self.factors))
         self.data["chol"].value[:k, :k] = cholesky(kwargs["cov"])
-        self.bounds_assets.update(**kwargs)
-        self.bounds_factors.update(**kwargs)
 
     def constraints(self, weights, **kwargs):
-        y = kwargs.get("factor_weights", self.data["exposure"] @ weights)
-
-        factor = {"factors": y == self.data["exposure"] @ weights}
-
-        return (
-            self.bounds_assets.constraints(weights)
-            | self.bounds_factors.constraints(y)
-            | factor
-        )
+        factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
+        return {"factors": factor_weights == self.data["exposure"] @ weights}
 
     @property
     def variables(self):
         return cp.Variable(self.assets), cp.Variable(self.factors)
+
+    def factor_weights(self, weights):
+        return self.data["exposure"] @ weights

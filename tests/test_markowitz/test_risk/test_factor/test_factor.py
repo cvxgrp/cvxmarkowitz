@@ -47,18 +47,20 @@ def test_minvar(returns):
 
     weights, factor_weights = model.variables
 
-    problem = minrisk_problem(model, weights, factor_weights=factor_weights)
+    problem, bounds, bounds_factors = minrisk_problem(
+        model, weights, factor_weights=factor_weights
+    )
 
     assert problem.is_dpp()
 
 
-def test_data():
-    model = FactorModel(assets=20, factors=10)
-    print(model.data.keys())
-    model.data["lower_factors"].value = 2 * np.ones(10)
-    assert model.data["lower_factors"].value == pytest.approx(
-        model.bounds_factors.data["lower_factors"].value
-    )
+# def test_data():
+#    model = FactorModel(assets=20, factors=10)
+#    print(model.data.keys())
+#    model.data["lower_factors"].value = 2 * np.ones(10)
+#    assert model.data["lower_factors"].value == pytest.approx(
+#        model.bounds_factors.data["lower_factors"].value
+#    )
 
 
 def test_estimate_risk():
@@ -70,18 +72,28 @@ def test_estimate_risk():
     # define the problem
     weights, factor_weights = model.variables
 
-    prob = minrisk_problem(model, weights, factor_weights=factor_weights)
+    prob, bounds, bounds_factors = minrisk_problem(
+        model, weights, factor_weights=factor_weights
+    )
     assert prob.is_dpp()
 
     model.update(
         cov=rand_cov(10),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
+        # lower_assets=np.zeros(20),
+        # upper_assets=np.ones(20),
+        # lower_factors=np.zeros(10),
+        # upper_factors=np.ones(10),
+    )
+
+    bounds.update(
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
-        lower_factors=np.zeros(10),
-        upper_factors=np.ones(10),
     )
+
+    bounds_factors.update(lower_factors=np.zeros(10), upper_factors=np.ones(10))
+
     prob.solve()
     assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(weights.value[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
@@ -90,11 +102,21 @@ def test_estimate_risk():
         cov=rand_cov(10),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
+        # lower_assets=np.zeros(20),
+        # upper_assets=np.ones(20),
+        # lower_factors=-0.1 * np.ones(10),
+        # upper_factors=0.1 * np.ones(10),
+    )
+
+    bounds.update(
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
-        lower_factors=-0.1 * np.ones(10),
-        upper_factors=0.1 * np.ones(10),
     )
+
+    bounds_factors.update(
+        lower_factors=-0.1 * np.ones(10), upper_factors=0.1 * np.ones(10)
+    )
+
     prob.solve()
     assert prob.value == pytest.approx(0.5454593844618784)
     assert np.array(weights.value[20:]) == pytest.approx(np.zeros(5), abs=1e-6)

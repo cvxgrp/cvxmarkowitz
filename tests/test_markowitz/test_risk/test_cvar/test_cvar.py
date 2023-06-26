@@ -17,14 +17,12 @@ def test_estimate_risk():
 
     # define the problem
     weights, _ = model.variables()
-    prob = minrisk_problem(model, weights)
+    prob, bounds, _ = minrisk_problem(model, weights)
     assert prob.is_dpp()
 
-    model.update(
-        returns=np.random.randn(50, 10),
-        lower_assets=np.zeros(10),
-        upper_assets=np.ones(10),
-    )
+    model.update(returns=np.random.randn(50, 10))
+
+    bounds.update(lower_assets=np.zeros(10), upper_assets=np.ones(10))
     prob.solve()
     assert prob.value == pytest.approx(0.5058720677762698)
 

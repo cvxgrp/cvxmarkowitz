@@ -7,7 +7,6 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
-from cvx.markowitz.bounds import Bounds
 
 
 @dataclass(frozen=True)
@@ -16,7 +15,6 @@ class CVar(Model):
 
     alpha: float = 0.95
     n: int = 0
-    bounds: Bounds = None  # Bounds(assets=Model.assets, name="assets")
 
     def __post_init__(self):
         # self.k = int(self.n * (1 - self.alpha))
@@ -25,10 +23,6 @@ class CVar(Model):
             name="returns",
             value=np.zeros((self.n, self.assets)),
         )
-        object.__setattr__(self, "bounds", Bounds(assets=self.assets, name="assets"))
-
-        for name, item in self.bounds.data.items():
-            self.data[name] = item
 
     def estimate(self, weights, **kwargs):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
@@ -45,10 +39,9 @@ class CVar(Model):
         m = ret.shape[1]
 
         self.data["R"].value[:, :m] = kwargs["returns"]
-        self.bounds.update(**kwargs)
 
     def constraints(self, weights, **kwargs):
-        return self.bounds.constraints(weights)
+        return dict({})
 
     def variables(self):
         return cp.Variable(self.assets), None

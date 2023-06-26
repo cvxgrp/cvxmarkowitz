@@ -58,6 +58,3 @@ if __name__ == "__main__":
     logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")
-
-    # logger.info(f"weights assets:\n{minvar.weights_assets.value}")
-    # logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")

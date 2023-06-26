@@ -38,7 +38,7 @@ def test_pca(returns):
     )
 
 
-def test_idiosyncratic(returns):
+def test_idiosyncratic_with_max_factors(returns):
     # as many components as vectors, hence the residual should be zero
     xxx = pca(returns, n_components=20)
     pd.testing.assert_series_equal(
@@ -61,3 +61,19 @@ def test_idiosyncratic(returns):
         returns.values,
         xxx.factors.values @ xxx.exposure.values + xxx.idiosyncratic.values,
     )
+
+
+def test_too_many_factors(returns):
+    # as many components as vectors, hence the residual should be zero
+    with pytest.raises(ValueError):
+        pca(returns, n_components=22)
+
+
+def test_columns(returns):
+    xxx = pca(returns, n_components=15)
+    assert xxx.factors.columns.tolist() == list(range(0, 15))
+    assert xxx.exposure.columns.tolist() == returns.columns.tolist()
+    assert xxx.idiosyncratic.columns.tolist() == returns.columns.tolist()
+    assert xxx.cov.columns.tolist() == list(range(0, 15))
+    assert xxx.systematic.columns.tolist() == returns.columns.tolist()
+    assert xxx.explained_variance.index.tolist() == list(range(0, 15))

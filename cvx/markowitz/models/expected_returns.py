@@ -26,6 +26,3 @@ class ExpectedReturns(Model):
         n = mu.shape[0]
         self.data["mu"].value = np.zeros(self.assets)
         self.data["mu"].value[:n] = mu
-
-    def constraints(self, variables):
-        return dict({})

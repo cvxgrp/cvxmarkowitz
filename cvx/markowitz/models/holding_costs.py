@@ -26,7 +26,3 @@ class HoldingCosts(Model):
         n = h.shape[0]
         self.data["holding_costs"].value = np.zeros(self.assets)
         self.data["holding_costs"].value[:n] = h
-
-    def constraints(self, variables):
-        return dict({})
-        # raise NotImplementedError("No constraints for holding costs")

@@ -36,9 +36,6 @@ class SampleCovariance(Model):
         self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:n, :n] = cholesky(cov)
 
-    def constraints(self, weights, **kwargs):
-        return dict({})
-
     @property
     def variables(self):
         return {"weights": cp.Variable(self.assets)}

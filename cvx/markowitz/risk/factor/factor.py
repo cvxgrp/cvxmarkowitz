@@ -77,7 +77,5 @@ class FactorModel(Model):
             "factor_weights": cp.Variable(self.factors),
         }
 
-        # return cp.Variable(self.assets), cp.Variable(self.factors)
-
     def factor_weights(self, variables):
         return self.data["exposure"] @ variables["weights"]

@@ -21,9 +21,6 @@ class TradingCosts(Model):
         )
 
     def estimate(self, variables):
-        # x = weights - self.data["weights"]
-        # print(cp.abs(x).value)
-        # print(cp.sum(cp.power(cp.abs(x), p=self.parameter["power"])).value)
         return cp.sum(
             cp.power(cp.abs(variables["weights"] - self.data["weights"]), p=self.power)
         )
@@ -33,8 +30,3 @@ class TradingCosts(Model):
         n = w.shape[0]
         self.data["weights"].value = np.zeros(self.assets)
         self.data["weights"].value[:n] = w
-
-    def constraints(self, variables):
-        return dict({})
-
-        # raise NotImplementedError("No constraints for trading costs")

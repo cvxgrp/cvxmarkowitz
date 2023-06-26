@@ -41,8 +41,5 @@ class CVar(Model):
         self.data["R"].value = np.zeros((self.n, self.assets))
         self.data["R"].value[:, :m] = kwargs["returns"]
 
-    def constraints(self, variables):
-        return dict({})
-
     def variables(self):
         return {"weights": cp.Variable(self.assets)}

@@ -6,7 +6,7 @@ import numpy as np
 
 def valid(matrix):
     """
-    Construct the valid subset of matrix (correlation) matrix matrix
+    Construct the valid subset of matrix (correlation) matrix
     :param matrix: n x n matrix
 
     :return: Tuple of matrix boolean vector indicating if row/column

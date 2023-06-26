@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import numpy as np
+from aux.portfolio.min_risk import minrisk_problem
 
-from cvx.markowitz.portfolio.min_risk import minrisk_problem
 from cvx.markowitz.risk import SampleCovariance
 
 

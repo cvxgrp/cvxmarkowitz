@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+from aux.portfolio.min_risk import minrisk_problem
 
-from cvx.markowitz.portfolio.min_risk import minrisk_problem
 from cvx.markowitz.risk import CVar
 
 

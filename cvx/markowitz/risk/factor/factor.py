@@ -39,27 +39,17 @@ class FactorModel(Model):
         """
         Compute the total variance
         """
-        # for name, variable in variables.items():
-        #    print(name)
-        #    print(type(variable))
-        #    print(variable.value)
-
-        var_residual = self.residual_risk(variables)
-        var_systematic = self.systematic_risk(variables)
-
-        # print(var_residual.value)
-        # print(var_systematic.value)
-        # print(self.data["chol"].value)
-        # print((self.data["chol"] @ self.variables["factor_weights"]).value)
+        var_residual = self._residual_risk(variables)
+        var_systematic = self._systematic_risk(variables)
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-    def residual_risk(self, variables):
+    def _residual_risk(self, variables):
         return cp.norm2(
             cp.multiply(self.data["idiosyncratic_risk"], variables["weights"])
         )
 
-    def systematic_risk(self, variables):
+    def _systematic_risk(self, variables):
         return cp.norm2(self.data["chol"] @ variables["factor_weights"])
 
     def update(self, **kwargs):

@@ -150,8 +150,10 @@ def test_factor_mini():
     residual = np.linalg.norm(np.array([0.05, 0.01, 0.02]))
     systematic = np.linalg.norm(np.array([0.7, 0.75]))
 
-    assert model.residual_risk(variables=variables).value == pytest.approx(residual)
-    assert model.systematic_risk(variables=variables).value == pytest.approx(systematic)
+    assert model._residual_risk(variables=variables).value == pytest.approx(residual)
+    assert model._systematic_risk(variables=variables).value == pytest.approx(
+        systematic
+    )
 
     total = np.linalg.norm(np.array([residual, systematic]))
 

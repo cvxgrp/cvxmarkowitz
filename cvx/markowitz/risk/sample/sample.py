@@ -23,9 +23,9 @@ class SampleCovariance(Model):
             value=np.zeros((self.assets, self.assets)),
         )
 
-    def estimate(self, weights, **kwargs):
+    def estimate(self, variables):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
-        return cp.norm2(self.data["chol"] @ weights)
+        return cp.norm2(self.data["chol"] @ variables["weights"])
 
     def update(self, **kwargs):
         cov = kwargs["cov"]
@@ -41,4 +41,4 @@ class SampleCovariance(Model):
 
     @property
     def variables(self):
-        return cp.Variable(self.assets), None
+        return {"weights": cp.Variable(self.assets)}

@@ -35,15 +35,32 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-    def estimate(self, weights, **kwargs):
+    def estimate(self, variables):
         """
         Compute the total variance
         """
-        var_residual = cp.norm2(cp.multiply(self.data["idiosyncratic_risk"], weights))
+        # for name, variable in variables.items():
+        #    print(name)
+        #    print(type(variable))
+        #    print(variable.value)
 
-        y = kwargs.get("factor_weights", self.factor_weights(weights))
+        var_residual = self.residual_risk(variables)
+        var_systematic = self.systematic_risk(variables)
 
-        return cp.norm2(cp.vstack([cp.norm2(self.data["chol"] @ y), var_residual]))
+        # print(var_residual.value)
+        # print(var_systematic.value)
+        # print(self.data["chol"].value)
+        # print((self.data["chol"] @ self.variables["factor_weights"]).value)
+
+        return cp.norm2(cp.vstack([var_systematic, var_residual]))
+
+    def residual_risk(self, variables):
+        return cp.norm2(
+            cp.multiply(self.data["idiosyncratic_risk"], variables["weights"])
+        )
+
+    def systematic_risk(self, variables):
+        return cp.norm2(self.data["chol"] @ variables["factor_weights"])
 
     def update(self, **kwargs):
         exposure = kwargs["exposure"]
@@ -56,13 +73,21 @@ class FactorModel(Model):
         self.data["chol"].value = np.zeros((self.factors, self.factors))
         self.data["chol"].value[:k, :k] = cholesky(kwargs["cov"])
 
-    def constraints(self, weights, **kwargs):
-        factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
-        return {"factors": factor_weights == self.data["exposure"] @ weights}
+    def constraints(self, variables):
+        # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
+        return {
+            "factors": variables["factor_weights"]
+            == self.data["exposure"] @ variables["weights"]
+        }
 
     @property
     def variables(self):
-        return cp.Variable(self.assets), cp.Variable(self.factors)
+        return {
+            "weights": cp.Variable(self.assets),
+            "factor_weights": cp.Variable(self.factors),
+        }
 
-    def factor_weights(self, weights):
-        return self.data["exposure"] @ weights
+        # return cp.Variable(self.assets), cp.Variable(self.factors)
+
+    def factor_weights(self, variables):
+        return self.data["exposure"] @ variables["weights"]

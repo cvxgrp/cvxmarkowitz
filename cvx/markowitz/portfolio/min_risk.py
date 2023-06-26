@@ -6,28 +6,32 @@ import cvxpy as cp
 from cvx.markowitz.bounds import Bounds
 
 
-def minrisk_problem(riskmodel, weights, **kwargs):
-    bounds = Bounds(riskmodel.assets, name="assets")
+def minrisk_problem(riskmodel, variables):
+    bounds = Bounds(riskmodel.assets, name="assets", acting_on="weights")
+
     try:
-        bounds_factors = Bounds(riskmodel.factors, name="factors")
+        bounds_factors = Bounds(
+            riskmodel.factors, name="factors", acting_on="factor_weights"
+        )
     except AttributeError:
         bounds_factors = None
 
     constraints = {
-        "fully invested": cp.sum(weights) == 1.0,
-        "long only": weights >= 0,
+        "fully invested": cp.sum(variables["weights"]) == 1.0,
+        "long only": variables["weights"] >= 0,
     }
 
     try:
-        constraints |= riskmodel.constraints(weights, **kwargs)
-        constraints |= bounds.constraints(weights)
-        constraints |= bounds_factors.constraints(riskmodel.factor_weights(weights))
+        constraints |= riskmodel.constraints(variables)
+        constraints |= bounds.constraints(variables)
+        constraints |= bounds_factors.constraints(variables)
     except AttributeError:
         pass
 
     # print(constraints)
     problem = cp.Problem(
-        cp.Minimize(riskmodel.estimate(weights, **kwargs)), list(constraints.values())
+        objective=cp.Minimize(riskmodel.estimate(variables)),
+        constraints=list(constraints.values()),
     )
 
     return problem, bounds, bounds_factors

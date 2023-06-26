@@ -24,7 +24,7 @@ class CVar(Model):
             value=np.zeros((self.n, self.assets)),
         )
 
-    def estimate(self, weights, **kwargs):
+    def estimate(self, variables):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
@@ -32,16 +32,17 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.n * (1 - self.alpha))
-        return -cp.sum_smallest(self.data["R"] @ weights, k=k) / k
+        return -cp.sum_smallest(self.data["R"] @ variables["weights"], k=k) / k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
         m = ret.shape[1]
 
+        self.data["R"].value = np.zeros((self.n, self.assets))
         self.data["R"].value[:, :m] = kwargs["returns"]
 
-    def constraints(self, weights, **kwargs):
+    def constraints(self, variables):
         return dict({})
 
     def variables(self):
-        return cp.Variable(self.assets), None
+        return {"weights": cp.Variable(self.assets)}

@@ -28,7 +28,7 @@ def test_timeseries_model(returns):
     model.update(
         cov=factors.cov.values,
         exposure=factors.exposure.values,
-        idiosyncratic_risk=factors.idiosyncratic.std().values,
+        idiosyncratic_risk=factors.idiosyncratic_returns.std().values,
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
         lower_factors=np.zeros(10),

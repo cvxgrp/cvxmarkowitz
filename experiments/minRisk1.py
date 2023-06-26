@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import cvxpy as cp
-import numpy as np
 import pandas as pd
 from loguru import logger
 
@@ -17,17 +16,22 @@ if __name__ == "__main__":
     )
 
     logger.info(f"Returns: \n{returns}")
+    lower_bound_assets = pd.Series(data=0.0, index=returns.columns)
+    upper_bound_assets = pd.Series(data=1.0, index=returns.columns)
 
     # compute 10 components
     pca = principal_components(returns=returns, n_components=10)
     # pca is a NamedTuple exposing the following fields:
-    # ["explained_variance", "factors", "exposure", "cov", "systematic", "idiosyncratic"],
+    # ["explained_variance", "factors", "exposure", "cov", "systematic_returns", "idiosyncratic_returns"],
     #   - explained_variance: pd.Series
     #   - factors: pd.DataFrame
     #   - exposure: pd.DataFrame
     #   - cov: pd.DataFrame
-    #   - systematic: pd.DataFrame
-    #   - idiosyncratic: pd.DataFrame
+    #   - systematic_returns: pd.DataFrame
+    #   - idiosyncratic_returns: pd.DataFrame
+
+    lower_bound_factors = pd.Series(data=-1.0, index=pca.factor_names)
+    upper_bound_factors = pd.Series(data=+1.0, index=pca.factor_names)
 
     # You can define the problem for up to 25 assets and 15 factors
     # model = FactorModel(assets=25, k=15)
@@ -42,22 +46,21 @@ if __name__ == "__main__":
     # minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
 
     problem = minvar.build()
-    assert problem.is_dpp()
+    assert problem.is_dpp(), "Problem is not DPP"
 
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
-    logger.info(problem)
 
     ###########################################################################
     # distinguish between data and parameters
     # clean up at the end, e.g. integer lots
     minvar.update(
-        cov=pca.cov.values,
-        exposure=pca.exposure.values,
-        idiosyncratic_risk=pca.idiosyncratic.std().values,
-        lower_assets=np.zeros(20),
-        upper_assets=np.ones(20),
-        lower_factors=np.zeros(10),
-        upper_factors=np.ones(10),
+        cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
+        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
+        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
+        lower_assets=lower_bound_assets[pca.asset_names].values,
+        upper_assets=upper_bound_assets[pca.asset_names].values,
+        lower_factors=lower_bound_factors[pca.factor_names].values,
+        upper_factors=upper_bound_factors[pca.factor_names].values,
     )
 
     logger.info(f"Factor covariance: {pca.cov}")
@@ -76,26 +79,28 @@ if __name__ == "__main__":
     pca = principal_components(returns=returns, n_components=5)
 
     minvar.update(
-        cov=pca.cov.values,
-        exposure=pca.exposure.values,
-        idiosyncratic_risk=pca.idiosyncratic.std().values,
-        lower_assets=np.zeros(10),
-        upper_assets=np.ones(10),
-        lower_factors=-np.ones(5),
-        upper_factors=np.ones(5),
+        cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
+        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
+        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
+        lower_assets=lower_bound_assets[pca.asset_names].values,
+        upper_assets=upper_bound_assets[pca.asset_names].values,
+        lower_factors=lower_bound_factors[pca.factor_names].values,
+        upper_factors=upper_bound_factors[pca.factor_names].values,
     )
-    for name, parameter in minvar.model.data.items():
-        logger.info(f"{name}: {parameter.value}")
 
-    for name, parameter in minvar.model.bounds_assets.data.items():
-        logger.info(f"{name}: {parameter.value}")
+    # for name, parameter in minvar.model.data.items():
+    #    logger.info(f"{name}: {parameter.value}")
 
-    for name, parameter in minvar.model.bounds_factors.data.items():
-        logger.info(f"{name}: {parameter.value}")
+    # for name, parameter in minvar.model.bounds_assets.data.items():
+    #    logger.info(f"{name}: {parameter.value}")
+
+    # for name, parameter in minvar.model.bounds_factors.data.items():
+    #    logger.info(f"{name}: {parameter.value}")
 
     x = problem.solve(verbose=True)
     logger.info(f"Minimum standard deviation: {x}")
 
-    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+    # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value, index=pca.asset_names)}")
+    logger.info(f"Solution:\n{minvar.solution(pca.asset_names)}")
     logger.info(f"{problem}")
     logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")

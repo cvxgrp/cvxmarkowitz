@@ -33,3 +33,9 @@ class MinVar:
 
     def update(self, **kwargs):
         self.model.update(**kwargs)
+
+    def solution(self, names):
+        n = len(names)
+        return dict(zip(names, self.weights_assets.value[:n]))
+
+        # return pd.Series(self.weights_assets.value[:,n], index=names)

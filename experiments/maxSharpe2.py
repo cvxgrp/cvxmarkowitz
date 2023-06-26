@@ -107,7 +107,7 @@ if __name__ == "__main__":
     solver.update(
         cov=components.cov.values,
         exposure=components.exposure.values,
-        idiosyncratic_risk=components.idiosyncratic.std().values,
+        idiosyncratic_risk=components.idiosyncratic_returns.std().values,
         mu=np.random.rand(20) / 100.0,
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),

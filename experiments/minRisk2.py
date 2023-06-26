@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import cvxpy as cp
-import numpy as np
 import pandas as pd
 from loguru import logger
 
@@ -16,6 +15,8 @@ if __name__ == "__main__":
     )
 
     logger.info(f"Returns: \n{returns}")
+    lower_bound_assets = pd.Series(data=0.0, index=returns.columns)
+    upper_bound_assets = pd.Series(data=1.0, index=returns.columns)
 
     minvar = MinVar(assets=20)
 
@@ -25,21 +26,22 @@ if __name__ == "__main__":
     )
 
     problem = minvar.build()
-    assert problem.is_dpp()
+    assert problem.is_dpp(), "Problem is not DPP"
+
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
     logger.info(problem)
 
     ####################################################################################################################
     minvar.update(
         cov=returns.cov().values,
-        lower_assets=np.zeros(20),
-        upper_assets=np.ones(20),
+        lower_assets=lower_bound_assets[returns.columns].values,
+        upper_assets=upper_bound_assets[returns.columns].values,
     )
 
     logger.info("Start solving problems...")
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
-    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+    logger.info(f"weights assets:\n{minvar.solution(names=returns.columns)}")
 
     ####################################################################################################################
     returns = returns.iloc[:, :10]
@@ -47,11 +49,15 @@ if __name__ == "__main__":
     # second solve, should be a lot faster as the problem is DPP
     minvar.update(
         cov=returns.cov().values,
-        lower_assets=np.zeros(10),
-        upper_assets=np.ones(10),
+        lower_assets=lower_bound_assets[returns.columns].values,
+        upper_assets=upper_bound_assets[returns.columns].values,
     )
 
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
-    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+    logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
+    logger.info(f"{problem}")
     logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")
+
+    # logger.info(f"weights assets:\n{minvar.weights_assets.value}")
+    # logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")

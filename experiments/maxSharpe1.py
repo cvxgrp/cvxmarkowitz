@@ -23,7 +23,7 @@ if __name__ == "__main__":
     model.update(
         cov=components.cov.values,
         exposure=components.exposure.values,
-        idiosyncratic_risk=components.idiosyncratic.std().values,
+        idiosyncratic_risk=components.idiosyncratic_returns.std().values,
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
         lower_factors=np.zeros(10),

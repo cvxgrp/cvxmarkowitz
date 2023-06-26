@@ -19,5 +19,6 @@ def test_holding_costs():
     # here it's important that the weights
     weights = cp.Variable(assets)
     weights.value = np.array([-0.4, 0.7, 0.0])
+    variables = {"weights": weights}
 
-    assert model.estimate(weights).value == pytest.approx(0.04)
+    assert model.estimate(variables).value == pytest.approx(0.04)

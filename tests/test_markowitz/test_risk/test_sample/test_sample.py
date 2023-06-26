@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import numpy as np
 
-from cvx.markowitz.bounds import Bounds
 from cvx.markowitz.portfolio.min_risk import minrisk_problem
 from cvx.markowitz.risk import SampleCovariance
 
@@ -15,7 +14,7 @@ def test_sample():
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
-    vola = riskmodel.estimate(np.array([1.0, 1.0])).value
+    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0])}).value
     np.testing.assert_almost_equal(vola, 2.0)
 
 
@@ -26,15 +25,15 @@ def test_sample_large():
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
-    vola = riskmodel.estimate(np.array([1.0, 1.0, 0.0, 0.0])).value
+    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0, 0.0, 0.0])}).value
     np.testing.assert_almost_equal(vola, 2.0)
 
 
 def test_min_variance():
     riskmodel = SampleCovariance(assets=4)
 
-    weights, _ = riskmodel.variables
-    problem, bounds, _ = minrisk_problem(riskmodel, weights)
+    variables = riskmodel.variables
+    problem, bounds, _ = minrisk_problem(riskmodel, variables)
     assert problem.is_dpp()
 
     riskmodel.update(
@@ -48,7 +47,7 @@ def test_min_variance():
 
     problem.solve()
     np.testing.assert_almost_equal(
-        weights.value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+        variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
 
     # It's enough to only update the value for the cholesky decomposition
@@ -58,5 +57,5 @@ def test_min_variance():
 
     problem.solve()
     np.testing.assert_almost_equal(
-        weights.value, np.array([0.875, 0.125, 0.0, 0.0]), decimal=5
+        variables["weights"].value, np.array([0.875, 0.125, 0.0, 0.0]), decimal=5
     )

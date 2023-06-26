@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import cvxpy as cp
+import numpy as np
 import pandas as pd
 from loguru import logger
 
@@ -38,6 +39,8 @@ if __name__ == "__main__":
     # model = SampleCovariance(assets=25)
     minvar = MinVar(assets=20, factors=10)
 
+    holding_costs = pd.Series(data=0.0005, index=returns.columns)
+
     # You can add constraints before you build the problem
     # minvar.constraints["concentration"] = (
     #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
@@ -61,6 +64,8 @@ if __name__ == "__main__":
         upper_assets=upper_bound_assets[pca.asset_names].values,
         lower_factors=lower_bound_factors[pca.factor_names].values,
         upper_factors=upper_bound_factors[pca.factor_names].values,
+        weights=np.zeros(20),
+        holding_costs=holding_costs[returns.columns].values,
     )
 
     logger.info(f"Factor covariance: {pca.cov}")
@@ -68,10 +73,7 @@ if __name__ == "__main__":
     logger.info("Start solving problems...")
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
-    logger.info(f"weights assets:\n{minvar.weights_assets.value}")
-
-    for name, parameter in minvar.model.data.items():
-        logger.info(f"{name}: {parameter.value}")
+    logger.info(f"weights assets:\n{minvar.variables['weights'].value}")
 
     ###########################################################################
     # second solve, should be a lot faster as the problem is DPP
@@ -86,6 +88,8 @@ if __name__ == "__main__":
         upper_assets=upper_bound_assets[pca.asset_names].values,
         lower_factors=lower_bound_factors[pca.factor_names].values,
         upper_factors=upper_bound_factors[pca.factor_names].values,
+        weights=np.zeros(10),
+        holding_costs=holding_costs[returns.columns].values,
     )
 
     # for name, parameter in minvar.model.data.items():
@@ -103,4 +107,6 @@ if __name__ == "__main__":
     # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value, index=pca.asset_names)}")
     logger.info(f"Solution:\n{minvar.solution(pca.asset_names)}")
     logger.info(f"{problem}")
-    logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")
+    logger.info(
+        f"Concentration: {cp.sum_largest(minvar.variables['weights'], 2).value}"
+    )

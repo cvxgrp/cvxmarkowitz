@@ -18,14 +18,11 @@ class ExpectedReturns(Model):
             value=np.zeros(self.assets),
         )
 
-    def estimate(self, weights, **kwargs):
-        return self.data["mu"] @ weights
+    def estimate(self, variables):
+        return self.data["mu"] @ variables["weights"]
 
     def update(self, **kwargs):
         mu = kwargs["mu"]
         n = mu.shape[0]
         self.data["mu"].value = np.zeros(self.assets)
         self.data["mu"].value[:n] = mu
-
-    def constraints(self, weights, **kwargs):
-        raise NotImplementedError("No constraints for expected returns")

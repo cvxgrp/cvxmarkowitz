@@ -35,15 +35,22 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-    def estimate(self, weights, **kwargs):
+    def estimate(self, variables):
         """
         Compute the total variance
         """
-        var_residual = cp.norm2(cp.multiply(self.data["idiosyncratic_risk"], weights))
+        var_residual = self._residual_risk(variables)
+        var_systematic = self._systematic_risk(variables)
 
-        y = kwargs.get("factor_weights", self.factor_weights(weights))
+        return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-        return cp.norm2(cp.vstack([cp.norm2(self.data["chol"] @ y), var_residual]))
+    def _residual_risk(self, variables):
+        return cp.norm2(
+            cp.multiply(self.data["idiosyncratic_risk"], variables["weights"])
+        )
+
+    def _systematic_risk(self, variables):
+        return cp.norm2(self.data["chol"] @ variables["factor_weights"])
 
     def update(self, **kwargs):
         exposure = kwargs["exposure"]
@@ -56,13 +63,19 @@ class FactorModel(Model):
         self.data["chol"].value = np.zeros((self.factors, self.factors))
         self.data["chol"].value[:k, :k] = cholesky(kwargs["cov"])
 
-    def constraints(self, weights, **kwargs):
-        factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
-        return {"factors": factor_weights == self.data["exposure"] @ weights}
+    def constraints(self, variables):
+        # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
+        return {
+            "factors": variables["factor_weights"]
+            == self.data["exposure"] @ variables["weights"]
+        }
 
     @property
     def variables(self):
-        return cp.Variable(self.assets), cp.Variable(self.factors)
+        return {
+            "weights": cp.Variable(self.assets),
+            "factor_weights": cp.Variable(self.factors),
+        }
 
-    def factor_weights(self, weights):
-        return self.data["exposure"] @ weights
+    def factor_weights(self, variables):
+        return self.data["exposure"] @ variables["weights"]

@@ -13,8 +13,9 @@ from .model import Model
 @dataclass(frozen=True)
 class Bounds(Model):
     name: str = ""
+    acting_on: str = "weights"
 
-    def estimate(self, weights, **kwargs):
+    def estimate(self, variables):
         """No estimation for bounds"""
         raise NotImplementedError("No estimation for bounds")
 
@@ -42,8 +43,10 @@ class Bounds(Model):
         self.data[self._f("upper")].value = np.zeros(self.assets)
         self.data[self._f("upper")].value[: len(upper)] = upper
 
-    def constraints(self, weights, **kwargs):
+    def constraints(self, variables):
         return {
-            f"lower bound {self.name}": weights >= self.data[self._f("lower")],
-            f"upper bound {self.name}": weights <= self.data[self._f("upper")],
+            f"lower bound {self.name}": variables[self.acting_on]
+            >= self.data[self._f("lower")],
+            f"upper bound {self.name}": variables[self.acting_on]
+            <= self.data[self._f("upper")],
         }

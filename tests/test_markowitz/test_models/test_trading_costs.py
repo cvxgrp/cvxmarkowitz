@@ -20,4 +20,5 @@ def test_trading_costs():
     weights = cp.Variable(assets)
     weights.value = np.array([0.4, 0.7, 0.0])
 
-    assert model.estimate(weights).value == pytest.approx(0.8)
+    variables = {"weights": weights}
+    assert model.estimate(variables).value == pytest.approx(0.8)

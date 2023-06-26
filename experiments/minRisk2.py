@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import cvxpy as cp
+import numpy as np
 import pandas as pd
 from loguru import logger
 
@@ -17,12 +18,13 @@ if __name__ == "__main__":
     logger.info(f"Returns: \n{returns}")
     lower_bound_assets = pd.Series(data=0.0, index=returns.columns)
     upper_bound_assets = pd.Series(data=1.0, index=returns.columns)
+    holding_costs = pd.Series(data=0.0005, index=returns.columns)
 
     minvar = MinVar(assets=20)
 
     # You can add constraints before you build the problem
     minvar.constraints["concentration"] = (
-        cp.sum_largest(minvar.weights_assets, 2) <= 0.4
+        cp.sum_largest(minvar.variables["weights"], 2) <= 0.4
     )
 
     problem = minvar.build()
@@ -36,6 +38,8 @@ if __name__ == "__main__":
         cov=returns.cov().values,
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
+        weights=np.zeros(20),
+        holding_costs=holding_costs[returns.columns].values,
     )
 
     logger.info("Start solving problems...")
@@ -51,10 +55,14 @@ if __name__ == "__main__":
         cov=returns.cov().values,
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
+        weights=np.zeros(10),
+        holding_costs=holding_costs[returns.columns].values,
     )
 
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
     logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
-    logger.info(f"Concentration: {cp.sum_largest(minvar.weights_assets, 2).value}")
+    logger.info(
+        f"Concentration: {cp.sum_largest(minvar.variables['weights'], 2).value}"
+    )

@@ -18,9 +18,10 @@ def test_expected_returns():
 
     weights = cp.Variable(assets)
     weights.value = np.array([1.0, 1.0, 2.0])
+    variables = {"weights": weights}
 
-    assert model.estimate(weights).value == pytest.approx(0.3)
+    assert model.estimate(variables).value == pytest.approx(0.3)
 
     # give a new shorter vector of expected returns
     model.update(mu=np.array([0.1]))
-    assert model.estimate(weights).value == pytest.approx(0.1)
+    assert model.estimate(variables).value == pytest.approx(0.1)

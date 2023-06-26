@@ -16,8 +16,8 @@ def test_estimate_risk():
     np.random.seed(42)
 
     # define the problem
-    weights, _ = model.variables()
-    prob, bounds, _ = minrisk_problem(model, weights)
+    variables = model.variables()
+    prob, bounds, _ = minrisk_problem(model, variables)
     assert prob.is_dpp()
 
     model.update(returns=np.random.randn(50, 10))

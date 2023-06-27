@@ -4,9 +4,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from aux.linalg.pca import pca as aux_pca
 
-from cvx.linalg import pca
+from cvx.linalg import PCA
 
 
 @pytest.fixture()
@@ -18,7 +17,7 @@ def returns(resource_dir):
 
 
 def test_pca(returns):
-    xxx = pca(returns)
+    xxx = PCA(returns=returns, n_components=10)
 
     assert np.allclose(
         xxx.explained_variance,
@@ -41,7 +40,7 @@ def test_pca(returns):
 
 def test_idiosyncratic_with_max_factors(returns):
     # as many components as vectors, hence the residual should be zero
-    xxx = pca(returns, n_components=20)
+    xxx = PCA(returns=returns, n_components=20)
     np.testing.assert_allclose(xxx.idiosyncratic_returns.std(), np.zeros(20), atol=1e-6)
     # pd.testing.assert_series_equal(
     #    xxx.idiosyncratic_returns.std(), pd.Series(np.zeros(20), index=returns.columns)
@@ -55,9 +54,7 @@ def test_idiosyncratic_with_max_factors(returns):
 
 def test_idiosyncratic(returns):
     # as many components as vectors, hence the residual should be zero
-    xxx = pca(returns, n_components=15)
-
-    print(xxx.exposure.shape)
+    xxx = PCA(returns=returns, n_components=15)
 
     assert np.allclose(
         returns,
@@ -68,11 +65,11 @@ def test_idiosyncratic(returns):
 def test_too_many_factors(returns):
     # as many components as vectors, hence the residual should be zero
     with pytest.raises(ValueError):
-        pca(returns, n_components=22)
+        PCA(returns=returns, n_components=22)
 
 
-def test_columns(returns):
-    xxx = pca(returns, n_components=15)
+def test_shape(returns):
+    xxx = PCA(returns=returns, n_components=15)
     assert xxx.factors.shape == (320, 15)
     assert xxx.exposure.shape == (15, 20)
     assert xxx.idiosyncratic_returns.shape == (320, 20)
@@ -81,16 +78,17 @@ def test_columns(returns):
     assert xxx.systematic_returns.shape == (320, 20)
 
 
-def test_alternative(returns):
-    xxx = aux_pca(returns, n_components=10)
-    xxy = pca(returns, n_components=10)
-
-    # pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
-    # pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
-
-    np.testing.assert_allclose(xxx.cov, xxy.cov, atol=1e-10)
-    np.testing.assert_allclose(xxx.systematic_returns, xxy.systematic_returns)
-    np.testing.assert_allclose(xxx.idiosyncratic_returns, xxy.idiosyncratic_returns)
-    np.testing.assert_allclose(xxx.explained_variance, xxy.explained_variance)
-
-    # pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)
+#
+# def test_alternative(returns):
+#     xxx = aux_pca(returns, n_components=10)
+#     xxy = PCA(returns=returns, n_components=10)
+#
+#     # pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
+#     # pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
+#
+#     np.testing.assert_allclose(xxx.cov, xxy.cov, atol=1e-10)
+#     np.testing.assert_allclose(xxx.systematic_returns, xxy.systematic_returns)
+#     np.testing.assert_allclose(xxx.idiosyncratic_returns, xxy.idiosyncratic_returns)
+#     np.testing.assert_allclose(xxx.explained_variance, xxy.explained_variance)
+#
+#     # pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)

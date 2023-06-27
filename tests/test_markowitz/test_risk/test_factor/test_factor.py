@@ -8,7 +8,7 @@ import pytest
 from aux.portfolio.min_risk import minrisk_problem
 from aux.random import rand_cov
 
-from cvx.linalg import pca as principal_components
+from cvx.linalg import PCA
 from cvx.markowitz.risk import FactorModel
 
 
@@ -22,7 +22,7 @@ def returns(resource_dir):
 
 def test_timeseries_model(returns):
     # Here we compute the factors and regress the returns on them
-    factors = principal_components(returns=returns, n_components=10)
+    factors = PCA(returns=returns, n_components=10)
 
     model = FactorModel(assets=20, factors=10)
 

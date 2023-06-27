@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.linalg import pca as principal_components
+from cvx.linalg import PCA
 from experiments.aux.min_var import MinVar
 
 if __name__ == "__main__":
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     upper_bound_assets = pd.Series(data=1.0, index=returns.columns)
 
     # compute 10 components
-    pca = principal_components(returns=returns.values, n_components=10)
+    pca = PCA(returns=returns.values, n_components=10)
     # pca is a NamedTuple exposing the following fields:
     # ["explained_variance", "factors", "exposure", "cov", "systematic_returns", "idiosyncratic_returns"],
     #   - explained_variance: pd.Series
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     ###########################################################################
     # second solve, should be a lot faster as the problem is DPP
     returns = returns.iloc[:, :10]
-    pca = principal_components(returns=returns.values, n_components=5)
+    pca = PCA(returns=returns.values, n_components=5)
 
     minvar.update(
         cov=pca.cov,

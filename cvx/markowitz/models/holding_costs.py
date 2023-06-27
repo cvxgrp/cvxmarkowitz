@@ -22,7 +22,7 @@ class HoldingCosts(Model):
         )
 
     def update(self, **kwargs):
-        h = kwargs["holding_costs"]
-        n = h.shape[0]
+        costs = kwargs["holding_costs"]
+        num = costs.shape[0]
         self.data["holding_costs"].value = np.zeros(self.assets)
-        self.data["holding_costs"].value[:n] = h
+        self.data["holding_costs"].value[:num] = costs

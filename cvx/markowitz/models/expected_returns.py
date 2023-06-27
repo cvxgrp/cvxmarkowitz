@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Model for expected returns"""
+# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -22,7 +24,7 @@ class ExpectedReturns(Model):
         return self.data["mu"] @ variables["weights"]
 
     def update(self, **kwargs):
-        mu = kwargs["mu"]
-        n = mu.shape[0]
+        exp_returns = kwargs["mu"]
+        num = exp_returns.shape[0]
         self.data["mu"].value = np.zeros(self.assets)
-        self.data["mu"].value[:n] = mu
+        self.data["mu"].value[:num] = exp_returns

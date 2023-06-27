@@ -26,7 +26,7 @@ class TradingCosts(Model):
         )
 
     def update(self, **kwargs):
-        w = kwargs["weights"]
-        n = w.shape[0]
+        weights = kwargs["weights"]
+        num = weights.shape[0]
         self.data["weights"].value = np.zeros(self.assets)
-        self.data["weights"].value[:n] = w
+        self.data["weights"].value[:num] = weights

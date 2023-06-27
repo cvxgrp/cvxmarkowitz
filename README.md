@@ -5,6 +5,7 @@
 [![PyPI download month](https://img.shields.io/pypi/dm/cvxmarkowitz.svg)](https://pypi.python.org/pypi/cvxmarkowitz/)
 [![Coverage Status](https://coveralls.io/repos/github/cvxgrp/simulator/badge.png?branch=main)](https://coveralls.io/github/cvxgrp/simulator?branch=main)
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cvxgrp/cvxmarkowitz)
 
 ## Poetry
 

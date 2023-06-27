@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+from cvx.linalg import cholesky
 from cvx.linalg import PCA
 from experiments.aux.min_var import MinVar
 
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     # distinguish between data and parameters
     # clean up at the end, e.g. integer lots
     minvar.update(
-        cov=pca.cov,
+        chol=cholesky(pca.cov),
         exposure=pca.exposure,
         idiosyncratic_risk=pca.idiosyncratic_risk,
         lower_assets=lower_bound_assets[returns.columns].values,
@@ -81,7 +82,7 @@ if __name__ == "__main__":
     pca = PCA(returns=returns.values, n_components=5)
 
     minvar.update(
-        cov=pca.cov,
+        chol=cholesky(pca.cov),
         exposure=pca.exposure,
         idiosyncratic_risk=pca.idiosyncratic_risk,
         lower_assets=lower_bound_assets[returns.columns].values,

@@ -24,10 +24,11 @@ class Builder:
         """
         Update the model
         """
-        for _, model in self.model.items():
+        for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
-                    warnings.warn(f"Missing data for {key}")
+                    raise ValueError(f"Missing data for {key} in model {name}")
+
             model.update(**kwargs)
 
     @property

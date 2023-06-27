@@ -4,13 +4,14 @@ from __future__ import annotations
 import numpy as np
 from aux.portfolio.min_var import MinVar
 
+from cvx.linalg import cholesky
 from cvx.markowitz.risk import SampleCovariance
 
 
 def test_sample():
     riskmodel = SampleCovariance(assets=2)
     riskmodel.update(
-        cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
@@ -21,7 +22,7 @@ def test_sample():
 def test_sample_large():
     riskmodel = SampleCovariance(assets=4)
     riskmodel.update(
-        cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
@@ -37,7 +38,7 @@ def test_min_variance():
     assert "risk" in builder.model
 
     builder.update(
-        cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
@@ -51,7 +52,7 @@ def test_min_variance():
 
     # It's enough to only update the value for the cholesky decomposition
     builder.update(
-        cov=np.array([[1.0, 0.5], [0.5, 4.0]]),
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 4.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )

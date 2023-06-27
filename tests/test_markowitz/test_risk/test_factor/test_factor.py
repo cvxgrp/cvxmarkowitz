@@ -8,6 +8,7 @@ import pytest
 from aux.portfolio.min_var import MinVar
 from aux.random import rand_cov
 
+from cvx.linalg import cholesky
 from cvx.linalg import PCA
 from cvx.markowitz.risk import FactorModel
 
@@ -27,7 +28,7 @@ def test_timeseries_model(returns):
     model = FactorModel(assets=20, factors=10)
 
     model.update(
-        cov=factors.cov,
+        chol=cholesky(factors.cov),
         exposure=factors.exposure,
         idiosyncratic_risk=factors.idiosyncratic_risk,
     )
@@ -52,7 +53,7 @@ def test_estimate_risk():
     builder = MinVar(assets=25, factors=12)
 
     builder.update(
-        cov=rand_cov(10),
+        chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
         lower_assets=np.zeros(20),
@@ -70,7 +71,7 @@ def test_estimate_risk():
     )
 
     builder.update(
-        cov=rand_cov(10),
+        chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
         lower_assets=np.zeros(20),
@@ -111,7 +112,7 @@ def test_factor_mini():
         assert type(value) == cp.Variable
 
     model.update(
-        cov=np.eye(2),
+        chol=np.eye(2),
         exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
         idiosyncratic_risk=np.array([0.1, 0.1, 0.1]),
     )

@@ -18,7 +18,7 @@ class CVar(Model):
 
     def __post_init__(self):
         # self.k = int(self.n * (1 - self.alpha))
-        self.data["R"] = cp.Parameter(
+        self.data["returns"] = cp.Parameter(
             shape=(self.rows, self.assets),
             name="returns",
             value=np.zeros((self.rows, self.assets)),
@@ -32,14 +32,14 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.rows * (1 - self.alpha))
-        return -cp.sum_smallest(self.data["R"] @ variables["weights"], k=k) / k
+        return -cp.sum_smallest(self.data["returns"] @ variables["weights"], k=k) / k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
         columns = ret.shape[1]
 
-        self.data["R"].value = np.zeros((self.rows, self.assets))
-        self.data["R"].value[:, :columns] = kwargs["returns"]
+        self.data["returns"].value = np.zeros((self.rows, self.assets))
+        self.data["returns"].value[:, :columns] = ret
 
     def variables(self):
         return {"weights": cp.Variable(self.assets)}

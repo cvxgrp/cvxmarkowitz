@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import cvxpy as cp
 import numpy as np
+import pytest
 
 from cvx.markowitz.builder import Builder
 from cvx.markowitz.risk import SampleCovariance
@@ -22,7 +23,7 @@ def test_dummy():
     builder.model["risk"] = SampleCovariance(assets=1)
     builder.variables["weights"] = cp.Variable(1)
 
-    builder.update(cov=np.eye(1))
+    builder.update(chol=np.eye(1))
     problem = builder.build()
     problem.solve()
 
@@ -32,3 +33,11 @@ def test_dummy():
 
     print(dict(builder.data))
     assert np.allclose(dict(builder.data)[("risk", "chol")].value, np.eye(1))
+
+
+def test_missing_data():
+    builder = DummyBuilder(assets=1)
+    builder.model["risk"] = SampleCovariance(assets=1)
+    builder.variables["weights"] = cp.Variable(1)
+    with pytest.raises(ValueError):
+        builder.update(cov=np.eye(1))

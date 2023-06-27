@@ -8,7 +8,7 @@ import pytest
 from aux.portfolio.min_risk import minrisk_problem
 from aux.random import rand_cov
 
-from cvx.linalg import pca as principal_components
+from cvx.linalg import PCA
 from cvx.markowitz.risk import FactorModel
 
 
@@ -17,19 +17,19 @@ def returns(resource_dir):
     prices = pd.read_csv(
         resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
     )
-    return prices.pct_change().fillna(0.0)
+    return prices.pct_change().fillna(0.0).values
 
 
 def test_timeseries_model(returns):
     # Here we compute the factors and regress the returns on them
-    factors = principal_components(returns=returns, n_components=10)
+    factors = PCA(returns=returns, n_components=10)
 
     model = FactorModel(assets=20, factors=10)
 
     model.update(
-        cov=factors.cov.values,
-        exposure=factors.exposure.values,
-        idiosyncratic_risk=factors.idiosyncratic_returns.std().values,
+        cov=factors.cov,
+        exposure=factors.exposure,
+        idiosyncratic_risk=factors.idiosyncratic_risk,
     )
 
     variables = model.variables
@@ -38,7 +38,7 @@ def test_timeseries_model(returns):
 
     vola = model.estimate(variables).value
     print(vola)
-    np.testing.assert_almost_equal(vola, 0.00923407730537884)
+    np.testing.assert_almost_equal(vola, 0.009233894697646914)
 
 
 def test_minvar(returns):

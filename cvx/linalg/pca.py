@@ -2,66 +2,53 @@
 """PCA analysis with numpy"""
 from __future__ import annotations
 
-from collections import namedtuple
+from dataclasses import dataclass
+from dataclasses import field
 
 import numpy as np
-import pandas as pd
 
 
-PCA = namedtuple(
-    "PCA",
-    [
-        "asset_names",
-        "factor_names",
-        "explained_variance",
-        "factors",
-        "exposure",
-        "cov",
-        "systematic_returns",
-        "idiosyncratic_returns",
-    ],
-)
+@dataclass
+class PCA:
+    n_components: int = 0
+    returns: np.ndarray = field(default_factory=np.array)
 
+    def __post_init__(self):
+        if self.n_components > self.returns.shape[1]:
+            raise ValueError(
+                "The number of components cannot exceed the number of assets"
+            )
 
-def pca(returns, n_components=10):
-    """
-    Compute the first n principal components for a return matrix without sklearn
+        # compute the principal components without sklearn
+        # 1. compute the correlation
+        cov = np.cov(self.returns.T)
+        # 2. compute the eigenvalues and eigenvectors
+        self.eigenvalues, eigenvectors = np.linalg.eig(cov)
+        # 3. sort the eigenvalues in descending order
+        idx = self.eigenvalues.argsort()[::-1]
+        self.eigenvalues = np.real(self.eigenvalues[idx])
+        eigenvectors = np.real(eigenvectors[:, idx])
+        # 4. compute the factors
+        self.factors = self.returns @ eigenvectors[:, : self.n_components]
 
-    Args:
-        returns: DataFrame of prices
-        n_components: Number of compoFnents
-    """
+        self.exposure = np.transpose(eigenvectors[:, : self.n_components])
 
-    if n_components > len(returns.columns):
-        raise ValueError("The number of components cannot exceed the number of assets")
+    @property
+    def explained_variance(self):
+        return self.eigenvalues[: self.n_components] / (np.sum(self.eigenvalues))
 
-    # compute the principal components without sklearn
-    # 1. compute the correlation
-    corr = returns.cov()
-    # 2. compute the eigenvalues and eigenvectors
-    eigenvalues, eigenvectors = np.linalg.eig(corr.values)
-    # 3. sort the eigenvalues in descending order
-    idx = eigenvalues.argsort()[::-1]
-    eigenvalues = np.real(eigenvalues[idx])
-    eigenvectors = np.real(eigenvectors[:, idx])
-    # 4. compute the factors
-    factors = returns @ eigenvectors[:, :n_components]
-    # 5. compute the exposure
-    exposure = pd.DataFrame(
-        data=np.transpose(eigenvectors[:, :n_components]),
-        columns=returns.columns,
-        index=factors.columns,
-    )
+    @property
+    def cov(self):
+        return np.cov(self.factors.T)
 
-    return PCA(
-        asset_names=returns.columns,
-        factor_names=factors.columns,
-        explained_variance=pd.Series(
-            data=eigenvalues[:n_components] / (np.sum(eigenvalues))
-        ),
-        factors=factors,
-        exposure=exposure,
-        cov=factors.cov(),
-        systematic_returns=factors @ exposure,
-        idiosyncratic_returns=returns - factors @ exposure,
-    )
+    @property
+    def systematic_returns(self):
+        return self.factors @ self.exposure
+
+    @property
+    def idiosyncratic_returns(self):
+        return self.returns - self.systematic_returns
+
+    @property
+    def idiosyncratic_risk(self):
+        return np.std(self.idiosyncratic_returns, axis=0)

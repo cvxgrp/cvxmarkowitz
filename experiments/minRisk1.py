@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.linalg import pca as principal_components
+from cvx.linalg import PCA
 from experiments.aux.min_var import MinVar
 
 if __name__ == "__main__":
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     upper_bound_assets = pd.Series(data=1.0, index=returns.columns)
 
     # compute 10 components
-    pca = principal_components(returns=returns, n_components=10)
+    pca = PCA(returns=returns.values, n_components=10)
     # pca is a NamedTuple exposing the following fields:
     # ["explained_variance", "factors", "exposure", "cov", "systematic_returns", "idiosyncratic_returns"],
     #   - explained_variance: pd.Series
@@ -31,8 +31,8 @@ if __name__ == "__main__":
     #   - systematic_returns: pd.DataFrame
     #   - idiosyncratic_returns: pd.DataFrame
 
-    lower_bound_factors = pd.Series(data=-1.0, index=pca.factor_names)
-    upper_bound_factors = pd.Series(data=+1.0, index=pca.factor_names)
+    lower_bound_factors = pd.Series(data=-1.0, index=range(10))
+    upper_bound_factors = pd.Series(data=+1.0, index=range(10))  # len(pca.factors)))
 
     # You can define the problem for up to 25 assets and 15 factors
     # model = FactorModel(assets=25, k=15)
@@ -57,13 +57,13 @@ if __name__ == "__main__":
     # distinguish between data and parameters
     # clean up at the end, e.g. integer lots
     minvar.update(
-        cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
-        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
-        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
-        lower_assets=lower_bound_assets[pca.asset_names].values,
-        upper_assets=upper_bound_assets[pca.asset_names].values,
-        lower_factors=lower_bound_factors[pca.factor_names].values,
-        upper_factors=upper_bound_factors[pca.factor_names].values,
+        cov=pca.cov,
+        exposure=pca.exposure,
+        idiosyncratic_risk=pca.idiosyncratic_risk,
+        lower_assets=lower_bound_assets[returns.columns].values,
+        upper_assets=upper_bound_assets[returns.columns].values,
+        lower_factors=lower_bound_factors.values,
+        upper_factors=upper_bound_factors.values,
         weights=np.zeros(20),
         holding_costs=holding_costs[returns.columns].values,
     )
@@ -78,16 +78,16 @@ if __name__ == "__main__":
     ###########################################################################
     # second solve, should be a lot faster as the problem is DPP
     returns = returns.iloc[:, :10]
-    pca = principal_components(returns=returns, n_components=5)
+    pca = PCA(returns=returns.values, n_components=5)
 
     minvar.update(
-        cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
-        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
-        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
-        lower_assets=lower_bound_assets[pca.asset_names].values,
-        upper_assets=upper_bound_assets[pca.asset_names].values,
-        lower_factors=lower_bound_factors[pca.factor_names].values,
-        upper_factors=upper_bound_factors[pca.factor_names].values,
+        cov=pca.cov,
+        exposure=pca.exposure,
+        idiosyncratic_risk=pca.idiosyncratic_risk,
+        lower_assets=lower_bound_assets[returns.columns].values,
+        upper_assets=upper_bound_assets[returns.columns].values,
+        lower_factors=lower_bound_factors[range(5)].values,
+        upper_factors=upper_bound_factors[range(5)].values,
         weights=np.zeros(10),
         holding_costs=holding_costs[returns.columns].values,
     )
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     logger.info(f"Minimum standard deviation: {x}")
 
     # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value, index=pca.asset_names)}")
-    logger.info(f"Solution:\n{minvar.solution(pca.asset_names)}")
+    logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(
         f"Concentration: {cp.sum_largest(minvar.variables['weights'], 2).value}"

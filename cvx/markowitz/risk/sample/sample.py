@@ -28,13 +28,13 @@ class SampleCovariance(Model):
         return cp.norm2(self.data["chol"] @ variables["weights"])
 
     def update(self, **kwargs):
-        cov = kwargs["cov"]
-        rows = cov.shape[0]
-        assert (
-            rows <= self.assets
-        ), f"Covariance matrix is too large. Has to be smaller than {self.assets}"
+        chol = kwargs["chol"]
+        rows = chol.shape[0]
+        # assert (
+        #    rows <= self.assets
+        # ), f"Covariance matrix is too large. Has to be smaller than {self.assets}"
         self.data["chol"].value = np.zeros((self.assets, self.assets))
-        self.data["chol"].value[:rows, :rows] = cholesky(cov)
+        self.data["chol"].value[:rows, :rows] = chol
 
     @property
     def variables(self):

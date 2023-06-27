@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+from cvx.linalg import cholesky
 from experiments.aux.min_var import MinVar
 
 if __name__ == "__main__":
@@ -35,7 +36,7 @@ if __name__ == "__main__":
 
     ####################################################################################################################
     minvar.update(
-        cov=returns.cov().values,
+        chol=cholesky(returns.cov().values),
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
         weights=np.zeros(20),
@@ -52,7 +53,7 @@ if __name__ == "__main__":
 
     # second solve, should be a lot faster as the problem is DPP
     minvar.update(
-        cov=returns.cov().values,
+        chol=cholesky(returns.cov().values),
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
         weights=np.zeros(10),

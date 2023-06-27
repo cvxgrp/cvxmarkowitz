@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -15,7 +16,7 @@ class Bounds(Model):
     name: str = ""
     acting_on: str = "weights"
 
-    def estimate(self, variables):
+    def estimate(self, variables: Dict[str, cp.Variable]):
         """No estimation for bounds"""
         raise NotImplementedError("No estimation for bounds")
 
@@ -43,7 +44,7 @@ class Bounds(Model):
         self.data[self._f("upper")].value = np.zeros(self.assets)
         self.data[self._f("upper")].value[: len(upper)] = upper
 
-    def constraints(self, variables):
+    def constraints(self, variables: Dict[str, cp.Variable]):
         return {
             f"lower bound {self.name}": variables[self.acting_on]
             >= self.data[self._f("lower")],

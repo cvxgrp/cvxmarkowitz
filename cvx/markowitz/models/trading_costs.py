@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -23,7 +24,7 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables: Dict[str, cp.Variable]):
         return cp.sum(
             cp.power(cp.abs(variables["weights"] - self.data["weights"]), p=self.power)
         )

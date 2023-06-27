@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field

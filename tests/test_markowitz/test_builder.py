@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import Builder
+from cvx.markowitz.builder import CvxError
 from cvx.markowitz.risk import SampleCovariance
 
 
@@ -39,5 +40,5 @@ def test_missing_data():
     builder = DummyBuilder(assets=1)
     builder.model["risk"] = SampleCovariance(assets=1)
     builder.variables["weights"] = cp.Variable(1)
-    with pytest.raises(ValueError):
+    with pytest.raises(CvxError):
         builder.update(cov=np.eye(1))

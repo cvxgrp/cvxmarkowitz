@@ -24,6 +24,7 @@ cvxsimulator = "*"
 jupyter-book = "0.15.1"
 pylint = "*"
 scikit-learn = "*"
+cvxpyanalyzer = "*"
 
 [build-system]
 requires = ["poetry-core"]

@@ -14,14 +14,14 @@ class CVar(Model):
     """Conditional value at risk model"""
 
     alpha: float = 0.95
-    n: int = 0
+    rows: int = 0
 
     def __post_init__(self):
         # self.k = int(self.n * (1 - self.alpha))
         self.data["R"] = cp.Parameter(
-            shape=(self.n, self.assets),
+            shape=(self.rows, self.assets),
             name="returns",
-            value=np.zeros((self.n, self.assets)),
+            value=np.zeros((self.rows, self.assets)),
         )
 
     def estimate(self, variables):
@@ -31,15 +31,15 @@ class CVar(Model):
         # k is the number of returns in the left tail
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
-        k = int(self.n * (1 - self.alpha))
+        k = int(self.rows * (1 - self.alpha))
         return -cp.sum_smallest(self.data["R"] @ variables["weights"], k=k) / k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
-        m = ret.shape[1]
+        columns = ret.shape[1]
 
-        self.data["R"].value = np.zeros((self.n, self.assets))
-        self.data["R"].value[:, :m] = kwargs["returns"]
+        self.data["R"].value = np.zeros((self.rows, self.assets))
+        self.data["R"].value[:, :columns] = kwargs["returns"]
 
     def variables(self):
         return {"weights": cp.Variable(self.assets)}

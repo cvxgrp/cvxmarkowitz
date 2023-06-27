@@ -4,6 +4,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
+from aux.linalg.pca import pca as aux_pca
 
 from cvx.linalg import pca
 
@@ -77,3 +78,16 @@ def test_columns(returns):
     assert xxx.cov.columns.tolist() == list(range(0, 15))
     assert xxx.systematic_returns.columns.tolist() == returns.columns.tolist()
     assert xxx.explained_variance.index.tolist() == list(range(0, 15))
+
+
+def test_alternative(returns):
+    xxx = aux_pca(returns, n_components=10)
+    xxy = pca(returns, n_components=10)
+
+    pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
+    pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
+
+    pd.testing.assert_frame_equal(xxx.cov, xxy.cov)
+    pd.testing.assert_frame_equal(xxx.systematic_returns, xxy.systematic_returns)
+    pd.testing.assert_frame_equal(xxx.idiosyncratic_returns, xxy.idiosyncratic_returns)
+    pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field
@@ -42,18 +41,19 @@ class Builder:
         Return the objective function
         """
 
-    def build(self):
+    def build(self) -> cp.Problem:
         """
         Build the cvxpy problem
         """
-        for model in self.model.values():
-            for name, constraint in model.constraints(self.variables).items():
-                assert name not in self.constraints, "Duplicate constraint"
-                self.constraints[name] = constraint
+        for name_model, model in self.model.items():
+            for name_constraint, constraint in model.constraints(
+                self.variables
+            ).items():
+                self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         return cp.Problem(self.objective, list(self.constraints.values()))
 
-    def solution(self, names):
+    def solution(self, names) -> Dict[str, float]:
         """
         Return the solution as a dictionary
         """

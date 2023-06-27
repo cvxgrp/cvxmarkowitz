@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 
-def valid(matrix):
+def valid(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     Construct the valid subset of matrix (correlation) matrix
     :param matrix: n x n matrix

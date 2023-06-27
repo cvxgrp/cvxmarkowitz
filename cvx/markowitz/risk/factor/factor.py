@@ -8,7 +8,6 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.linalg import cholesky
 from cvx.markowitz import Model
 
 
@@ -35,7 +34,7 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables) -> cp.Expression:
         """
         Compute the total variance
         """
@@ -69,14 +68,3 @@ class FactorModel(Model):
             "factors": variables["factor_weights"]
             == self.data["exposure"] @ variables["weights"]
         }
-
-    @property
-    def variables(self):
-        return {
-            "weights": cp.Variable(self.assets),
-            "factor_weights": cp.Variable(self.factors),
-        }
-
-    #
-    # def factor_weights(self, variables):
-    #     return self.data["exposure"] @ variables["weights"]

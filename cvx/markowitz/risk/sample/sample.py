@@ -4,11 +4,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
 
-from cvx.linalg import cholesky
 from cvx.markowitz import Model
 
 
@@ -23,19 +23,12 @@ class SampleCovariance(Model):
             value=np.zeros((self.assets, self.assets)),
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         return cp.norm2(self.data["chol"] @ variables["weights"])
 
     def update(self, **kwargs):
         chol = kwargs["chol"]
         rows = chol.shape[0]
-        # assert (
-        #    rows <= self.assets
-        # ), f"Covariance matrix is too large. Has to be smaller than {self.assets}"
         self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:rows, :rows] = chol
-
-    @property
-    def variables(self):
-        return {"weights": cp.Variable(self.assets)}

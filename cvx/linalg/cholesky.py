@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 
-def cholesky(cov):
+def cholesky(cov: np.ndarray) -> np.ndarray:
     """Compute the cholesky decomposition of a covariance matrix"""
     # upper triangular part of the cholesky decomposition
     # np.linalg.cholesky(cov) is the lower triangular part

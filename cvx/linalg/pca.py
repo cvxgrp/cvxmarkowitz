@@ -34,21 +34,21 @@ class PCA:
         self.exposure = np.transpose(eigenvectors[:, : self.n_components])
 
     @property
-    def explained_variance(self):
+    def explained_variance(self) -> np.ndarray:
         return self.eigenvalues[: self.n_components] / (np.sum(self.eigenvalues))
 
     @property
-    def cov(self):
+    def cov(self) -> np.ndarray:
         return np.cov(self.factors.T)
 
     @property
-    def systematic_returns(self):
+    def systematic_returns(self) -> np.ndarray:
         return self.factors @ self.exposure
 
     @property
-    def idiosyncratic_returns(self):
+    def idiosyncratic_returns(self) -> np.ndarray:
         return self.returns - self.systematic_returns
 
     @property
-    def idiosyncratic_risk(self):
+    def idiosyncratic_risk(self) -> np.ndarray:
         return np.std(self.idiosyncratic_returns, axis=0)

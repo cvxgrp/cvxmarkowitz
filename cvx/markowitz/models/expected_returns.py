@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -21,7 +22,7 @@ class ExpectedReturns(Model):
             value=np.zeros(self.assets),
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return self.data["mu"] @ variables["weights"]
 
     def update(self, **kwargs):

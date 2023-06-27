@@ -11,7 +11,7 @@ import cvxpy as cp
 from cvx.markowitz import Model
 
 
-@dataclass
+@dataclass(frozen=True)
 class Builder:
     assets: int = 0
     factors: int = None
@@ -37,8 +37,10 @@ class Builder:
         """
         Build the cvxpy problem
         """
-        for _, model in self.model.items():
-            self.constraints |= model.constraints(self.variables)
+        for model in self.model.values():
+            for name, constraint in model.constraints(self.variables).items():
+                assert name not in self.constraints, "Duplicate constraint"
+                self.constraints[name] = constraint
 
         return cp.Problem(self.objective, list(self.constraints.values()))
 

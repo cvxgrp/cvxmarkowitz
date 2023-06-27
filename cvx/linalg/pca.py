@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import field
 
 import numpy as np
 
@@ -10,7 +11,7 @@ import numpy as np
 @dataclass
 class PCA:
     n_components: int = 0
-    returns: np.ndarray = np.array([])
+    returns: np.ndarray = field(default_factory=np.array)
 
     def __post_init__(self):
         if self.n_components > self.returns.shape[1]:

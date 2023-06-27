@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import warnings
 from abc import abstractmethod
 from dataclasses import dataclass
 from dataclasses import field
@@ -24,6 +25,9 @@ class Builder:
         Update the model
         """
         for _, model in self.model.items():
+            for key in model.data.keys():
+                if key not in kwargs:
+                    warnings.warn(f"Missing data for {key}")
             model.update(**kwargs)
 
     @property
@@ -49,3 +53,9 @@ class Builder:
         Return the solution as a dictionary
         """
         return dict(zip(names, self.variables["weights"].value[: len(names)]))
+
+    @property
+    def data(self):
+        for name, model in self.model.items():
+            for key, value in model.data.items():
+                yield (name, key), value

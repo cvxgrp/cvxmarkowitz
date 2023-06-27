@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import numpy as np
-from aux.portfolio.min_risk import minrisk_problem
+from aux.portfolio.min_var import MinVar
 
 from cvx.markowitz.risk import SampleCovariance
 
@@ -30,32 +30,36 @@ def test_sample_large():
 
 
 def test_min_variance():
-    riskmodel = SampleCovariance(assets=4)
+    # define the problem
+    builder = MinVar(assets=4)
 
-    variables = riskmodel.variables
-    problem, bounds, _ = minrisk_problem(riskmodel, variables)
-    assert problem.is_dpp()
+    assert "bound_assets" in builder.model
+    assert "risk" in builder.model
 
-    riskmodel.update(
+    builder.update(
         cov=np.array([[1.0, 0.5], [0.5, 2.0]]),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
     )
 
-    bounds.update(
+    problem = builder.build()
+    problem.solve()
+
+    np.testing.assert_almost_equal(
+        builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+    )
+
+    # It's enough to only update the value for the cholesky decomposition
+    builder.update(
+        cov=np.array([[1.0, 0.5], [0.5, 4.0]]),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
 
     problem.solve()
-    np.testing.assert_almost_equal(
-        variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
-    )
 
-    # It's enough to only update the value for the cholesky decomposition
-    riskmodel.update(
-        cov=np.array([[1.0, 0.5], [0.5, 4.0]]),
-    )
-
-    problem.solve()
     np.testing.assert_almost_equal(
-        variables["weights"].value, np.array([0.875, 0.125, 0.0, 0.0]), decimal=5
+        builder.variables["weights"].value,
+        np.array([0.875, 0.125, 0.0, 0.0]),
+        decimal=5,
     )

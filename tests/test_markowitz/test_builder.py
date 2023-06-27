@@ -18,14 +18,17 @@ class DummyBuilder(Builder):
 
 
 def test_dummy():
-    solver = DummyBuilder(assets=1)
-    solver.model["risk"] = SampleCovariance(assets=1)
-    solver.variables["weights"] = cp.Variable(1)
+    builder = DummyBuilder(assets=1)
+    builder.model["risk"] = SampleCovariance(assets=1)
+    builder.variables["weights"] = cp.Variable(1)
 
-    solver.update(cov=np.eye(1))
-    problem = solver.build()
+    builder.update(cov=np.eye(1))
+    problem = builder.build()
     problem.solve()
 
-    solver.variables["weights"].value = np.array([2.0])
-    d = solver.solution(names=["a"])
+    builder.variables["weights"].value = np.array([2.0])
+    d = builder.solution(names=["a"])
     assert d["a"] == 2.0
+
+    print(dict(builder.data))
+    assert np.allclose(dict(builder.data)[("risk", "chol")].value, np.eye(1))

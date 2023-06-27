@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from aux.portfolio.min_risk import minrisk_problem
+from aux.portfolio.min_var import MinVar
 
 from cvx.markowitz.risk import CVar
 
@@ -16,21 +16,28 @@ def test_estimate_risk():
     np.random.seed(42)
 
     # define the problem
-    variables = model.variables()
-    prob, bounds, _ = minrisk_problem(model, variables)
-    assert prob.is_dpp()
+    builder = MinVar(assets=14)
 
-    model.update(returns=np.random.randn(50, 10))
+    # overwrite the risk model
+    builder.model["risk"] = model
 
-    bounds.update(lower_assets=np.zeros(10), upper_assets=np.ones(10))
-    prob.solve()
-    assert prob.value == pytest.approx(0.5058720677762698)
+    assert "bound_assets" in builder.model
 
-    # it's enough to only update the R value...
-    model.update(
+    builder.update(
         returns=np.random.randn(50, 10),
         lower_assets=np.zeros(10),
         upper_assets=np.ones(10),
     )
-    prob.solve()
-    assert prob.value == pytest.approx(0.43559171295408616)
+
+    problem = builder.build()
+    problem.solve()
+    assert problem.value == pytest.approx(0.5058720677762698)
+
+    # it's enough to only update the R value...
+    builder.update(
+        returns=np.random.randn(50, 10),
+        lower_assets=np.zeros(10),
+        upper_assets=np.ones(10),
+    )
+    problem.solve()
+    assert problem.value == pytest.approx(0.43559171295408616)

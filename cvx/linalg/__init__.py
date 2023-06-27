@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Linalg module"""
 from __future__ import annotations
 
 from .cholesky import cholesky

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Extract valid submatrix of a matrix"""
 from __future__ import annotations
 
 import numpy as np
@@ -16,5 +17,5 @@ def valid(matrix):
     if matrix.shape[0] != matrix.shape[1]:
         raise AssertionError
 
-    v = np.isfinite(np.diag(matrix))
-    return v, matrix[:, v][v]
+    _valid = np.isfinite(np.diag(matrix))
+    return _valid, matrix[:, _valid][_valid]

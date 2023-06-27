@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Model for trading costs"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -11,6 +12,8 @@ from cvx.markowitz import Model
 
 @dataclass(frozen=True)
 class TradingCosts(Model):
+    """Model for trading costs"""
+
     power: float = 1.0
 
     def __post_init__(self):

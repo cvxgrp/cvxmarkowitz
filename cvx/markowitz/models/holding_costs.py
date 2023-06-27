@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Model for holding costs"""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -11,6 +12,8 @@ from cvx.markowitz import Model
 
 @dataclass(frozen=True)
 class HoldingCosts(Model):
+    """Model for holding costs"""
+
     def __post_init__(self):
         self.data["holding_costs"] = cp.Parameter(
             shape=self.assets, name="holding_costs", value=np.zeros(self.assets)

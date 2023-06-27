@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""PCA analysis
-"""
+"""PCA analysis with numpy"""
 from __future__ import annotations
 
 from collections import namedtuple

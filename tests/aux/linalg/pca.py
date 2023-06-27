@@ -26,12 +26,13 @@ def pca(returns, n_components=10):
     factors = returns @ np.transpose(exposure)
 
     return PCA(
-        asset_names=returns.columns,
-        factor_names=factors.columns,
+        # asset_names=returns.columns,
+        # factor_names=factors.columns,
         explained_variance=sklearn_pca.explained_variance_ratio_,
-        factors=factors.values,
+        factors=factors,
         exposure=exposure,
-        cov=factors.cov(),
-        systematic_returns=factors.values @ exposure,
-        idiosyncratic_returns=returns.values - factors.values @ exposure,
+        cov=np.cov(factors.T),
+        systematic_returns=factors @ exposure,
+        idiosyncratic_returns=returns - factors @ exposure,
+        idiosyncratic_risk=np.std(returns - factors @ exposure, axis=0),
     )

@@ -14,7 +14,7 @@ def returns(resource_dir):
     prices = pd.read_csv(
         resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
     )
-    return prices.pct_change().fillna(0.0)
+    return prices.pct_change().fillna(0.0).values
 
 
 def test_pca(returns):
@@ -48,7 +48,7 @@ def test_idiosyncratic_with_max_factors(returns):
     # )
 
     assert np.allclose(
-        returns.values,
+        returns,
         xxx.factors @ xxx.exposure + xxx.idiosyncratic_returns,
     )
 
@@ -60,7 +60,7 @@ def test_idiosyncratic(returns):
     print(xxx.exposure.shape)
 
     assert np.allclose(
-        returns.values,
+        returns,
         xxx.factors @ xxx.exposure + xxx.idiosyncratic_returns,
     )
 
@@ -71,21 +71,22 @@ def test_too_many_factors(returns):
         pca(returns, n_components=22)
 
 
-# def test_columns(returns):
-#    xxx = pca(returns, n_components=15)
-#    assert xxx.factors.columns.tolist() == list(range(0, 15))
-#    assert xxx.exposure.columns.tolist() == returns.columns.tolist()
-#    assert xxx.idiosyncratic_returns.columns.tolist() == returns.columns.tolist()
-#    assert xxx.cov.columns.tolist() == list(range(0, 15))
-#    assert xxx.systematic_returns.columns.tolist() == returns.columns.tolist()
+def test_columns(returns):
+    xxx = pca(returns, n_components=15)
+    assert xxx.factors.shape == (320, 15)
+    assert xxx.exposure.shape == (15, 20)
+    assert xxx.idiosyncratic_returns.shape == (320, 20)
+    assert np.std(xxx.idiosyncratic_returns, axis=0).shape == (20,)
+    assert xxx.cov.shape == (15, 15)
+    assert xxx.systematic_returns.shape == (320, 20)
 
 
 def test_alternative(returns):
     xxx = aux_pca(returns, n_components=10)
     xxy = pca(returns, n_components=10)
 
-    pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
-    pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
+    # pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
+    # pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
 
     np.testing.assert_allclose(xxx.cov, xxy.cov, atol=1e-10)
     np.testing.assert_allclose(xxx.systematic_returns, xxy.systematic_returns)

@@ -17,7 +17,7 @@ def returns(resource_dir):
     prices = pd.read_csv(
         resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
     )
-    return prices.pct_change().fillna(0.0)
+    return prices.pct_change().fillna(0.0).values
 
 
 def test_timeseries_model(returns):
@@ -27,9 +27,9 @@ def test_timeseries_model(returns):
     model = FactorModel(assets=20, factors=10)
 
     model.update(
-        cov=factors.cov.values,
+        cov=factors.cov,
         exposure=factors.exposure,
-        idiosyncratic_risk=factors.idiosyncratic_returns.std(),
+        idiosyncratic_risk=np.std(factors.idiosyncratic_returns),
     )
 
     variables = model.variables

@@ -29,10 +29,9 @@ def pca(returns, n_components=10):
         asset_names=returns.columns,
         factor_names=factors.columns,
         explained_variance=sklearn_pca.explained_variance_ratio_,
-        factors=factors,
+        factors=factors.values,
         exposure=exposure,
         cov=factors.cov(),
-        # systematic_returns=factors @ exposure,
         systematic_returns=factors.values @ exposure,
         idiosyncratic_returns=returns.values - factors.values @ exposure,
     )

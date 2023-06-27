@@ -701,6 +701,23 @@ scs = ["setuptools (>65.5.1)"]
 xpress = ["xpress"]
 
 [[package]]
+name = "cvxpyanalyzer"
+version = "0.0.3"
+description = "Analyzer for CVXPY problems"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "cvxpyanalyzer-0.0.3-py3-none-any.whl", hash = "sha256:23401142e05dee4cfec3ee7e405a7108545af5349a11f37f24c2071debc8ddbc"},
+    {file = "cvxpyanalyzer-0.0.3.tar.gz", hash = "sha256:8175e0c72b709dc0eae9df82647390404ca554e00f8f56fe3b37b5980824a174"},
+]
+
+[package.dependencies]
+cvxpy = ">=1.1.0a1"
+requests = "*"
+setuptools = "*"
+
+[[package]]
 name = "cvxsimulator"
 version = "0.5.1"
 description = "Simple simulator for investors"
@@ -4408,4 +4425,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "1baca6c509cb04aa8d2c7f38a5730b7883e522e40f6e1eaf1309c8a7dc3503b9"
+content-hash = "bcb947b79ec9c7a6971b3dd51f3e60eb013d02e274337584e41792aad1fc7733"

@@ -56,9 +56,7 @@ def pca(returns, n_components=10):
     return PCA(
         asset_names=returns.columns,
         factor_names=factors.columns,
-        explained_variance=pd.Series(
-            data=eigenvalues[:n_components] / (np.sum(eigenvalues))
-        ),
+        explained_variance=eigenvalues[:n_components] / (np.sum(eigenvalues)),
         factors=factors,
         exposure=exposure,
         cov=factors.cov(),

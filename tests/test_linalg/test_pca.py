@@ -77,7 +77,6 @@ def test_columns(returns):
     assert xxx.idiosyncratic_returns.columns.tolist() == returns.columns.tolist()
     assert xxx.cov.columns.tolist() == list(range(0, 15))
     assert xxx.systematic_returns.columns.tolist() == returns.columns.tolist()
-    assert xxx.explained_variance.index.tolist() == list(range(0, 15))
 
 
 def test_alternative(returns):
@@ -90,4 +89,6 @@ def test_alternative(returns):
     pd.testing.assert_frame_equal(xxx.cov, xxy.cov)
     pd.testing.assert_frame_equal(xxx.systematic_returns, xxy.systematic_returns)
     pd.testing.assert_frame_equal(xxx.idiosyncratic_returns, xxy.idiosyncratic_returns)
-    pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)
+    np.testing.assert_allclose(xxx.explained_variance, xxy.explained_variance)
+
+    # pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)

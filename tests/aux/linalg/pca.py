@@ -29,7 +29,7 @@ def pca(returns, n_components=10):
     return PCA(
         asset_names=returns.columns,
         factor_names=factors.columns,
-        explained_variance=pd.Series(data=sklearn_pca.explained_variance_ratio_),
+        explained_variance=sklearn_pca.explained_variance_ratio_,
         factors=factors,
         exposure=pd.DataFrame(data=exposure, columns=returns.columns),
         cov=factors.cov(),

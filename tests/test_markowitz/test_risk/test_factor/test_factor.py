@@ -28,8 +28,8 @@ def test_timeseries_model(returns):
 
     model.update(
         cov=factors.cov.values,
-        exposure=factors.exposure.values,
-        idiosyncratic_risk=factors.idiosyncratic_returns.std().values,
+        exposure=factors.exposure,
+        idiosyncratic_risk=factors.idiosyncratic_returns.std(),
     )
 
     variables = model.variables
@@ -38,7 +38,7 @@ def test_timeseries_model(returns):
 
     vola = model.estimate(variables).value
     print(vola)
-    np.testing.assert_almost_equal(vola, 0.00923407730537884)
+    np.testing.assert_almost_equal(vola, 0.009233894697646914)
 
 
 def test_minvar(returns):

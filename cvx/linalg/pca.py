@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections import namedtuple
 
 import numpy as np
-import pandas as pd
 
 
 PCA = namedtuple(
@@ -47,11 +46,7 @@ def pca(returns, n_components=10):
     # 4. compute the factors
     factors = returns @ eigenvectors[:, :n_components]
     # 5. compute the exposure
-    exposure = pd.DataFrame(
-        data=np.transpose(eigenvectors[:, :n_components]),
-        columns=returns.columns,
-        index=factors.columns,
-    )
+    exposure = np.transpose(eigenvectors[:, :n_components])
 
     return PCA(
         asset_names=returns.columns,
@@ -60,6 +55,6 @@ def pca(returns, n_components=10):
         factors=factors,
         exposure=exposure,
         cov=factors.cov(),
-        systematic_returns=factors @ exposure,
-        idiosyncratic_returns=returns - factors @ exposure,
+        systematic_returns=factors.values @ exposure,
+        idiosyncratic_returns=returns.values - factors.values @ exposure,
     )

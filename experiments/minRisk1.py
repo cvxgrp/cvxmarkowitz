@@ -58,8 +58,8 @@ if __name__ == "__main__":
     # clean up at the end, e.g. integer lots
     minvar.update(
         cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
-        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
-        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
+        exposure=pca.exposure,
+        idiosyncratic_risk=pca.idiosyncratic_returns.std(),
         lower_assets=lower_bound_assets[pca.asset_names].values,
         upper_assets=upper_bound_assets[pca.asset_names].values,
         lower_factors=lower_bound_factors[pca.factor_names].values,
@@ -82,8 +82,8 @@ if __name__ == "__main__":
 
     minvar.update(
         cov=pca.cov[pca.factor_names].loc[pca.factor_names].values,
-        exposure=pca.exposure[pca.asset_names].loc[pca.factor_names].values,
-        idiosyncratic_risk=pca.idiosyncratic_returns[pca.asset_names].std().values,
+        exposure=pca.exposure,
+        idiosyncratic_risk=pca.idiosyncratic_returns.std(),
         lower_assets=lower_bound_assets[pca.asset_names].values,
         upper_assets=upper_bound_assets[pca.asset_names].values,
         lower_factors=lower_bound_factors[pca.factor_names].values,

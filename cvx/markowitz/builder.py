@@ -12,6 +12,10 @@ import cvxpy as cp
 from cvx.markowitz import Model
 
 
+class CvxError(Exception):
+    pass
+
+
 @dataclass(frozen=True)
 class Builder:
     assets: int = 0
@@ -27,7 +31,7 @@ class Builder:
         for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
-                    raise ValueError(f"Missing data for {key} in model {name}")
+                    raise CvxError(f"Missing data for {key} in model {name}")
 
             model.update(**kwargs)
 

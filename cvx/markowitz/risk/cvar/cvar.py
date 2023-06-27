@@ -25,7 +25,7 @@ class CVar(Model):
             value=np.zeros((self.rows, self.assets)),
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]

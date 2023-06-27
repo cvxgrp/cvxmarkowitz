@@ -34,7 +34,7 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables) -> cp.Expression:
         """
         Compute the total variance
         """

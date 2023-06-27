@@ -20,7 +20,7 @@ class HoldingCosts(Model):
             shape=self.assets, name="holding_costs", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return cp.sum(
             cp.neg(cp.multiply(variables["weights"], self.data["holding_costs"]))
         )

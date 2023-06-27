@@ -24,7 +24,7 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return cp.sum(
             cp.power(cp.abs(variables["weights"] - self.data["weights"]), p=self.power)
         )

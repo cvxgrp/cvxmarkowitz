@@ -23,7 +23,7 @@ class SampleCovariance(Model):
             value=np.zeros((self.assets, self.assets)),
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         return cp.norm2(self.data["chol"] @ variables["weights"])
 

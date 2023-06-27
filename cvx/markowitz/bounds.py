@@ -44,7 +44,9 @@ class Bounds(Model):
         self.data[self._f("upper")].value = np.zeros(self.assets)
         self.data[self._f("upper")].value[: len(upper)] = upper
 
-    def constraints(self, variables: Dict[str, cp.Variable]):
+    def constraints(
+        self, variables: Dict[str, cp.Variable]
+    ) -> Dict[str, cp.Expression]:
         return {
             f"lower bound {self.name}": variables[self.acting_on]
             >= self.data[self._f("lower")],

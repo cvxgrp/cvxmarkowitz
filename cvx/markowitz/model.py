@@ -21,7 +21,7 @@ class Model(ABC):
     data: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     @abstractmethod
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """
         Estimate the variance given the portfolio weights
         """
@@ -32,7 +32,9 @@ class Model(ABC):
         Update the data in the risk model
         """
 
-    def constraints(self, variables: Dict[str, cp.Variable]):
+    def constraints(
+        self, variables: Dict[str, cp.Variable]
+    ) -> Dict[str, cp.Expression]:
         """
         Return the constraints for the risk model
         """

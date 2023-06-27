@@ -22,7 +22,7 @@ class ExpectedReturns(Model):
             value=np.zeros(self.assets),
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return self.data["mu"] @ variables["weights"]
 
     def update(self, **kwargs):

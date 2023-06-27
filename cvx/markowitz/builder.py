@@ -41,7 +41,7 @@ class Builder:
         Return the objective function
         """
 
-    def build(self):
+    def build(self) -> cp.Problem:
         """
         Build the cvxpy problem
         """
@@ -53,7 +53,7 @@ class Builder:
 
         return cp.Problem(self.objective, list(self.constraints.values()))
 
-    def solution(self, names):
+    def solution(self, names) -> Dict[str, float]:
         """
         Return the solution as a dictionary
         """

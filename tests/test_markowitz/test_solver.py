@@ -17,7 +17,7 @@ class DummySolver(Solver):
         return cp.Maximize(0.0)
 
 
-def test_Dummy():
+def test_dummy():
     solver = DummySolver(assets=1)
     solver.model = {"risk": SampleCovariance(assets=1)}
     solver.variables = {"weights": cp.Variable(1)}

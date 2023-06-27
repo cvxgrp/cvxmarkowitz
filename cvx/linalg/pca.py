@@ -23,11 +23,11 @@ class PCA:
         # 1. compute the correlation
         cov = np.cov(self.returns.T)
         # 2. compute the eigenvalues and eigenvectors
-        self.eigenvalues, eigenvectors = np.linalg.eig(cov)
+        self.eigenvalues, eigenvectors = np.linalg.eigh(cov)
         # 3. sort the eigenvalues in descending order
         idx = self.eigenvalues.argsort()[::-1]
-        self.eigenvalues = np.real(self.eigenvalues[idx])
-        eigenvectors = np.real(eigenvectors[:, idx])
+        self.eigenvalues = self.eigenvalues[idx]
+        eigenvectors = eigenvectors[:, idx]
         # 4. compute the factors
         self.factors = self.returns @ eigenvectors[:, : self.n_components]
 

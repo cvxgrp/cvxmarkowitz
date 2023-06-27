@@ -29,12 +29,12 @@ class SampleCovariance(Model):
 
     def update(self, **kwargs):
         cov = kwargs["cov"]
-        n = cov.shape[0]
+        rows = cov.shape[0]
         assert (
-            n <= self.assets
+            rows <= self.assets
         ), f"Covariance matrix is too large. Has to be smaller than {self.assets}"
         self.data["chol"].value = np.zeros((self.assets, self.assets))
-        self.data["chol"].value[:n, :n] = cholesky(cov)
+        self.data["chol"].value[:rows, :rows] = cholesky(cov)
 
     @property
     def variables(self):

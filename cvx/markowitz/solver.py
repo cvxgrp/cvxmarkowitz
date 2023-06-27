@@ -23,8 +23,8 @@ class Solver:
         """
         Update the model
         """
-        for name, model in self.model.items():
-            self.model[name].update(**kwargs)
+        for _, model in self.model.items():
+            model.update(**kwargs)
 
     @property
     @abstractmethod
@@ -37,8 +37,8 @@ class Solver:
         """
         Build the cvxpy problem
         """
-        for name, model in self.model.items():
-            self.constraints |= self.model[name].constraints(self.variables)
+        for _, model in self.model.items():
+            self.constraints |= model.constraints(self.variables)
 
         return cp.Problem(self.objective, list(self.constraints.values()))
 

@@ -8,7 +8,6 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.linalg import cholesky
 from cvx.markowitz import Model
 
 
@@ -69,14 +68,3 @@ class FactorModel(Model):
             "factors": variables["factor_weights"]
             == self.data["exposure"] @ variables["weights"]
         }
-
-    @property
-    def variables(self):
-        return {
-            "weights": cp.Variable(self.assets),
-            "factor_weights": cp.Variable(self.factors),
-        }
-
-    #
-    # def factor_weights(self, variables):
-    #     return self.data["exposure"] @ variables["weights"]

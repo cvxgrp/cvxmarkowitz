@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -24,7 +25,7 @@ class CVar(Model):
             value=np.zeros((self.rows, self.assets)),
         )
 
-    def estimate(self, variables):
+    def estimate(self, variables: Dict[str, cp.Variable]):
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
@@ -40,6 +41,3 @@ class CVar(Model):
 
         self.data["returns"].value = np.zeros((self.rows, self.assets))
         self.data["returns"].value[:, :columns] = ret
-
-    def variables(self):
-        return {"weights": cp.Variable(self.assets)}

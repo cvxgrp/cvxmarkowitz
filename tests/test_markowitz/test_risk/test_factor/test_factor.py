@@ -33,7 +33,7 @@ def test_timeseries_model(returns):
         idiosyncratic_risk=factors.idiosyncratic_risk,
     )
 
-    variables = model.variables
+    variables = {"weights": cp.Variable(20), "factor_weights": cp.Variable(10)}
     variables["weights"].value = 0.05 * np.ones(20)
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
 
@@ -103,7 +103,7 @@ def test_estimate_risk():
 def test_factor_mini():
     model = FactorModel(assets=3, factors=2)
 
-    variables = model.variables
+    variables = {"weights": cp.Variable(3), "factor_weights": cp.Variable(2)}
 
     assert "weights" in variables
     assert "factor_weights" in variables

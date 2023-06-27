@@ -6,19 +6,19 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
+from cvx.markowitz.builder import Builder
 from cvx.markowitz.risk import SampleCovariance
-from cvx.markowitz.solver import Solver
 
 
 @dataclass
-class DummySolver(Solver):
+class DummyBuilder(Builder):
     @property
     def objective(self):
         return cp.Maximize(0.0)
 
 
 def test_dummy():
-    solver = DummySolver(assets=1)
+    solver = DummyBuilder(assets=1)
     solver.model = {"risk": SampleCovariance(assets=1)}
     solver.variables = {"weights": cp.Variable(1)}
 

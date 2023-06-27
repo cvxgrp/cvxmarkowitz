@@ -12,7 +12,7 @@ from cvx.markowitz import Model
 
 
 @dataclass
-class Solver:
+class Builder:
     assets: int = 0
     factors: int = None
     model: Dict[str, Model] = field(default_factory=dict)

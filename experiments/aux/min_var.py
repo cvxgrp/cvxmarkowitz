@@ -13,7 +13,7 @@ from cvx.markowitz.risk import FactorModel
 from cvx.markowitz.risk import SampleCovariance
 
 
-@dataclass
+@dataclass(frozen=True)
 class MinVar(Builder):
 
     """
@@ -30,6 +30,15 @@ class MinVar(Builder):
         # pick the correct risk model
         if self.factors is not None:
             self.model["risk"] = FactorModel(assets=self.assets, factors=self.factors)
+
+            # add variable for factor weights
+            self.variables["factor_weights"] = cp.Variable(
+                self.factors, name="factor_weights"
+            )
+            # add bounds for factor weights
+            self.model["bounds_factors"] = Bounds(
+                assets=self.factors, name="factors", acting_on="factor_weights"
+            )
         else:
             self.model["risk"] = SampleCovariance(assets=self.assets)
 
@@ -43,11 +52,3 @@ class MinVar(Builder):
 
         self.constraints["long-only"] = self.variables["weights"] >= 0
         self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
-
-        if self.factors is not None:
-            self.variables["factor_weights"] = cp.Variable(
-                self.factors, name="factor_weights"
-            )
-            self.model["bounds_factors"] = Bounds(
-                assets=self.factors, name="factors", acting_on="factor_weights"
-            )

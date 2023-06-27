@@ -10,7 +10,7 @@ from cvx.markowitz.builder import Builder
 from cvx.markowitz.risk import SampleCovariance
 
 
-@dataclass
+@dataclass(frozen=True)
 class DummyBuilder(Builder):
     @property
     def objective(self):
@@ -19,8 +19,8 @@ class DummyBuilder(Builder):
 
 def test_dummy():
     solver = DummyBuilder(assets=1)
-    solver.model = {"risk": SampleCovariance(assets=1)}
-    solver.variables = {"weights": cp.Variable(1)}
+    solver.model["risk"] = SampleCovariance(assets=1)
+    solver.variables["weights"] = cp.Variable(1)
 
     solver.update(cov=np.eye(1))
     problem = solver.build()

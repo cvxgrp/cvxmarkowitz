@@ -5,7 +5,7 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 import pytest
-from aux.portfolio.min_risk import minrisk_problem
+from aux.portfolio.min_var import MinVar
 from aux.random import rand_cov
 
 from cvx.linalg import PCA
@@ -37,15 +37,11 @@ def test_timeseries_model(returns):
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
 
     vola = model.estimate(variables).value
-    print(vola)
     np.testing.assert_almost_equal(vola, 0.009233894697646914)
 
 
 def test_minvar(returns):
-    model = FactorModel(assets=20, factors=10)
-
-    problem, _, _ = minrisk_problem(model, variables=model.variables)
-
+    problem = MinVar(assets=20, factors=10).build()
     assert problem.is_dpp()
 
 
@@ -60,67 +56,56 @@ def test_minvar(returns):
 
 def test_estimate_risk():
     """Test the estimate() method"""
-    model = FactorModel(assets=25, factors=12)
-
-    variables = model.variables
-
     np.random.seed(42)
 
-    # define the problem
-    # weights, factor_weights = model.variables
+    builder = MinVar(assets=25, factors=12)
 
-    prob, bounds, bounds_factors = minrisk_problem(model, variables)
-    assert prob.is_dpp()
-
-    model.update(
+    builder.update(
         cov=rand_cov(10),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
-    )
-
-    bounds.update(
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
+        lower_factors=np.zeros(10),
+        upper_factors=np.ones(10),
     )
 
-    bounds_factors.update(lower_factors=np.zeros(10), upper_factors=np.ones(10))
+    problem = builder.build()
+    problem.solve()
 
-    prob.solve()
     # assert prob.value == pytest.approx(0.14138117837204583)
-    assert np.array(variables["weights"].value[20:]) == pytest.approx(
+    assert np.array(builder.variables["weights"].value[20:]) == pytest.approx(
         np.zeros(5), abs=1e-6
     )
 
-    model.update(
+    builder.update(
         cov=rand_cov(10),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
-    )
-
-    bounds.update(
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
+        lower_factors=-0.1 * np.ones(10),
+        upper_factors=0.1 * np.ones(10),
     )
 
-    bounds_factors.update(
-        lower_factors=-0.1 * np.ones(10), upper_factors=0.1 * np.ones(10)
-    )
+    problem.solve()
 
-    prob.solve()
-    assert prob.value == pytest.approx(0.5454593844618784)
-    assert np.array(variables["weights"].value[20:]) == pytest.approx(
+    assert problem.value == pytest.approx(0.5454593844618784)
+    assert np.array(builder.variables["weights"].value[20:]) == pytest.approx(
         np.zeros(5), abs=1e-6
     )
+
+    data = dict(builder.data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert model.data["exposure"].value @ variables["weights"].value == pytest.approx(
-        variables["factor_weights"].value, abs=1e-6
-    )
+    assert data[("risk", "exposure")].value @ builder.variables[
+        "weights"
+    ].value == pytest.approx(builder.variables["factor_weights"].value, abs=1e-6)
 
     # test all entries of y are smaller than 0.1
-    assert np.all([variables["factor_weights"].value <= 0.1 + 1e-6])
+    assert np.all([builder.variables["factor_weights"].value <= 0.1 + 1e-6])
     # test all entries of y are larger than -0.1
-    assert np.all([variables["factor_weights"].value >= -(0.1 + 1e-6)])
+    assert np.all([builder.variables["factor_weights"].value >= -(0.1 + 1e-6)])
 
 
 def test_factor_mini():

@@ -46,10 +46,11 @@ class Builder:
         """
         Build the cvxpy problem
         """
-        for model in self.model.values():
-            for name, constraint in model.constraints(self.variables).items():
-                assert name not in self.constraints, "Duplicate constraint"
-                self.constraints[name] = constraint
+        for name_model, model in self.model.items():
+            for name_constraint, constraint in model.constraints(
+                self.variables
+            ).items():
+                self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         return cp.Problem(self.objective, list(self.constraints.values()))
 

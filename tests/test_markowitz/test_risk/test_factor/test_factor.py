@@ -45,15 +45,6 @@ def test_minvar(returns):
     assert problem.is_dpp()
 
 
-# def test_data():
-#    model = FactorModel(assets=20, factors=10)
-#    print(model.data.keys())
-#    model.data["lower_factors"].value = 2 * np.ones(10)
-#    assert model.data["lower_factors"].value == pytest.approx(
-#        model.bounds_factors.data["lower_factors"].value
-#    )
-
-
 def test_estimate_risk():
     """Test the estimate() method"""
     np.random.seed(42)

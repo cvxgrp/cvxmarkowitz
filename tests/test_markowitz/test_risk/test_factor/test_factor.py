@@ -29,7 +29,7 @@ def test_timeseries_model(returns):
     model.update(
         cov=factors.cov,
         exposure=factors.exposure,
-        idiosyncratic_risk=np.std(factors.idiosyncratic_returns),
+        idiosyncratic_risk=factors.idiosyncratic_risk,
     )
 
     variables = model.variables

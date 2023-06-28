@@ -18,7 +18,7 @@ def test_max_sharpe():
 
     problem = builder.build()
 
-    builder.update(
+    problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
@@ -28,7 +28,16 @@ def test_max_sharpe():
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value,
+        problem.variables["weights"].value,
         np.array([5.20124e-01, 4.79876e-01, 0.0, 0.0]),
+        decimal=5,
+    )
+
+    problem.parameter["sigma_max"].value = 3.0
+    problem.solve()
+
+    np.testing.assert_almost_equal(
+        problem.variables["weights"].value,
+        np.array([5.10084e-01, 4.89916e-01, 0.0, 0.0]),
         decimal=5,
     )

@@ -23,18 +23,20 @@ def test_estimate_risk():
 
     assert "bound_assets" in builder.model
 
-    builder.update(
+    problem = builder.build()
+
+    problem.update(
         returns=np.random.randn(50, 10),
         lower_assets=np.zeros(10),
         upper_assets=np.ones(10),
     )
 
-    problem = builder.build()
+    # problem = builder.build()
     problem.solve()
     assert problem.value == pytest.approx(0.5058720677762698)
 
     # it's enough to only update the R value...
-    builder.update(
+    problem.update(
         returns=np.random.randn(50, 10),
         lower_assets=np.zeros(10),
         upper_assets=np.ones(10),

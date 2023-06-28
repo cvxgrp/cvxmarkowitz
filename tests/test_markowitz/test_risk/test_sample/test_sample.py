@@ -37,21 +37,23 @@ def test_min_variance():
     assert "bound_assets" in builder.model
     assert "risk" in builder.model
 
-    builder.update(
+    problem = builder.build()
+
+    problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
     )
 
-    problem = builder.build()
+    # problem = builder.build()
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+        problem.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
 
     # It's enough to only update the value for the cholesky decomposition
-    builder.update(
+    problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 4.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
@@ -60,7 +62,7 @@ def test_min_variance():
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value,
+        problem.variables["weights"].value,
         np.array([0.875, 0.125, 0.0, 0.0]),
         decimal=5,
     )

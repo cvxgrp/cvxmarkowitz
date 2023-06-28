@@ -26,12 +26,12 @@ class Bounds(Model):
     def __post_init__(self):
         self.data[self._f("lower")] = cp.Parameter(
             shape=self.assets,
-            name="lower bound",
+            name=self._f("lower"),
             value=np.zeros(self.assets),
         )
         self.data[self._f("upper")] = cp.Parameter(
             shape=self.assets,
-            name="upper bound",
+            name=self._f("upper"),
             value=np.ones(self.assets),
         )
 

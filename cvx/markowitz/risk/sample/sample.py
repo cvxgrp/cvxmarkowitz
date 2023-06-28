@@ -19,7 +19,7 @@ class SampleCovariance(Model):
     def __post_init__(self):
         self.data["chol"] = cp.Parameter(
             shape=(self.assets, self.assets),
-            name="cholesky of covariance",
+            name="chol",
             value=np.zeros((self.assets, self.assets)),
         )
 

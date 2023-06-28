@@ -25,13 +25,20 @@ class FactorModel(Model):
         )
 
         self.data["idiosyncratic_risk"] = cp.Parameter(
-            shape=self.assets, name="idiosyncratic_risk", value=np.zeros(self.assets)
+            shape=self.assets, name="idiosyncratic risk", value=np.zeros(self.assets)
         )
 
         self.data["chol"] = cp.Parameter(
             shape=(self.factors, self.factors),
-            name="chol",
+            name="cholesky of covariance",
             value=np.zeros((self.factors, self.factors)),
+        )
+
+        self.parameter["covariance_uncertainty"] = cp.Parameter(
+            shape=1,
+            name="covariance uncertainty",
+            value=np.zeros(1),
+            nonneg=True,
         )
 
     def estimate(self, variables) -> cp.Expression:
@@ -43,13 +50,22 @@ class FactorModel(Model):
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
+
+    # def _robust_risk(self)
+
     def _residual_risk(self, variables):
+        
         return cp.norm2(
             cp.multiply(self.data["idiosyncratic_risk"], variables["weights"])
         )
 
     def _systematic_risk(self, variables):
-        return cp.norm2(self.data["chol"] @ variables["factor_weights"])
+        # Volatilities for robust covariance
+        sigmas = cp.sqrt(cp.sum(self.data["chol"]**2, axis=1))
+ 
+        return cp.norm2(self.data["chol"] @ variables["factor_weights"])#\
+            # + self.parameter["covariance_uncertainty"] \
+            #     * (cp.sum(sigmas * cp.abs(variables["factor_weights"])))**2
 
     def update(self, **kwargs):
         exposure = kwargs["exposure"]

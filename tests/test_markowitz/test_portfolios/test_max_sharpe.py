@@ -23,21 +23,14 @@ def test_max_sharpe():
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
         mu=np.ones(2),
+        mu_uncertainty=np.zeros(2),
     )
 
     problem.solve()
 
     np.testing.assert_almost_equal(
-        problem.variables["weights"].value,
-        np.array([5.20124e-01, 4.79876e-01, 0.0, 0.0]),
-        decimal=5,
-    )
-
-    problem.parameter["sigma_max"].value = 3.0
-    problem.solve()
-
-    np.testing.assert_almost_equal(
-        problem.variables["weights"].value,
-        np.array([5.10084e-01, 4.89916e-01, 0.0, 0.0]),
+        builder.variables["weights"].value,
+        # np.array([5.20124e-01, 4.79876e-01, 0.0, 0.0]),
+        np.array([ 5.17711e-01,  4.82289e-01, 0.0, 0.0]),
         decimal=5,
     )

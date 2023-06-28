@@ -42,7 +42,6 @@ def test_dummy():
 
 def test_missing_data():
     builder = DummyBuilder(assets=1)
-    builder.model["risk"] = SampleCovariance(assets=1)
-    builder.variables["weights"] = cp.Variable(1)
+    problem = builder.build()
     with pytest.raises(CvxError):
-        builder.update(cov=np.eye(1))
+        problem.update(cov=np.eye(1))

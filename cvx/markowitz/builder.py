@@ -23,6 +23,7 @@ class Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
+    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
     # problem has var_dict and param_dict
 
     def update(self, **kwargs):
@@ -58,6 +59,9 @@ class Problem:
     @property
     def value(self):
         return self.problem.value
+
+    def is_dpp(self):
+        return self.problem.is_dpp()
 
 
 @dataclass(frozen=True)
@@ -112,7 +116,12 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
-        return Problem(problem=problem, model=self.model, variables=self.variables)
+        return Problem(
+            problem=problem,
+            model=self.model,
+            variables=self.variables,
+            parameter=self.parameter,
+        )
 
     @property
     def data(self):

@@ -49,7 +49,7 @@ def test_min_variance():
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+        problem.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
 
     # It's enough to only update the value for the cholesky decomposition
@@ -62,7 +62,7 @@ def test_min_variance():
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value,
+        problem.variables["weights"].value,
         np.array([0.875, 0.125, 0.0, 0.0]),
         decimal=5,
     )

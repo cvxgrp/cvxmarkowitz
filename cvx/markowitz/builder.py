@@ -105,7 +105,7 @@ class Builder:
         Return the objective function
         """
 
-    def build(self) -> cp.Problem:
+    def build(self):
         """
         Build the cvxpy problem
         """

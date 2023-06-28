@@ -24,7 +24,10 @@ def test_dummy():
     builder.model["risk"] = SampleCovariance(assets=1)
     builder.variables["weights"] = cp.Variable(1)
 
-    builder.update(chol=np.eye(1))
+    builder.update(
+        chol=np.eye(1), lower_assets=np.array([0.0]), upper_assets=np.array([1.0])
+    )
+
     problem = builder.build()
     problem.solve()
 

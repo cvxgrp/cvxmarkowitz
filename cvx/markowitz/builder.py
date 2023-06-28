@@ -19,7 +19,7 @@ class CvxError(Exception):
 
 
 @dataclass(frozen=True)
-class Problem:
+class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
@@ -116,7 +116,7 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
-        return Problem(
+        return _Problem(
             problem=problem,
             model=self.model,
             variables=self.variables,

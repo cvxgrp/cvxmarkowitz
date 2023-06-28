@@ -5,7 +5,7 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.bounds import Bounds
+from cvx.markowitz.models.bounds import Bounds
 
 
 def test_raise_not_implemented():

@@ -5,16 +5,16 @@ from dataclasses import dataclass
 
 import cvxpy as cp
 
-from cvx.markowitz.bounds import Bounds
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.models.holding_costs import HoldingCosts
+from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.models.expected_returns import ExpectedReturns
 from cvx.markowitz.models.trading_costs import TradingCosts
 from cvx.markowitz.risk import FactorModel
 from cvx.markowitz.risk import SampleCovariance
 
 
 @dataclass(frozen=True)
-class MinVar(Builder):
+class MaxSharpe(Builder):
 
     """
     Minimize the standard deviation of the portfolio returns subject to a set of constraints
@@ -24,7 +24,7 @@ class MinVar(Builder):
 
     @property
     def objective(self):
-        return cp.Minimize(self.model["risk"].estimate(self.variables))
+        return cp.Maximize(self.model["return"].estimate(self.variables))
 
     def __post_init__(self):
         # pick the correct risk model
@@ -49,6 +49,14 @@ class MinVar(Builder):
         self.model["bound_assets"] = Bounds(
             assets=self.assets, name="assets", acting_on="weights"
         )
+        self.model["return"] = ExpectedReturns(assets=self.assets)
+
+        self.parameter["sigma_max"] = cp.Parameter(
+            nonneg=True, name="maximal volatility"
+        )
 
         self.constraints["long-only"] = self.variables["weights"] >= 0
         self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
+        self.constraints["risk"] = (
+            self.model["risk"].estimate(self.variables) <= self.parameter["sigma_max"]
+        )

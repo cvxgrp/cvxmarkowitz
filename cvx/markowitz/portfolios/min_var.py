@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 import cvxpy as cp
 
-from cvx.markowitz.bounds import Bounds
 from cvx.markowitz.builder import Builder
+from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.models.holding_costs import HoldingCosts
 from cvx.markowitz.models.trading_costs import TradingCosts
 from cvx.markowitz.risk import FactorModel

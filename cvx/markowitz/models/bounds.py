@@ -8,7 +8,7 @@ from typing import Dict
 import cvxpy as cp
 import numpy as np
 
-from .model import Model
+from cvx.markowitz.model import Model
 
 
 @dataclass(frozen=True)

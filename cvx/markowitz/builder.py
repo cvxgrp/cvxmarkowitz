@@ -22,6 +22,7 @@ class Builder:
     model: Dict[str, Model] = field(default_factory=dict)
     constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
+    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     def update(self, **kwargs):
         """

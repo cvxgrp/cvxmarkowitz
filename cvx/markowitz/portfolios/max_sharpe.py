@@ -51,6 +51,12 @@ class MaxSharpe(Builder):
         )
         self.model["return"] = ExpectedReturns(assets=self.assets)
 
+        self.parameter["sigma_max"] = cp.Parameter(
+            nonneg=True, name="maximal volatility"
+        )
+
         self.constraints["long-only"] = self.variables["weights"] >= 0
         self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
-        self.constraints["risk"] = self.model["risk"].estimate(self.variables) <= 2.0
+        self.constraints["risk"] = (
+            self.model["risk"].estimate(self.variables) <= self.parameter["sigma_max"]
+        )

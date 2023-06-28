@@ -10,6 +10,7 @@ from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 def test_max_sharpe():
     # define the problem
     builder = MaxSharpe(assets=4)
+    builder.parameter["sigma_max"].value = 2.0
 
     assert "bound_assets" in builder.model
     assert "risk" in builder.model

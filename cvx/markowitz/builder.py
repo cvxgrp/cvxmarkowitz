@@ -19,6 +19,48 @@ class CvxError(Exception):
 
 
 @dataclass(frozen=True)
+class Problem:
+    problem: cp.Problem
+    model: Dict[str, Model] = field(default_factory=dict)
+
+    # problem has var_dict and param_dict
+
+    def update(self, **kwargs):
+        """
+        Update the model
+        """
+        for name, model in self.model.items():
+            for key in model.data.keys():
+                if key not in kwargs:
+                    raise CvxError(f"Missing data for {key} in model {name}")
+
+            model.update(**kwargs)
+
+        # set the parameters in the problem
+        # print(self.problem.param_dict.keys())
+
+        for name, model in self.model.items():
+            for key in model.data.keys():
+                self.problem.param_dict[key].value = model.data[key].value
+
+    def solve(self, **kwargs):
+        """
+        Solve the problem
+        """
+        self.problem.solve(**kwargs)
+
+    def solution(self, variable="weights"):
+        """
+        Return the solution
+        """
+        return self.problem.var_dict[variable].value
+
+    @property
+    def value(self):
+        return self.problem.value
+
+
+@dataclass(frozen=True)
 class Builder:
     assets: int = 0
     factors: int = None
@@ -51,19 +93,8 @@ class Builder:
             assets=self.assets, name="assets", acting_on="weights"
         )
 
-    def update(self, **kwargs):
-        """
-        Update the model
-        """
-        for name, model in self.model.items():
-            for key in model.data.keys():
-                if key not in kwargs:
-                    raise CvxError(f"Missing data for {key} in model {name}")
-
-            model.update(**kwargs)
-
     @property
-    # @abstractmethod
+    @abstractmethod
     def objective(self):
         """
         Return the objective function
@@ -79,13 +110,9 @@ class Builder:
             ).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
-        return cp.Problem(self.objective, list(self.constraints.values()))
-
-    def solution(self, names) -> Dict[str, float]:
-        """
-        Return the solution as a dictionary
-        """
-        return dict(zip(names, self.variables["weights"].value[: len(names)]))
+        problem = cp.Problem(self.objective, list(self.constraints.values()))
+        assert problem.is_dpp(), "Problem is not DPP"
+        return Problem(problem=problem, model=self.model)
 
     @property
     def data(self):

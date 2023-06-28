@@ -21,14 +21,15 @@ class DummyBuilder(Builder):
 
 def test_dummy():
     builder = DummyBuilder(assets=1)
-    builder.model["risk"] = SampleCovariance(assets=1)
-    builder.variables["weights"] = cp.Variable(1)
+    # builder.model["risk"] = SampleCovariance(assets=1)
+    # builder.variables["weights"] = cp.Variable(1)
 
-    builder.update(
+    problem = builder.build()
+    problem.update(
         chol=np.eye(1), lower_assets=np.array([0.0]), upper_assets=np.array([1.0])
     )
 
-    problem = builder.build()
+    # problem = builder.build()
     problem.solve()
 
     builder.variables["weights"].value = np.array([2.0])

@@ -17,11 +17,7 @@ def test_min_var():
 
     problem = builder.build()
 
-    # print(dir(problem))
-    # print(problem.param_dict)
-    # assert False
-
-    builder.update(
+    problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
@@ -30,5 +26,8 @@ def test_min_var():
     problem.solve()
 
     np.testing.assert_almost_equal(
-        builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+        problem.solution(),
+        np.array([0.75, 0.25, 0.0, 0.0]),
+        decimal=5
+        # builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )

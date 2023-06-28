@@ -7,7 +7,7 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import cholesky
-from experiments.aux.min_var import MinVar
+from cvx.markowitz.portfolios.min_var import MinVar
 
 if __name__ == "__main__":
     returns = (

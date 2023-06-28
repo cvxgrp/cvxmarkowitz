@@ -8,7 +8,7 @@ from loguru import logger
 
 from cvx.linalg import cholesky
 from cvx.linalg import PCA
-from experiments.aux.min_var import MinVar
+from cvx.markowitz.portfolios.min_var import MinVar
 
 if __name__ == "__main__":
     returns = (

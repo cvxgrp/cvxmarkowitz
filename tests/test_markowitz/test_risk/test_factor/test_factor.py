@@ -5,11 +5,11 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 import pytest
-from aux.portfolio.min_var import MinVar
 from aux.random import rand_cov
 
 from cvx.linalg import cholesky
 from cvx.linalg import PCA
+from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
 
 

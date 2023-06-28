@@ -22,7 +22,7 @@ class CvxError(Exception):
 class Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
-
+    variables: Dict[str, cp.Variable] = field(default_factory=dict)
     # problem has var_dict and param_dict
 
     def update(self, **kwargs):
@@ -112,7 +112,7 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
-        return Problem(problem=problem, model=self.model)
+        return Problem(problem=problem, model=self.model, variables=self.variables)
 
     @property
     def data(self):

@@ -37,7 +37,7 @@ class Problem:
             model.update(**kwargs)
 
         # set the parameters in the problem
-        # print(self.problem.param_dict.keys())
+        print(self.problem.param_dict.keys())
 
         for name, model in self.model.items():
             for key in model.data.keys():

@@ -1,4 +1,4 @@
-name: pre-commit
+name: "basic"
 
 on:
   push:
@@ -8,5 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+
+    - uses: cvxgrp/.github/actions/test@main
+      with:
+        #os: 'ubuntu-latest'
+        python-version: '3.10'
+
     - uses: pre-commit/action@v3.0.0

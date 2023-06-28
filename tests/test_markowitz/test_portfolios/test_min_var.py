@@ -9,12 +9,17 @@ from cvx.markowitz.portfolios.min_var import MinVar
 
 def test_min_var():
     # define the problem
+
     builder = MinVar(assets=4)
 
     assert "bound_assets" in builder.model
     assert "risk" in builder.model
 
     problem = builder.build()
+
+    # print(dir(problem))
+    # print(problem.param_dict)
+    # assert False
 
     builder.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),

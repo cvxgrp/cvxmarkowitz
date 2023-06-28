@@ -52,7 +52,9 @@ def test_estimate_risk():
 
     builder = MinVar(assets=25, factors=12)
 
-    builder.update(
+    problem = builder.build()
+
+    problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
@@ -62,15 +64,14 @@ def test_estimate_risk():
         upper_factors=np.ones(10),
     )
 
-    problem = builder.build()
     problem.solve()
 
     # assert prob.value == pytest.approx(0.14138117837204583)
-    assert np.array(builder.variables["weights"].value[20:]) == pytest.approx(
+    assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
         np.zeros(5), abs=1e-6
     )
 
-    builder.update(
+    problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
         idiosyncratic_risk=np.random.randn(20),
@@ -83,21 +84,21 @@ def test_estimate_risk():
     problem.solve()
 
     assert problem.value == pytest.approx(0.5454593844618784)
-    assert np.array(builder.variables["weights"].value[20:]) == pytest.approx(
+    assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
         np.zeros(5), abs=1e-6
     )
 
     data = dict(builder.data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert data[("risk", "exposure")].value @ builder.variables[
+    assert data[("risk", "exposure")].value @ problem.variables[
         "weights"
-    ].value == pytest.approx(builder.variables["factor_weights"].value, abs=1e-6)
+    ].value == pytest.approx(problem.variables["factor_weights"].value, abs=1e-6)
 
     # test all entries of y are smaller than 0.1
-    assert np.all([builder.variables["factor_weights"].value <= 0.1 + 1e-6])
+    assert np.all([problem.variables["factor_weights"].value <= 0.1 + 1e-6])
     # test all entries of y are larger than -0.1
-    assert np.all([builder.variables["factor_weights"].value >= -(0.1 + 1e-6)])
+    assert np.all([problem.variables["factor_weights"].value >= -(0.1 + 1e-6)])
 
 
 def test_factor_mini():

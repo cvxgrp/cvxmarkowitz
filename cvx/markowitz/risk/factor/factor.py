@@ -25,12 +25,12 @@ class FactorModel(Model):
         )
 
         self.data["idiosyncratic_risk"] = cp.Parameter(
-            shape=self.assets, name="idiosyncratic risk", value=np.zeros(self.assets)
+            shape=self.assets, name="idiosyncratic_risk", value=np.zeros(self.assets)
         )
 
         self.data["chol"] = cp.Parameter(
             shape=(self.factors, self.factors),
-            name="cholesky of covariance",
+            name="chol",
             value=np.zeros((self.factors, self.factors)),
         )
 

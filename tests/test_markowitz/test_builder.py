@@ -9,31 +9,37 @@ import pytest
 
 from cvx.markowitz.builder import Builder
 from cvx.markowitz.builder import CvxError
-from cvx.markowitz.risk import SampleCovariance
 
 
 @dataclass(frozen=True)
 class DummyBuilder(Builder):
     @property
     def objective(self):
-        return cp.Maximize(0.0)
+        return cp.Maximize(0.0 + 0.0 * self.model["risk"].estimate(self.variables))
 
 
 def test_dummy():
     builder = DummyBuilder(assets=1)
-    builder.model["risk"] = SampleCovariance(assets=1)
-    builder.variables["weights"] = cp.Variable(1)
 
-    builder.update(
+    assert "risk" in builder.model
+    assert "bound_assets" in builder.model
+    assert "chol" in builder.model["risk"].data
+
+    problem = builder.build()
+    print(problem.problem.parameters())
+    # todo: risk model needs to be involved in DummyBuilder
+
+    problem.update(
         chol=np.eye(1), lower_assets=np.array([0.0]), upper_assets=np.array([1.0])
     )
 
-    problem = builder.build()
+    # problem = builder.build()
     problem.solve()
 
-    builder.variables["weights"].value = np.array([2.0])
-    d = builder.solution(names=["a"])
-    assert d["a"] == 2.0
+    problem.problem.var_dict["weights"].value = np.array([2.0])
+
+    d = problem.solution()  # (names=["a"])
+    assert d == np.array([2.0])
 
     print(dict(builder.data))
     assert np.allclose(dict(builder.data)[("risk", "chol")].value, np.eye(1))
@@ -41,7 +47,6 @@ def test_dummy():
 
 def test_missing_data():
     builder = DummyBuilder(assets=1)
-    builder.model["risk"] = SampleCovariance(assets=1)
-    builder.variables["weights"] = cp.Variable(1)
+    problem = builder.build()
     with pytest.raises(CvxError):
-        builder.update(cov=np.eye(1))
+        problem.update(cov=np.eye(1))

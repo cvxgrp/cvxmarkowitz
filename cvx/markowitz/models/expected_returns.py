@@ -18,7 +18,7 @@ class ExpectedReturns(Model):
     def __post_init__(self):
         self.data["mu"] = cp.Parameter(
             shape=self.assets,
-            name="vector of expected returns",
+            name="mu",
             value=np.zeros(self.assets),
         )
 

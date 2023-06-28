@@ -22,6 +22,7 @@ class CvxError(Exception):
 class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
+    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
     # problem has var_dict and param_dict
@@ -119,6 +120,7 @@ class Builder:
         return _Problem(
             problem=problem,
             model=self.model,
+            constraints=self.constraints,
             variables=self.variables,
             parameter=self.parameter,
         )

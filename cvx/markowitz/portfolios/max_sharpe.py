@@ -53,3 +53,4 @@ class MaxSharpe(Builder):
 
         self.constraints["long-only"] = self.variables["weights"] >= 0
         self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
+        self.constraints["risk"] = self.model["risk"].estimate(self.variables) <= 2.0

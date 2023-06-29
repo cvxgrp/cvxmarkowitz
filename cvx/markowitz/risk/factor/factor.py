@@ -65,9 +65,6 @@ class FactorModel(Model):
         return cp.norm2(cp.hstack([cp.multiply(self.data["idiosyncratic_risk"], variables["weights"]), \
          cp.multiply(self.data["idiosyncratic_vola_uncertainty"], variables["weights"])]))
 
-        # return cp.sum_squares(cp.multiply(self.data["idiosyncratic_risk"], variables["weights"])) + \
-        #  cp.sum_squares(cp.multiply(self.data["idiosyncratic_vola_uncertainty"], variables["weights"])) # Robust residual risk
-
     def _systematic_risk(self, variables):
 
         return cp.norm2(cp.hstack([self.data["chol"] @ variables["factor_weights"], \

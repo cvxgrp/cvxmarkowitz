@@ -125,8 +125,8 @@ def test_factor_mini():
         chol=np.eye(2),
         exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
         idiosyncratic_risk=np.array([0.1, 0.1, 0.1]),
-        systematic_vola_uncertainty=np.zeros(2),
-        idiosyncratic_vola_uncertainty=np.zeros(3),
+        systematic_vola_uncertainty=np.array([0.2, 0.1]),
+        idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
     )
 
     variables["weights"].value = np.array([0.5, 0.1, 0.2])
@@ -138,13 +138,14 @@ def test_factor_mini():
         np.array([0.7, 0.75]), abs=1e-6
     )
 
-    residual = np.linalg.norm(np.array([0.05, 0.01, 0.02]))
-    systematic = np.linalg.norm(np.array([0.7, 0.75]))
+    residual = np.sqrt(0.03)
+    systematic = np.sqrt(1.098725)
 
     assert model._residual_risk(variables=variables).value == pytest.approx(residual)
     assert model._systematic_risk(variables=variables).value == pytest.approx(
         systematic
     )
+
 
     total = np.linalg.norm(np.array([residual, systematic]))
 

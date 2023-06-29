@@ -36,6 +36,35 @@ def test_sample_large():
 
     np.testing.assert_almost_equal(vola, 2.0)
 
+def test_robust_sample():
+    riskmodel = SampleCovariance(assets=2)
+    riskmodel.update(
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
+        vola_uncertainty=np.array([0.1, 0.2]), # Volatility uncertainty
+    )
+
+    # Note: dummy should be abs(weights)
+    vola = riskmodel.estimate({"weights": np.array([1.0, -1.0]),\
+        "dummy": np.array([1.0, 1.0])}).value
+    np.testing.assert_almost_equal(vola, np.sqrt(2.09))
+
+
+def test_sample_large():
+    riskmodel = SampleCovariance(assets=4)
+    riskmodel.update(
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
+        vola_uncertainty=np.array([0.1, 0.2]), # Volatility uncertainty
+
+    )
+    vola = riskmodel.estimate({"weights": np.array([1.0, -1.0, 0.0, 0.0]),\
+        "dummy": np.array([1.0, 1.0, 0.0, 0.0])}).value
+
+    np.testing.assert_almost_equal(vola, np.sqrt(2.09))
+
 
 def test_min_variance():
     # define the problem

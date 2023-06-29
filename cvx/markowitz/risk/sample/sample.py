@@ -49,3 +49,9 @@ class SampleCovariance(Model):
         # Robust risk
         self.data["vola_uncertainty"].value = np.zeros(self.assets)
         self.data["vola_uncertainty"].value[:rows] = kwargs["vola_uncertainty"]
+
+
+    def constraints(self, variables):
+        return {
+            "dummy": variables["dummy"] >= cp.abs(variables["weights"]), # Robust risk dummy variable
+        }

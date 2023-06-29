@@ -24,7 +24,20 @@ Like many profound breakthroughs, it looks obvious in retrospect.*
 -- <cite>[[Ronald Kahn](https://en.wikipedia.org/wiki/Ronald_Kahn) in 2023]</cite>
 
 Our assumption is that we solve multiple problems of the same type in a row. The input for the $n$th problem may depend
-on the outcome of a previous problem, e.g. the $n-1$th.
+on the outcome of a previous problem, e.g. the $n-1$th. Hence, we need to respect their sequential nature and order.
+
+We can however hope that the problems we construct are [DPP](https://www.cvxpy.org/tutorial/advanced/index.html#disciplined-parametrized-programming)
+compliant. The first time a DPP-compliant problem is solved, CVXPY compiles it and caches the mapping from parameters to problem data. As a result, subsequent rewritings of DPP problems can be substantially faster.
+
+In practice, the problems are not constant in size. Assets are added or removed, factors are added or removed, and so on.
+We expect the user is providing the number of assets a priori.
+We can then construct a problem suitable for a number of assets equal or smaller than the one provided.
+Using this approach, we keep the number of assets fixed by setting the weights for the assets not used to zero.
+Hence we do **not** need to recompile the problem as a new asset has to be added.
+
+
+
+
 ## Installation
 
 You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):

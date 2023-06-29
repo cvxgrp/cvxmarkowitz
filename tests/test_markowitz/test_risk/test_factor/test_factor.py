@@ -111,7 +111,11 @@ def test_estimate_risk():
 def test_factor_mini():
     model = FactorModel(assets=3, factors=2)
 
-    variables = {"weights": cp.Variable(3), "factor_weights": cp.Variable(2), "dummy": cp.Variable(2)}
+    variables = {
+        "weights": cp.Variable(3),
+        "factor_weights": cp.Variable(2),
+        "dummy": cp.Variable(2),
+    }
 
     assert "weights" in variables
     assert "factor_weights" in variables
@@ -144,7 +148,6 @@ def test_factor_mini():
     assert model._systematic_risk(variables=variables).value == pytest.approx(
         systematic
     )
-
 
     total = np.linalg.norm(np.array([residual, systematic]))
 

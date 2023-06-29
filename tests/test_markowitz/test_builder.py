@@ -30,7 +30,10 @@ def test_dummy():
     # todo: risk model needs to be involved in DummyBuilder
 
     problem.update(
-        chol=np.eye(1), lower_assets=np.array([0.0]), upper_assets=np.array([1.0]), vola_uncertainty=np.zeros(1)
+        chol=np.eye(1),
+        lower_assets=np.array([0.0]),
+        upper_assets=np.array([1.0]),
+        vola_uncertainty=np.zeros(1),
     )
 
     # problem = builder.build()

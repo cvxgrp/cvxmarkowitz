@@ -29,13 +29,20 @@ class SampleCovariance(Model):
             value=np.zeros(self.assets),
             nonneg=True,
         )
-# x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
+
+    # x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of
         self.cov"""
-        
-        return cp.norm2(cp.hstack([self.data["chol"] @ variables["weights"], \
-        self.data["vola_uncertainty"] @ variables["dummy"]]))  # 
+
+        return cp.norm2(
+            cp.hstack(
+                [
+                    self.data["chol"] @ variables["weights"],
+                    self.data["vola_uncertainty"] @ variables["dummy"],
+                ]
+            )
+        )  #
 
         # return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
         # + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
@@ -50,8 +57,8 @@ class SampleCovariance(Model):
         self.data["vola_uncertainty"].value = np.zeros(self.assets)
         self.data["vola_uncertainty"].value[:rows] = kwargs["vola_uncertainty"]
 
-
     def constraints(self, variables):
         return {
-            "dummy": variables["dummy"] >= cp.abs(variables["weights"]), # Robust risk dummy variable
+            "dummy": variables["dummy"]
+            >= cp.abs(variables["weights"]),  # Robust risk dummy variable
         }

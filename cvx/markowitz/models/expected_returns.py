@@ -31,8 +31,9 @@ class ExpectedReturns(Model):
         )
 
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
-        return self.data["mu"] @ variables["weights"] \
-            - self.parameter["mu_uncertainty"] @ cp.abs(variables["weights"])
+        return self.data["mu"] @ variables["weights"] - self.parameter[
+            "mu_uncertainty"
+        ] @ cp.abs(variables["weights"])
 
     def update(self, **kwargs):
         exp_returns = kwargs["mu"]
@@ -44,4 +45,3 @@ class ExpectedReturns(Model):
         uncertainty = kwargs["mu_uncertainty"]
         self.parameter["mu_uncertainty"].value = np.zeros(self.assets)
         self.parameter["mu_uncertainty"].value[:num] = uncertainty
-

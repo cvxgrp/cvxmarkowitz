@@ -33,6 +33,7 @@ def test_min_var():
         # builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
 
+
 def test_min_var_robust():
     # define the problem
 
@@ -54,7 +55,6 @@ def test_min_var_robust():
 
     np.testing.assert_almost_equal(
         problem.solution(),
-        np.array([0.626406, 0.373594, 0.0, 0.0]), # Computed analytically
-        decimal=5
+        np.array([0.626406, 0.373594, 0.0, 0.0]),  # Computed analytically
+        decimal=5,
     )
-

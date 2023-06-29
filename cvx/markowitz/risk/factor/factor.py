@@ -25,7 +25,9 @@ class FactorModel(Model):
         )
 
         self.data["idiosyncratic_risk"] = cp.Parameter(
-            shape=self.assets, name="idiosyncratic_risk", value=np.zeros(self.assets),
+            shape=self.assets,
+            name="idiosyncratic_risk",
+            value=np.zeros(self.assets),
         )
 
         self.data["chol"] = cp.Parameter(
@@ -57,22 +59,33 @@ class FactorModel(Model):
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-
     # def _robust_risk(self)
 
     def _residual_risk(self, variables):
-
-        return cp.norm2(cp.hstack([cp.multiply(self.data["idiosyncratic_risk"], variables["weights"]), \
-         cp.multiply(self.data["idiosyncratic_vola_uncertainty"], variables["weights"])]))
+        return cp.norm2(
+            cp.hstack(
+                [
+                    cp.multiply(self.data["idiosyncratic_risk"], variables["weights"]),
+                    cp.multiply(
+                        self.data["idiosyncratic_vola_uncertainty"],
+                        variables["weights"],
+                    ),
+                ]
+            )
+        )
 
     def _systematic_risk(self, variables):
-
-        return cp.norm2(cp.hstack([self.data["chol"] @ variables["factor_weights"], \
-        self.data["systematic_vola_uncertainty"] @ variables["dummy"]]))
+        return cp.norm2(
+            cp.hstack(
+                [
+                    self.data["chol"] @ variables["factor_weights"],
+                    self.data["systematic_vola_uncertainty"] @ variables["dummy"],
+                ]
+            )
+        )
 
         # return cp.sum_squares(self.data["chol"] @ variables["factor_weights"]) \
-        #      + (self.data["systematic_vola_uncertainty"] @ cp.abs(variables["factor_weights"]))**2 # Robust systematic risk 
- 
+        #      + (self.data["systematic_vola_uncertainty"] @ cp.abs(variables["factor_weights"]))**2 # Robust systematic risk
 
     def update(self, **kwargs):
         exposure = kwargs["exposure"]
@@ -83,18 +96,23 @@ class FactorModel(Model):
         self.data["idiosyncratic_risk"].value = np.zeros(self.assets)
         self.data["idiosyncratic_risk"].value[:assets] = kwargs["idiosyncratic_risk"]
         self.data["chol"].value = np.zeros((self.factors, self.factors))
-        self.data["chol"].value[:k, :k] = kwargs["chol"] 
+        self.data["chol"].value[:k, :k] = kwargs["chol"]
 
         # Robust risk
         self.data["systematic_vola_uncertainty"].value = np.zeros(self.factors)
         self.data["idiosyncratic_vola_uncertainty"].value = np.zeros(self.assets)
-        self.data["systematic_vola_uncertainty"].value[:k] = kwargs["systematic_vola_uncertainty"][:k]
-        self.data["idiosyncratic_vola_uncertainty"].value[:assets] = kwargs["idiosyncratic_vola_uncertainty"][:assets]
+        self.data["systematic_vola_uncertainty"].value[:k] = kwargs[
+            "systematic_vola_uncertainty"
+        ][:k]
+        self.data["idiosyncratic_vola_uncertainty"].value[:assets] = kwargs[
+            "idiosyncratic_vola_uncertainty"
+        ][:assets]
 
     def constraints(self, variables):
         # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
         return {
             "factors": variables["factor_weights"]
             == self.data["exposure"] @ variables["weights"],
-            "dummy": variables["dummy"] >= cp.abs(variables["factor_weights"]), # Robust risk dummy variable
+            "dummy": variables["dummy"]
+            >= cp.abs(variables["factor_weights"]),  # Robust risk dummy variable
         }

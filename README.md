@@ -35,6 +35,14 @@ We can then construct a problem suitable for a number of assets equal or smaller
 Using this approach, we keep the number of assets fixed by setting the weights for the assets not used to zero.
 Hence we do **not** need to recompile the problem as a new asset has to be added.
 
+Every problem has be constructed by a Builder. Here's a builder for a classic [minimum variance problem](cvx/markowitz/portfolios/min_var.py).
+The builder inherits from the [Builder](cvxmarkowitz/markowitz/builder.py) and implements the abstract method [build](cvxmarkowitz/markowitz/builder.py#L15).
+The builder remains flexible. At this stage it is possible to add or recome constraints,  Only once we trigger the build() method, we construct
+the problem and compile it.
+
+For injecting values for data and parameter into the problem, we use the [update](cvxmarkowitz/markowitz/builder.py#L19) method.
+
+
 
 
 

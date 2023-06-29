@@ -6,8 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.linalg import cholesky
-from cvx.linalg import PCA
+from cvx.linalg import PCA, cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
 
 if __name__ == "__main__":
@@ -24,7 +23,8 @@ if __name__ == "__main__":
     # compute 10 components
     pca = PCA(returns=returns.values, n_components=10)
     # pca is a NamedTuple exposing the following fields:
-    # ["explained_variance", "factors", "exposure", "cov", "systematic_returns", "idiosyncratic_returns"],
+    # ["explained_variance", "factors", "exposure", "cov", 
+    # "systematic_returns", "idiosyncratic_returns"],
     #   - explained_variance: pd.Series
     #   - factors: pd.DataFrame
     #   - exposure: pd.DataFrame
@@ -107,7 +107,8 @@ if __name__ == "__main__":
     x = problem.solve(verbose=True)
     logger.info(f"Minimum standard deviation: {x}")
 
-    # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value, index=pca.asset_names)}")
+    # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value, 
+    # index=pca.asset_names)}")
     # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(

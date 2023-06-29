@@ -2,16 +2,14 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Dict
 
 import cvxpy as cp
 
 from cvx.markowitz import Model
 from cvx.markowitz.models.bounds import Bounds
-from cvx.markowitz.risk import FactorModel
-from cvx.markowitz.risk import SampleCovariance
+from cvx.markowitz.risk import FactorModel, SampleCovariance
 
 
 class CvxError(Exception):

@@ -23,7 +23,8 @@ and much of the portfolio analytics we run today.
 Like many profound breakthroughs, it looks obvious in retrospect.*
 -- <cite>[[Ronald Kahn](https://en.wikipedia.org/wiki/Ronald_Kahn) in 2023]</cite>
 
-
+Our assumption is that we solve multiple problems of the same type in a row. The input for the $$n$$th problem may depend
+on the outcome of a previous problem, e.g. the $$n-1$$th.
 ## Installation
 
 You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):

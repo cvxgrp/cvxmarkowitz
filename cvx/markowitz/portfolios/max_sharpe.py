@@ -7,7 +7,6 @@ import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
 from cvx.markowitz.models.expected_returns import ExpectedReturns
-from cvx.markowitz.models.trading_costs import TradingCosts
 
 
 @dataclass(frozen=True)

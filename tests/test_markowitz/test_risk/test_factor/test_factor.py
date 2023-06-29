@@ -7,8 +7,7 @@ import pandas as pd
 import pytest
 from aux.random import rand_cov
 
-from cvx.linalg import cholesky
-from cvx.linalg import PCA
+from cvx.linalg import PCA, cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
 

@@ -27,3 +27,4 @@ class MinVar(Builder):
         super().__post_init__()
         self.constraints["long-only"] = self.variables["weights"] >= 0
         self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
+        

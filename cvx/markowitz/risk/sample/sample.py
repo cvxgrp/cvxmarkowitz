@@ -33,9 +33,12 @@ class SampleCovariance(Model):
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of
         self.cov"""
+        
+        return cp.norm2(cp.hstack([self.data["chol"] @ variables["weights"], \
+        self.data["vola_uncertainty"] @ variables["dummy"]]))  # 
 
-        return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
-        + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
+        # return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
+        # + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
 
     def update(self, **kwargs):
         chol = kwargs["chol"]

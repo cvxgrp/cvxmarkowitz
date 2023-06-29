@@ -38,8 +38,9 @@ def test_timeseries_model(returns):
     variables = {"weights": cp.Variable(20), "factor_weights": cp.Variable(10)}
     variables["weights"].value = 0.05 * np.ones(20)
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
+    variables["dummy"] = cp.abs(variables["factor_weights"])
 
-    vola = np.sqrt(model.estimate(variables).value)
+    vola = model.estimate(variables).value
     np.testing.assert_almost_equal(vola, 0.009233894697646914)
 
 
@@ -89,7 +90,7 @@ def test_estimate_risk():
 
     problem.solve()
 
-    assert problem.value == pytest.approx(0.5454593844618784**2, abs=1e-3)
+    assert problem.value == pytest.approx(0.5454593844618784, abs=1e-3)
     assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
         np.zeros(5), abs=1e-3
     )
@@ -111,10 +112,11 @@ def test_estimate_risk():
 def test_factor_mini():
     model = FactorModel(assets=3, factors=2)
 
-    variables = {"weights": cp.Variable(3), "factor_weights": cp.Variable(2)}
+    variables = {"weights": cp.Variable(3), "factor_weights": cp.Variable(2), "dummy": cp.Variable(2)}
 
     assert "weights" in variables
     assert "factor_weights" in variables
+    assert "dummy" in variables
 
     for _, value in variables.items():
         assert type(value) == cp.Variable
@@ -129,20 +131,21 @@ def test_factor_mini():
 
     variables["weights"].value = np.array([0.5, 0.1, 0.2])
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
+    # Note: dummy is abs(factor_weights)
+    variables["dummy"] = cp.abs(variables["factor_weights"])
 
     assert variables["factor_weights"].value == pytest.approx(
         np.array([0.7, 0.75]), abs=1e-6
     )
 
-    residual = np.linalg.norm(np.array([0.05, 0.01, 0.02]))**2
-    systematic = np.linalg.norm(np.array([0.7, 0.75]))**2
+    residual = np.linalg.norm(np.array([0.05, 0.01, 0.02]))
+    systematic = np.linalg.norm(np.array([0.7, 0.75]))
 
-    assert model._residual_risk_squared(variables=variables).value == pytest.approx(residual)
-    assert model._systematic_risk_squared(variables=variables).value == pytest.approx(
+    assert model._residual_risk(variables=variables).value == pytest.approx(residual)
+    assert model._systematic_risk(variables=variables).value == pytest.approx(
         systematic
     )
 
-    # total = np.linalg.norm(np.array([residual, systematic]))
-    total = residual + systematic
+    total = np.linalg.norm(np.array([residual, systematic]))
 
     assert model.estimate(variables=variables).value == pytest.approx(total)

@@ -35,7 +35,7 @@ class SampleCovariance(Model):
         self.cov"""
 
         return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
-        + cp.sum_squares(cp.multiply(self.data["vola_uncertainty"], cp.abs(variables["weights"])))  # Robust risk
+        + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
 
     def update(self, **kwargs):
         chol = kwargs["chol"]

@@ -23,12 +23,26 @@ class SampleCovariance(Model):
             value=np.zeros((self.assets, self.assets)),
         )
 
+        self.data["vola_uncertainty"] = cp.Parameter(
+            shape=self.assets,
+            name="vola_uncertainty",
+            value=np.zeros(self.assets),
+            nonneg=True,
+        )
+# x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
-        """Estimate the risk by computing the Cholesky decomposition of self.cov"""
-        return cp.norm2(self.data["chol"] @ variables["weights"])
+        """Estimate the risk by computing the Cholesky decomposition of
+        self.cov"""
+
+        return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
+        + cp.sum_squares(cp.multiply(self.data["vola_uncertainty"], cp.abs(variables["weights"])))  # Robust risk
 
     def update(self, **kwargs):
         chol = kwargs["chol"]
         rows = chol.shape[0]
         self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:rows, :rows] = chol
+
+        # Robust risk
+        self.data["vola_uncertainty"].value = np.zeros(self.assets)
+        self.data["vola_uncertainty"].value[:rows] = kwargs["vola_uncertainty"]

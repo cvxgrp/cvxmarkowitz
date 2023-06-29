@@ -14,8 +14,9 @@ def test_sample():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
-    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0])}).value
+    vola = np.sqrt(riskmodel.estimate({"weights": np.array([1.0, 1.0])}).value)
     np.testing.assert_almost_equal(vola, 2.0)
 
 
@@ -25,8 +26,9 @@ def test_sample_large():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
-    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0, 0.0, 0.0])}).value
+    vola = np.sqrt(riskmodel.estimate({"weights": np.array([1.0, 1.0, 0.0, 0.0])}).value)
     np.testing.assert_almost_equal(vola, 2.0)
 
 
@@ -43,6 +45,7 @@ def test_min_variance():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
 
     # problem = builder.build()
@@ -57,6 +60,7 @@ def test_min_variance():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 4.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
 
     problem.solve()

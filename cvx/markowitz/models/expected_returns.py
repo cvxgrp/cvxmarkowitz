@@ -25,7 +25,7 @@ class ExpectedReturns(Model):
         # Robust return estimate
         self.parameter["mu_uncertainty"] = cp.Parameter(
             shape=self.assets,
-            name="uncertainty in expected returns",
+            name="mu_uncertainty",
             value=np.zeros(self.assets),
             nonneg=True,
         )

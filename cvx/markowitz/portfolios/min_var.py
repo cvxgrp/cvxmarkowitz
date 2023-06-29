@@ -6,8 +6,6 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.models.holding_costs import HoldingCosts
-from cvx.markowitz.models.trading_costs import TradingCosts
 
 
 @dataclass(frozen=True)

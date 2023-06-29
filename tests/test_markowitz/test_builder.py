@@ -7,8 +7,7 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.builder import Builder
-from cvx.markowitz.builder import CvxError
+from cvx.markowitz.builder import Builder, CvxError
 
 
 @dataclass(frozen=True)

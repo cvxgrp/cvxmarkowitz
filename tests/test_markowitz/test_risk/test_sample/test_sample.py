@@ -58,7 +58,7 @@ def test_robust_sample():
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 
-def test_sample_large():
+def test_robust_sample_large():
     riskmodel = SampleCovariance(assets=4)
     riskmodel.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),

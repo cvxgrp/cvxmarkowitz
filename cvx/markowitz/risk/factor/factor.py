@@ -84,9 +84,6 @@ class FactorModel(Model):
             )
         )
 
-        # return cp.sum_squares(self.data["chol"] @ variables["factor_weights"]) \
-        #      + (self.data["systematic_vola_uncertainty"] @ cp.abs(variables["factor_weights"]))**2 # Robust systematic risk
-
     def update(self, **kwargs):
         exposure = kwargs["exposure"]
         k, assets = exposure.shape

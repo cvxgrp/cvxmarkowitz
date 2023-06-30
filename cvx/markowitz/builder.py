@@ -85,11 +85,14 @@ class Builder:
             self.model["bounds_factors"] = Bounds(
                 assets=self.factors, name="factors", acting_on="factor_weights"
             )
-            self.variables["dummy"] = cp.Variable(self.factors, name="dummy")
+            # add variable for absolute factor weights
+            self.variables["_abs"] = cp.Variable(self.factors, name="_abs", nonneg=True)
 
         else:
             self.model["risk"] = SampleCovariance(assets=self.assets)
-            self.variables["dummy"] = cp.Variable(self.assets, name="dummy")
+            #
+            # add variable for absolute weights
+            self.variables["_abs"] = cp.Variable(self.assets, name="_abs", nonneg=True)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.

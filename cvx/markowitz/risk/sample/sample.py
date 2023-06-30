@@ -39,7 +39,7 @@ class SampleCovariance(Model):
             cp.hstack(
                 [
                     self.data["chol"] @ variables["weights"],
-                    self.data["vola_uncertainty"] @ variables["dummy"],
+                    self.data["vola_uncertainty"] @ variables["_abs"],
                 ]
             )
         )  #
@@ -53,12 +53,14 @@ class SampleCovariance(Model):
         self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:rows, :rows] = chol
 
+        # todo: add test for matching dimensions
+
         # Robust risk
         self.data["vola_uncertainty"].value = np.zeros(self.assets)
         self.data["vola_uncertainty"].value[:rows] = kwargs["vola_uncertainty"]
 
     def constraints(self, variables):
         return {
-            "dummy": variables["dummy"]
+            "dummy": variables["_abs"]
             >= cp.abs(variables["weights"]),  # Robust risk dummy variable
         }

@@ -79,7 +79,7 @@ class FactorModel(Model):
             cp.hstack(
                 [
                     self.data["chol"] @ variables["factor_weights"],
-                    self.data["systematic_vola_uncertainty"] @ variables["dummy"],
+                    self.data["systematic_vola_uncertainty"] @ variables["_abs"],
                 ]
             )
         )
@@ -110,6 +110,6 @@ class FactorModel(Model):
         return {
             "factors": variables["factor_weights"]
             == self.data["exposure"] @ variables["weights"],
-            "dummy": variables["dummy"]
+            "dummy": variables["_abs"]
             >= cp.abs(variables["factor_weights"]),  # Robust risk dummy variable
         }

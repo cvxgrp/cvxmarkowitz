@@ -19,7 +19,7 @@ def test_sample():
 
     # Note: dummy should be abs(weights)
     vola = riskmodel.estimate(
-        {"weights": np.array([1.0, 1.0]), "dummy": np.array([1.0, 1.0])}
+        {"weights": np.array([1.0, 1.0]), "_abs": np.array([1.0, 1.0])}
     ).value
     np.testing.assert_almost_equal(vola, 2.0)
 
@@ -35,7 +35,7 @@ def test_sample_large():
     vola = riskmodel.estimate(
         {
             "weights": np.array([1.0, 1.0, 0.0, 0.0]),
-            "dummy": np.array([1.0, 1.0, 0.0, 0.0]),
+            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
         }
     ).value
 
@@ -53,7 +53,7 @@ def test_robust_sample():
 
     # Note: dummy should be abs(weights)
     vola = riskmodel.estimate(
-        {"weights": np.array([1.0, -1.0]), "dummy": np.array([1.0, 1.0])}
+        {"weights": np.array([1.0, -1.0]), "_abs": np.array([1.0, 1.0])}
     ).value
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
@@ -69,7 +69,7 @@ def test_robust_sample_large():
     vola = riskmodel.estimate(
         {
             "weights": np.array([1.0, -1.0, 0.0, 0.0]),
-            "dummy": np.array([1.0, 1.0, 0.0, 0.0]),
+            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
         }
     ).value
 

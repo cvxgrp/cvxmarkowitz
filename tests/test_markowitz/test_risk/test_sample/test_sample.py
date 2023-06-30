@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from cvx.linalg import cholesky
+from cvx.markowitz.builder import CvxError
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import SampleCovariance
 
@@ -114,3 +116,15 @@ def test_min_variance():
         np.array([0.875, 0.125, 0.0, 0.0]),
         decimal=5,
     )
+
+
+def test_mismatch():
+    riskmodel = SampleCovariance(assets=4)
+
+    with pytest.raises(CvxError):
+        riskmodel.update(
+            chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+            lower_assets=np.zeros(2),
+            upper_assets=np.ones(2),
+            vola_uncertainty=np.array([0.1]),
+        )

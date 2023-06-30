@@ -9,6 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
+from cvx.markowitz.cvxerror import CvxError
 
 
 @dataclass(frozen=True)
@@ -24,9 +25,9 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.assets)),
         )
 
-        self.data["idiosyncratic_risk"] = cp.Parameter(
+        self.data["idiosyncratic_vola"] = cp.Parameter(
             shape=self.assets,
-            name="idiosyncratic_risk",
+            name="idiosyncratic_vola",
             value=np.zeros(self.assets),
         )
 
@@ -65,7 +66,7 @@ class FactorModel(Model):
         return cp.norm2(
             cp.hstack(
                 [
-                    cp.multiply(self.data["idiosyncratic_risk"], variables["weights"]),
+                    cp.multiply(self.data["idiosyncratic_vola"], variables["weights"]),
                     cp.multiply(
                         self.data["idiosyncratic_vola_uncertainty"],
                         variables["weights"],
@@ -85,13 +86,32 @@ class FactorModel(Model):
         )
 
     def update(self, **kwargs):
+        if (
+            not kwargs["idiosyncratic_vola"].shape[0]
+            == kwargs["idiosyncratic_vola_uncertainty"].shape[0]
+        ):
+            raise CvxError(
+                "Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty"
+            )
+
         exposure = kwargs["exposure"]
         k, assets = exposure.shape
 
+        if not kwargs["idiosyncratic_vola"].shape[0] == assets:
+            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")
+
+        if not kwargs["chol"].shape[0] == k:
+            raise CvxError("Mismatch in size of chol and exposure")
+
+        if not kwargs["systematic_vola_uncertainty"].shape[0] == k:
+            raise CvxError(
+                "Mismatch in length of systematic_vola_uncertainty and exposure"
+            )
+
         self.data["exposure"].value = np.zeros((self.factors, self.assets))
         self.data["exposure"].value[:k, :assets] = kwargs["exposure"]
-        self.data["idiosyncratic_risk"].value = np.zeros(self.assets)
-        self.data["idiosyncratic_risk"].value[:assets] = kwargs["idiosyncratic_risk"]
+        self.data["idiosyncratic_vola"].value = np.zeros(self.assets)
+        self.data["idiosyncratic_vola"].value[:assets] = kwargs["idiosyncratic_vola"]
         self.data["chol"].value = np.zeros((self.factors, self.factors))
         self.data["chol"].value[:k, :k] = kwargs["chol"]
 

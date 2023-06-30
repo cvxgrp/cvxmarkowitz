@@ -76,7 +76,7 @@ def test_shape(returns):
     assert np.std(xxx.idiosyncratic_returns, axis=0).shape == (20,)
     assert xxx.cov.shape == (15, 15)
     assert xxx.systematic_returns.shape == (320, 20)
-    assert xxx.idiosyncratic_risk.shape == (20,)
+    assert xxx.idiosyncratic_vola.shape == (20,)
 
 
 #

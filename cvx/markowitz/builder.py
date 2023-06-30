@@ -8,12 +8,9 @@ from typing import Dict
 import cvxpy as cp
 
 from cvx.markowitz import Model
+from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.risk import FactorModel, SampleCovariance
-
-
-class CvxError(Exception):
-    pass
 
 
 @dataclass(frozen=True)

@@ -8,6 +8,7 @@ import pytest
 from aux.random import rand_cov
 
 from cvx.linalg import PCA, cholesky
+from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
 
@@ -29,7 +30,7 @@ def test_timeseries_model(returns):
     model.update(
         chol=cholesky(factors.cov),
         exposure=factors.exposure,
-        idiosyncratic_risk=factors.idiosyncratic_risk,
+        idiosyncratic_vola=factors.idiosyncratic_vola,
         systematic_vola_uncertainty=np.zeros(10),
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
@@ -59,7 +60,7 @@ def test_estimate_risk():
     problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
-        idiosyncratic_risk=np.random.randn(20),
+        idiosyncratic_vola=np.random.randn(20),
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
         lower_factors=np.zeros(10),
@@ -78,7 +79,7 @@ def test_estimate_risk():
     problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
-        idiosyncratic_risk=np.random.randn(20),
+        idiosyncratic_vola=np.random.randn(20),
         lower_assets=np.zeros(20),
         upper_assets=np.ones(20),
         lower_factors=-0.1 * np.ones(10),
@@ -127,7 +128,7 @@ def test_factor_mini():
     model.update(
         chol=np.eye(2),
         exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-        idiosyncratic_risk=np.array([0.1, 0.1, 0.1]),
+        idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
         systematic_vola_uncertainty=np.array([0.2, 0.1]),
         idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
     )
@@ -152,3 +153,43 @@ def test_factor_mini():
     total = np.linalg.norm(np.array([residual, systematic]))
 
     assert model.estimate(variables=variables).value == pytest.approx(total)
+
+
+def test_mismatch():
+    model = FactorModel(assets=3, factors=2)
+
+    with pytest.raises(CvxError):
+        model.update(
+            chol=np.eye(2),
+            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
+            idiosyncratic_vola=np.array([0.1, 0.1]),
+            systematic_vola_uncertainty=np.array([0.2, 0.1]),
+            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        )
+
+    with pytest.raises(CvxError):
+        model.update(
+            chol=np.eye(2),
+            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
+            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
+            systematic_vola_uncertainty=np.array([0.2]),
+            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        )
+
+    with pytest.raises(CvxError):
+        model.update(
+            chol=np.eye(2),
+            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
+            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
+            systematic_vola_uncertainty=np.array([0.2, 0.1]),
+            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3]),
+        )
+
+    with pytest.raises(CvxError):
+        model.update(
+            chol=np.eye(1),
+            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
+            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
+            systematic_vola_uncertainty=np.array([0.2, 0.1]),
+            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        )

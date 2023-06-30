@@ -10,6 +10,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
+from cvx.markowitz.cvxerror import CvxError
 
 
 @dataclass(frozen=True)
@@ -48,12 +49,13 @@ class SampleCovariance(Model):
         # + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
 
     def update(self, **kwargs):
+        if not kwargs["vola_uncertainty"].shape[0] == kwargs["chol"].shape[0]:
+            raise CvxError("Mismatch in length for chol and vola_uncertainty")
+
         chol = kwargs["chol"]
         rows = chol.shape[0]
         self.data["chol"].value = np.zeros((self.assets, self.assets))
         self.data["chol"].value[:rows, :rows] = chol
-
-        # todo: add test for matching dimensions
 
         # Robust risk
         self.data["vola_uncertainty"].value = np.zeros(self.assets)

@@ -9,6 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
+from cvx.markowitz.builder import CvxError
 
 
 @dataclass(frozen=True)
@@ -43,5 +44,8 @@ class ExpectedReturns(Model):
 
         # Robust return estimate
         uncertainty = kwargs["mu_uncertainty"]
+        if not uncertainty.shape[0] == exp_returns.shape[0]:
+            raise CvxError("Mismatch in length for mu and mu_uncertainty")
+
         self.parameter["mu_uncertainty"].value = np.zeros(self.assets)
         self.parameter["mu_uncertainty"].value[:num] = uncertainty

@@ -5,6 +5,7 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
+from cvx.markowitz.builder import CvxError
 from cvx.markowitz.models.expected_returns import ExpectedReturns
 
 
@@ -50,3 +51,10 @@ def test_expected_returns_robust():
     # give a new shorter vector of expected returns
     model.update(mu=np.array([0.1]), mu_uncertainty=np.array([0.5]))
     assert model.estimate(variables).value == pytest.approx(-0.4)
+
+
+def test_mismatch():
+    assets = 3
+    model = ExpectedReturns(assets=assets)
+    with pytest.raises(CvxError):
+        model.update(mu=np.array([0.1, 0.2]), mu_uncertainty=np.array([0.03]))

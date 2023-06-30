@@ -110,6 +110,6 @@ class FactorModel(Model):
         return {
             "factors": variables["factor_weights"]
             == self.data["exposure"] @ variables["weights"],
-            "dummy": variables["_abs"]
+            "_abs": variables["_abs"]
             >= cp.abs(variables["factor_weights"]),  # Robust risk dummy variable
         }

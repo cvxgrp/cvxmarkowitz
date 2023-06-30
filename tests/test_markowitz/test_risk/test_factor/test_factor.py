@@ -37,7 +37,7 @@ def test_timeseries_model(returns):
     variables = {"weights": cp.Variable(20), "factor_weights": cp.Variable(10)}
     variables["weights"].value = 0.05 * np.ones(20)
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
-    variables["dummy"] = cp.abs(variables["factor_weights"])
+    variables["_abs"] = cp.abs(variables["factor_weights"])
 
     vola = model.estimate(variables).value
     np.testing.assert_almost_equal(vola, 0.009233894697646914)
@@ -114,12 +114,12 @@ def test_factor_mini():
     variables = {
         "weights": cp.Variable(3),
         "factor_weights": cp.Variable(2),
-        "dummy": cp.Variable(2),
+        "_abs": cp.Variable(2),
     }
 
     assert "weights" in variables
     assert "factor_weights" in variables
-    assert "dummy" in variables
+    assert "_abs" in variables
 
     for _, value in variables.items():
         assert type(value) == cp.Variable
@@ -135,7 +135,7 @@ def test_factor_mini():
     variables["weights"].value = np.array([0.5, 0.1, 0.2])
     variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
     # Note: dummy is abs(factor_weights)
-    variables["dummy"] = cp.abs(variables["factor_weights"])
+    variables["_abs"] = cp.abs(variables["factor_weights"])
 
     assert variables["factor_weights"].value == pytest.approx(
         np.array([0.7, 0.75]), abs=1e-6

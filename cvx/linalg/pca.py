@@ -49,5 +49,5 @@ class PCA:
         return self.returns - self.systematic_returns
 
     @property
-    def idiosyncratic_risk(self) -> np.ndarray:
+    def idiosyncratic_vola(self) -> np.ndarray:
         return np.std(self.idiosyncratic_returns, axis=0)

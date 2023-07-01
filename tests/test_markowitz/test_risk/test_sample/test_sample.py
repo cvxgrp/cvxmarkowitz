@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from cvx.linalg import cholesky
+from cvx.markowitz.builder import CvxError
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import SampleCovariance
 
@@ -14,8 +16,13 @@ def test_sample():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
-    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0])}).value
+
+    # Note: dummy should be abs(weights)
+    vola = riskmodel.estimate(
+        {"weights": np.array([1.0, 1.0]), "_abs": np.array([1.0, 1.0])}
+    ).value
     np.testing.assert_almost_equal(vola, 2.0)
 
 
@@ -25,9 +32,50 @@ def test_sample_large():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
-    vola = riskmodel.estimate({"weights": np.array([1.0, 1.0, 0.0, 0.0])}).value
+    vola = riskmodel.estimate(
+        {
+            "weights": np.array([1.0, 1.0, 0.0, 0.0]),
+            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
+        }
+    ).value
+
     np.testing.assert_almost_equal(vola, 2.0)
+
+
+def test_robust_sample():
+    riskmodel = SampleCovariance(assets=2)
+    riskmodel.update(
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
+        vola_uncertainty=np.array([0.1, 0.2]),  # Volatility uncertainty
+    )
+
+    # Note: dummy should be abs(weights)
+    vola = riskmodel.estimate(
+        {"weights": np.array([1.0, -1.0]), "_abs": np.array([1.0, 1.0])}
+    ).value
+    np.testing.assert_almost_equal(vola, np.sqrt(2.09))
+
+
+def test_robust_sample_large():
+    riskmodel = SampleCovariance(assets=4)
+    riskmodel.update(
+        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
+        vola_uncertainty=np.array([0.1, 0.2]),  # Volatility uncertainty
+    )
+    vola = riskmodel.estimate(
+        {
+            "weights": np.array([1.0, -1.0, 0.0, 0.0]),
+            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
+        }
+    ).value
+
+    np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 
 def test_min_variance():
@@ -43,6 +91,7 @@ def test_min_variance():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
 
     # problem = builder.build()
@@ -57,6 +106,7 @@ def test_min_variance():
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 4.0]])),
         lower_assets=np.zeros(2),
         upper_assets=np.ones(2),
+        vola_uncertainty=np.zeros(2),
     )
 
     problem.solve()
@@ -66,3 +116,15 @@ def test_min_variance():
         np.array([0.875, 0.125, 0.0, 0.0]),
         decimal=5,
     )
+
+
+def test_mismatch():
+    riskmodel = SampleCovariance(assets=4)
+
+    with pytest.raises(CvxError):
+        riskmodel.update(
+            chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+            lower_assets=np.zeros(2),
+            upper_assets=np.ones(2),
+            vola_uncertainty=np.array([0.1]),
+        )

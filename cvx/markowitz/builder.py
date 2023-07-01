@@ -8,12 +8,9 @@ from typing import Dict
 import cvxpy as cp
 
 from cvx.markowitz import Model
+from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.risk import FactorModel, SampleCovariance
-
-
-class CvxError(Exception):
-    pass
 
 
 @dataclass(frozen=True)
@@ -85,12 +82,19 @@ class Builder:
             self.model["bounds_factors"] = Bounds(
                 assets=self.factors, name="factors", acting_on="factor_weights"
             )
+            # add variable for absolute factor weights
+            self.variables["_abs"] = cp.Variable(self.factors, name="_abs", nonneg=True)
+
         else:
             self.model["risk"] = SampleCovariance(assets=self.assets)
+            #
+            # add variable for absolute weights
+            self.variables["_abs"] = cp.Variable(self.assets, name="_abs", nonneg=True)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
         self.variables["weights"] = cp.Variable(self.assets, name="weights")
+
         # add bounds on assets
         self.model["bound_assets"] = Bounds(
             assets=self.assets, name="assets", acting_on="weights"

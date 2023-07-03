@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import cvxpy as cp
+import numpy as np
 import pandas as pd
 from loguru import logger
 
@@ -38,6 +39,7 @@ if __name__ == "__main__":
         chol=cholesky(returns.cov().values),
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
+        vola_uncertainty=np.zeros(20),
         # weights=np.zeros(20),
         # holding_costs=holding_costs[returns.columns].values,
     )
@@ -56,6 +58,7 @@ if __name__ == "__main__":
         chol=cholesky(returns.cov().values),
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
+        vola_uncertainty=np.zeros(10),
         # weights=np.zeros(10),
         # holding_costs=holding_costs[returns.columns].values,
     )

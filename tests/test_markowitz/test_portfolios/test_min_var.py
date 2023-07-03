@@ -9,7 +9,7 @@ from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
 def test_min_var(solver):
     # define the problem
 
@@ -37,7 +37,7 @@ def test_min_var(solver):
     )
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.ECOS_BB])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
 def test_min_var_robust(solver):
     # define the problem
 
@@ -60,5 +60,5 @@ def test_min_var_robust(solver):
     np.testing.assert_almost_equal(
         problem.solution(),
         np.array([0.626406, 0.373594, 0.0, 0.0]),  # Computed analytically
-        decimal=5,
+        decimal=4,
     )

@@ -10,7 +10,7 @@ from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
 def test_estimate_risk(solver):
     """Test the estimate() method"""
     model = CVar(alpha=0.95, rows=50, assets=14)

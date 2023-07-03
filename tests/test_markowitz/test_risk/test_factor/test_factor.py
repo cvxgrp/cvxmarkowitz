@@ -49,7 +49,8 @@ def test_minvar(returns):
     assert problem.is_dpp()
 
 
-def test_estimate_risk():
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
+def test_estimate_risk(solver):
     """Test the estimate() method"""
     np.random.seed(42)
 
@@ -69,7 +70,7 @@ def test_estimate_risk():
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     # assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
@@ -88,7 +89,7 @@ def test_estimate_risk():
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     assert problem.value == pytest.approx(0.5454593844618784, abs=1e-3)
     assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(

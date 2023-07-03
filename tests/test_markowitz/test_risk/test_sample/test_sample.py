@@ -79,7 +79,7 @@ def test_robust_sample_large():
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
 def test_min_variance(solver):
     # define the problem
     builder = MinVar(assets=4)

@@ -2195,6 +2195,35 @@ files = [
 ]
 
 [[package]]
+name = "mosek"
+version = "10.0.46"
+description = "Python API for Mosek"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "Mosek-10.0.46-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:64c67fd828353ba17a974f6afb8789851b5457426c0aab364dfd2b64b7348b53"},
+    {file = "Mosek-10.0.46-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:71dea2fb6e1a4e7df75a74dc7a5c7abcf9635f263391b505494015dc86b656a1"},
+    {file = "Mosek-10.0.46-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:6d5fdd730ed712efb2edb956cd8f365f938d77561d6b6d1f2e70c1fc4d62853a"},
+    {file = "Mosek-10.0.46-cp310-cp310-manylinux2014_x86_64.whl", hash = "sha256:4fb126628781af2293c1961b1cc4d0e67154c39c90d8a9634a907124cc0da2c4"},
+    {file = "Mosek-10.0.46-cp310-cp310-win_amd64.whl", hash = "sha256:3f5406c994919b1d5d9b4bfc757adc48248d751cf839b8fe66afe6a07e66c3a3"},
+    {file = "Mosek-10.0.46-cp37-cp37m-macosx_10_15_x86_64.whl", hash = "sha256:ad8e75209ac4d0c87e0e866b7e581259a8f3e4b17a4e92cd48107172760188c4"},
+    {file = "Mosek-10.0.46-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:47c20ce18ef0e15d84756c4eea84f4c03e294d207401cb27046765f713cb48ae"},
+    {file = "Mosek-10.0.46-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:4593814484cb336907926f7f8705d7a5a3b24c1929446d91623b81f089270ab6"},
+    {file = "Mosek-10.0.46-cp37-cp37m-win_amd64.whl", hash = "sha256:ee9de1efc67f8be8ebbe23baadf058bc6afe33490b42e60b6c28dc7fae042570"},
+    {file = "Mosek-10.0.46-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:cf8c1aac6ea0de68957141844851db54421892313e8f2759f60b48bc151f2a0d"},
+    {file = "Mosek-10.0.46-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:e4ce6b61b4b838090fefc6bc25952102e0bd00a543b83e35a91464345af89bde"},
+    {file = "Mosek-10.0.46-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:a3ac0923165d814ba4cafcad2fb6753a2be9ec2db39cb595e7b05b18dc52855c"},
+    {file = "Mosek-10.0.46-cp38-cp38-manylinux2014_x86_64.whl", hash = "sha256:4d9d657c0886394350043bcbe8ae239b038023c25f6219a9144af9492a3b8614"},
+    {file = "Mosek-10.0.46-cp38-cp38-win_amd64.whl", hash = "sha256:5879734a728485a2cb50b61099fcd7bf96c8b80953cf9ae4404aa25db884f81d"},
+    {file = "Mosek-10.0.46-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:a79e7689f454bafca0322002579d5801f51c08486656535ffecc1acf9faa3e0d"},
+    {file = "Mosek-10.0.46-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:e11e26145517a9de3ecc56f8fc28ec0b505a348009906209c82546758f0aab23"},
+    {file = "Mosek-10.0.46-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:094ee305ce7d7c7536a7b73e78a2cd81a1fc17aa266a39b5369e927d3a6d99db"},
+    {file = "Mosek-10.0.46-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:27a33ac3092d79079bf1ca49985fd4ad5bae5cdf42aa0b3c88e3cbe099602486"},
+    {file = "Mosek-10.0.46-cp39-cp39-win_amd64.whl", hash = "sha256:68529aec46df699fb0da1510c62e1c484da3416fb86084e2e7be4540da460e80"},
+]
+
+[[package]]
 name = "multitasking"
 version = "0.0.11"
 description = "Non-blocking Python methods using decorators"
@@ -4461,4 +4490,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "0b16da435899781e7fb40a2191bdb700ac2e11dec53725a4ac4c982c375a86fc"
+content-hash = "46b3d49b8f7ed20403b8339a9730558e39e58e7e847f2f6afb54b6a9ee4535b8"

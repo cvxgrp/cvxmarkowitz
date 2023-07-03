@@ -27,6 +27,7 @@ scikit-learn = "*"
 cvxpyanalyzer = "*"
 ruff = "^0.0.275"
 clarabel = "^0.5.1"
+mosek = "*"
 
 [build-system]
 requires = ["poetry-core"]

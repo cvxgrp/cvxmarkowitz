@@ -25,6 +25,7 @@ jupyter-book = "0.15.1"
 pylint = "*"
 scikit-learn = "*"
 cvxpyanalyzer = "*"
+ruff = "^0.0.275"
 
 [build-system]
 requires = ["poetry-core"]

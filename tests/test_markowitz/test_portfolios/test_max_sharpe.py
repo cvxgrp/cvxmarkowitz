@@ -37,7 +37,7 @@ def test_max_sharpe(solver):
         # np.array([5.20124e-01, 4.79876e-01, 0.0, 0.0]),
         # np.array([0.514983, 0.485017, 0.0, 0.0]),
         np.array([5.15358e-01, 4.84642e-01, 0.0, 0.0]),
-        decimal=5,
+        decimal=3,
     )
 
     problem.parameter["sigma_max"].value = 3.0

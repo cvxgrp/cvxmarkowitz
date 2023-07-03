@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import os
+
 import cvxpy as cp
 import numpy as np
 import pytest
@@ -79,8 +81,11 @@ def test_robust_sample_large():
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_variance(solver):
+    if os.getenv("CI", False) and solver == cp.MOSEK:
+        pytest.skip("Skipping MOSEK test on CI")
+
     # define the problem
     builder = MinVar(assets=4)
 

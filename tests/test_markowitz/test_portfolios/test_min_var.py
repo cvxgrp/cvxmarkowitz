@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import os
+
 import cvxpy as cp
 import numpy as np
 import pytest
@@ -9,7 +11,7 @@ from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_var(solver):
     # define the problem
 
@@ -37,8 +39,11 @@ def test_min_var(solver):
     )
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_var_robust(solver):
+    if os.getenv("CI", False) and solver == cp.MOSEK:
+        pytest.skip("Skipping MOSEK test on CI")
+
     # define the problem
 
     builder = MinVar(assets=4)

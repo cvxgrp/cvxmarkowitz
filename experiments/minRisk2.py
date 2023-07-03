@@ -8,6 +8,7 @@ from loguru import logger
 
 from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
+from cvx.markowitz.portfolios.utils import approx
 
 if __name__ == "__main__":
     returns = (
@@ -28,6 +29,21 @@ if __name__ == "__main__":
         cp.sum_largest(builder.variables["weights"], 2) <= 0.4
     )
 
+    # here we add a constraints
+    # w[19] + w[17] <= 0.0001
+    # w[19] + w[17] >= -0.0001
+
+    builder.parameter["random"] = cp.Parameter(1, nonneg=True)
+
+    row = np.zeros(20)
+    row[19] = 1
+    row[17] = 1
+
+    for name, constraint in approx(
+        "xxx", row @ builder.variables["weights"], 0.0, builder.parameter["random"]
+    ):
+        builder.constraints[name] = constraint
+
     problem = builder.build()
     assert problem.is_dpp(), "Problem is not DPP"
 
@@ -43,10 +59,15 @@ if __name__ == "__main__":
         # weights=np.zeros(20),
         # holding_costs=holding_costs[returns.columns].values,
     )
+    problem.parameter["random"].value = np.array([0.1])
 
     logger.info("Start solving problems...")
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
+
+    print(problem.variables["weights"].value)
+    print(problem.problem)
+    # assert False
 
     # logger.info(f"weights assets:\n{minvar.solution(names=returns.columns)}")
 
@@ -62,6 +83,7 @@ if __name__ == "__main__":
         # weights=np.zeros(10),
         # holding_costs=holding_costs[returns.columns].values,
     )
+    problem.parameter["random"].value = np.array([0.1])
 
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")

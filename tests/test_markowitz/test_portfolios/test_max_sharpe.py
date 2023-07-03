@@ -9,7 +9,7 @@ from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS, cp.CLARABEL])
 def test_max_sharpe(solver):
     # define the problem
     builder = MaxSharpe(assets=4)

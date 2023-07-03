@@ -48,5 +48,5 @@ def test_estimate_risk(solver):
         lower_assets=np.zeros(10),
         upper_assets=np.ones(10),
     )
-    problem.solve()
+    problem.solve(solver=solver)
     assert problem.value == pytest.approx(0.4355917, abs=1e-5)

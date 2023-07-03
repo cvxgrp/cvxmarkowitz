@@ -14,15 +14,6 @@ We stand on the shoulders of [CVXPY](https://www.cvxpy.org).
 We solve problems arising in portfolio construction following the ideas of [Harry Markowitz](https://en.wikipedia.org/wiki/Harry_Markowitz).
 Markowitz gave diversification a mathematical home in the 1950s.
 
->*Before Markowitz, mathematical analysis of investing was limited
-to Graham & Dodd-type analysis of individual stocks and John Burr Williams’
-Theory of Investment Value, also focused on individual investments.
-Markowitz provided a precise mathematical definition of risk as standard deviation of return,
-and focused on return and risk at the portfolio level, leading to modern portfolio theory
-and much of the portfolio analytics we run today.
-Like many profound breakthroughs, it looks obvious in retrospect.*
--- <cite>[[Ronald Kahn](https://en.wikipedia.org/wiki/Ronald_Kahn) in 2023]</cite>
-
 Our assumption is that we solve multiple problems of the same type in a row. The input for the $n$th problem may depend
 on the outcome of a previous problem, e.g. the $n-1$th. Hence, we need to respect their sequential nature and order.
 

@@ -13,7 +13,8 @@ from cvx.markowitz.portfolios.min_var import MinVar
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_var(solver):
-    # define the problem
+    if os.getenv("CI", False) and solver == cp.MOSEK:
+        pytest.skip("Skipping MOSEK test on CI")
 
     builder = MinVar(assets=4)
 

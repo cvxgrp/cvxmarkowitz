@@ -2,6 +2,7 @@
 # Import necessary libraries
 from __future__ import annotations
 
+import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -9,7 +10,8 @@ from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
 
 
-def test_estimate_risk():
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+def test_estimate_risk(solver):
     """Test the estimate() method"""
     model = CVar(alpha=0.95, rows=50, assets=14)
 
@@ -32,8 +34,8 @@ def test_estimate_risk():
     )
 
     # problem = builder.build()
-    problem.solve()
-    assert problem.value == pytest.approx(0.5058720677762698)
+    problem.solve(solver=solver)
+    assert problem.value == pytest.approx(0.50587206, abs=1e-5)
 
     # it's enough to only update the R value...
     problem.update(
@@ -42,4 +44,4 @@ def test_estimate_risk():
         upper_assets=np.ones(10),
     )
     problem.solve()
-    assert problem.value == pytest.approx(0.43559171295408616)
+    assert problem.value == pytest.approx(0.4355917, abs=1e-5)

@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import cvxpy as cp
 import numpy as np
+import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 
 
-def test_max_sharpe():
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.SCS])
+def test_max_sharpe(solver):
     # define the problem
     builder = MaxSharpe(assets=4)
     builder.parameter["sigma_max"].value = 2.0
@@ -27,7 +30,7 @@ def test_max_sharpe():
         vola_uncertainty=np.zeros(2),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.variables["weights"].value,
@@ -38,7 +41,7 @@ def test_max_sharpe():
     )
 
     problem.parameter["sigma_max"].value = 3.0
-    problem.solve()
+    problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.variables["weights"].value,

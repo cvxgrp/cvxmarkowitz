@@ -61,10 +61,14 @@ def test_min_var_robust(solver):
         vola_uncertainty=np.array([0.15, 0.3]),
     )
 
-    problem.solve(solver=solver)
+    objective = problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.solution(),
         np.array([0.626406, 0.373594, 0.0, 0.0]),  # Computed analytically
         decimal=4,
     )
+
+    # correct...
+    assert objective == pytest.approx(100.0)
+    

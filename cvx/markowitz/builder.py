@@ -44,7 +44,7 @@ class _Problem:
         """
         Solve the problem
         """
-        self.problem.solve(**kwargs)
+        return self.problem.solve(**kwargs)
 
     def solution(self, variable="weights"):
         """

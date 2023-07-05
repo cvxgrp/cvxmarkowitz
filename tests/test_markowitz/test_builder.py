@@ -37,7 +37,7 @@ def test_dummy():
     )
 
     # problem = builder.build()
-    problem.solve()
+    problem.solve(solver=cp.ECOS)
 
     problem.problem.var_dict["weights"].value = np.array([2.0])
 

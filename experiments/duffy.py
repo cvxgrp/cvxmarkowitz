@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# see https://www.linkedin.com/posts/daniel-j-duffy-a6ab3912_fxy-x-x-y-y-stdabsx-1-ugcPost-7082323397543632896-SFZ1/?utm_source=share&utm_medium=member_desktop
 import cvxpy as cp
 
 if __name__ == "__main__":

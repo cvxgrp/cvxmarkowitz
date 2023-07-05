@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import os
+
+import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -78,7 +81,11 @@ def test_robust_sample_large():
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 
-def test_min_variance():
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
+def test_min_variance(solver):
+    if os.getenv("CI", False) and solver == cp.MOSEK:
+        pytest.skip("Skipping MOSEK test on CI")
+
     # define the problem
     builder = MinVar(assets=4)
 
@@ -95,10 +102,10 @@ def test_min_variance():
     )
 
     # problem = builder.build()
-    problem.solve()
+    problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
-        problem.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
+        problem.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=3
     )
 
     # It's enough to only update the value for the cholesky decomposition
@@ -109,12 +116,12 @@ def test_min_variance():
         vola_uncertainty=np.zeros(2),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.variables["weights"].value,
         np.array([0.875, 0.125, 0.0, 0.0]),
-        decimal=5,
+        decimal=3,
     )
 
 

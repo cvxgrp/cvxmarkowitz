@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import os
+
 import cvxpy as cp
 import numpy as np
 import pandas as pd
@@ -49,8 +51,12 @@ def test_minvar(returns):
     assert problem.is_dpp()
 
 
-def test_estimate_risk():
+@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
+def test_estimate_risk(solver):
     """Test the estimate() method"""
+    if os.getenv("CI", False) and solver == cp.MOSEK:
+        pytest.skip("Skipping MOSEK test on CI")
+
     np.random.seed(42)
 
     builder = MinVar(assets=25, factors=12)
@@ -69,7 +75,7 @@ def test_estimate_risk():
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     # assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
@@ -88,7 +94,7 @@ def test_estimate_risk():
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     assert problem.value == pytest.approx(0.5454593844618784, abs=1e-3)
     assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(

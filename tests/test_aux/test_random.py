@@ -7,4 +7,4 @@ from aux.random import rand_cov
 
 def test_rand_cov():
     a = rand_cov(5)
-    return np.all(np.linalg.eigvals(a) > 0)
+    assert np.all(np.linalg.eigvals(a) > 0)

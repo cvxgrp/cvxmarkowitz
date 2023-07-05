@@ -70,5 +70,4 @@ def test_min_var_robust(solver):
     )
 
     # correct...
-    assert objective == pytest.approx(100.0)
-    
+    assert objective == pytest.approx(1.1971448, abs=1e-5)

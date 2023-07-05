@@ -35,9 +35,10 @@ def test_max_sharpe(solver):
         vola_uncertainty=np.zeros(2),
     )
 
-    x = problem.solve(solver=solver)
+    problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.variables["weights"].value,
         np.array([5.5556e-01, 4.444e-01, 0.0, 0.0]),
-        decimal=4)
+        decimal=4,
+    )

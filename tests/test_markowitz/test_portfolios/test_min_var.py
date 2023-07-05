@@ -30,7 +30,7 @@ def test_min_var(solver):
         vola_uncertainty=np.zeros(2),
     )
 
-    problem.solve(solver=solver)
+    objective = problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
         problem.solution(),
@@ -38,6 +38,8 @@ def test_min_var(solver):
         decimal=3
         # builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
+
+    assert objective == pytest.approx(0.9354143, abs=1e-5)
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])

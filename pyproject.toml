@@ -26,6 +26,7 @@ pylint = "*"
 scikit-learn = "*"
 cvxpyanalyzer = "*"
 ruff = "^0.0.275"
+pre-commit = "*"
 
 [build-system]
 requires = ["poetry-core"]

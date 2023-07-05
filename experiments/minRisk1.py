@@ -42,6 +42,14 @@ if __name__ == "__main__":
 
     holding_costs = pd.Series(data=0.0005, index=returns.columns)
 
+    # for name, constraint in approx("xxx", builder.variables["weights"], 0.0, 0.1):
+    #    builder.constraints[name] = constraint
+
+    #     minvar.constraints[name] = constraint
+
+    #     builder.constraints[name] = constraint
+
+    # minvar.constraints
     # You can add constraints before you build the problem
     # minvar.constraints["concentration"] = (
     #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
@@ -60,13 +68,15 @@ if __name__ == "__main__":
     problem.update(
         chol=cholesky(pca.cov),
         exposure=pca.exposure,
-        idiosyncratic_risk=pca.idiosyncratic_risk,
+        idiosyncratic_vola=pca.idiosyncratic_vola,
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
         lower_factors=lower_bound_factors.values,
         upper_factors=upper_bound_factors.values,
         weights=np.zeros(20),
         holding_costs=holding_costs[returns.columns].values,
+        systematic_vola_uncertainty=np.zeros(10),
+        idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
     # minvar.parameter["kappa"].value = kappa[returns.columns].values
@@ -86,13 +96,15 @@ if __name__ == "__main__":
     problem.update(
         chol=cholesky(pca.cov),
         exposure=pca.exposure,
-        idiosyncratic_risk=pca.idiosyncratic_risk,
+        idiosyncratic_vola=pca.idiosyncratic_vola,
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
         lower_factors=lower_bound_factors[range(5)].values,
         upper_factors=upper_bound_factors[range(5)].values,
         weights=np.zeros(10),
         holding_costs=holding_costs[returns.columns].values,
+        systematic_vola_uncertainty=np.zeros(5),
+        idiosyncratic_vola_uncertainty=np.zeros(10),
     )
 
     # for name, parameter in minvar.model.data.items():

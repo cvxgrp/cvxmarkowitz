@@ -36,13 +36,8 @@ def test_max_sharpe(solver):
     )
 
     x = problem.solve(solver=solver)
-    print(x)
-    print(problem.problem)
 
     np.testing.assert_almost_equal(
         problem.variables["weights"].value,
-        # np.array([5.20124e-01, 4.79876e-01, 0.0, 0.0]),
-        # np.array([0.514983, 0.485017, 0.0, 0.0]),
         np.array([5.5556e-01, 4.444e-01, 0.0, 0.0]),
-        decimal=4,
-    )
+        decimal=4)

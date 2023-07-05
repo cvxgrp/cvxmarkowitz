@@ -32,11 +32,12 @@ def test_min_var(solver):
 
     objective = problem.solve(solver=solver)
 
+    np.testing.assert_almost_equal(problem.value, 0.9354143466222262)
+
     np.testing.assert_almost_equal(
         problem.solution(),
         np.array([0.75, 0.25, 0.0, 0.0]),
         decimal=3
-        # builder.variables["weights"].value, np.array([0.75, 0.25, 0.0, 0.0]), decimal=5
     )
 
     assert objective == pytest.approx(0.9354143, abs=1e-5)
@@ -71,5 +72,16 @@ def test_min_var_robust(solver):
         decimal=4,
     )
 
-    # correct...
     assert objective == pytest.approx(1.1971448, abs=1e-5)
+
+
+    problem.update(
+        chol=cholesky(np.array([[2.0, 0.4], [0.4, 3.0]])),
+        lower_assets=np.zeros(2),
+        upper_assets=np.ones(2),
+        vola_uncertainty=np.array([0.3, 0.6]),
+    )
+
+    problem.solve()
+
+    assert problem.value > objective

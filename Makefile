@@ -1,9 +1,9 @@
 .DEFAULT_GOAL := help
 
 SHELL=/bin/bash
-KERNEL="markowitz"
-UNAME=$(shell uname -s)
 
+UNAME=$(shell uname -s)
+KERNEL=$(shell poetry version | cut -d' ' -f1)
 
 .PHONY: install
 install:  ## Install a virtual environment
@@ -11,6 +11,7 @@ install:  ## Install a virtual environment
 
 .PHONY: kernel
 kernel: install ## Create a kernel for jupyter lab
+	@echo ${KERNEL}
 	@poetry run pip install ipykernel
 	@poetry run python -m ipykernel install --user --name=${KERNEL}
 
@@ -20,7 +21,7 @@ fmt:  ## Run autoformatting and linting
 	@poetry run pre-commit run --all-files
 
 .PHONY: test
-test:  ## Run tests
+test: install ## Run tests
 	@poetry run pytest
 
 .PHONY: clean

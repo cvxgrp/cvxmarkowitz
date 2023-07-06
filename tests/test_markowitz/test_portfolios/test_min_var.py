@@ -79,6 +79,6 @@ def test_min_var_robust(solver):
         vola_uncertainty=np.array([0.3, 0.6]),
     )
 
-    problem.solve()
+    problem.solve(solver=solver)
 
     assert problem.value > objective

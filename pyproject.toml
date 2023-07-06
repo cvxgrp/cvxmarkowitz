@@ -10,6 +10,7 @@ packages = [{include = "cvx"}]
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 cvxpy = "*"
+click = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.2.0"
@@ -29,6 +30,7 @@ pre-commit = "*"
 black = "^23.1.0"
 clarabel = "^0.5.1"
 mosek = "*"
+pytest-click = "*"
 
 [build-system]
 requires = ["poetry-core"]

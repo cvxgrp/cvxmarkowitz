@@ -167,6 +167,14 @@ def test_mismatch():
     with pytest.raises(CvxError):
         model.update(
             chol=np.eye(2),
+            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
+            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+            exposure=np.array([[1, 0], [1, 0.5]]),
+        )
+
+    with pytest.raises(CvxError):
+        model.update(
+            chol=np.eye(2),
             exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
             idiosyncratic_vola=np.array([0.1, 0.1]),
             systematic_vola_uncertainty=np.array([0.2, 0.1]),

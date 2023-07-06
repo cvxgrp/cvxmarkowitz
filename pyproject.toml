@@ -36,6 +36,9 @@ pytest-click = "*"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry.scripts]
+weather = "cvx.cli.weather:cli"
+
 [tool.ruff]
 select = ["E", "F", "I"]
 line-length = 100

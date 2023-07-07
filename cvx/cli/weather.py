@@ -22,13 +22,10 @@ import requests
     help="longitude (in degrees)",
 )
 def cli(metric: str, latitude: float, longitude: float) -> None:
-    r = requests.get(
-        "https://api.open-meteo.com/v1/forecast?latitude="
-        + str(latitude)
-        + "&longitude="
-        + str(longitude)
-        + "&current_weather=true"
-    )
+    url = "https://api.open-meteo.com/v1/forecast"
+    url = f"{url}?latitude={str(latitude)}&longitude={str(longitude)}&current_weather=true"
+    r = requests.get(url)
+
     if r.status_code == 200:
         if metric in r.json()["current_weather"]:
             print(r.json()["current_weather"][metric])
@@ -36,7 +33,3 @@ def cli(metric: str, latitude: float, longitude: float) -> None:
             print("Metric not supported!")
     else:
         print("Open-Meteo is down!")
-
-
-# if __name__ == "__main__":
-#    cli()

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+from aux.rand_cov import rand_cov
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -40,3 +41,7 @@ with open(path / "ex2.json", "r") as f:
     a_restored = np.asarray(json_load["a"])
     print(a_restored)
     print(a_restored.shape)
+
+a = rand_cov(5)
+with open(path / "eigenvalue.json", "w") as f:
+    json.dump({"a": a}, f, cls=NumpyEncoder)

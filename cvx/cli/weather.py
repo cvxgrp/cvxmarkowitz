@@ -38,5 +38,5 @@ def cli(metric: str, latitude: float, longitude: float) -> None:
         print("Open-Meteo is down!")
 
 
-if __name__ == "__main__":
-    cli()
+# if __name__ == "__main__":
+#    cli()

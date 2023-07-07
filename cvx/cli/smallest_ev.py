@@ -19,5 +19,5 @@ def smallest_ev(json_file) -> None:
         print(w[0])
 
 
-if __name__ == "__main__":
-    smallest_ev()
+# if __name__ == "__main__":
+#    smallest_ev()

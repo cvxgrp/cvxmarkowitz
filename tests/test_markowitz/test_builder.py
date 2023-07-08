@@ -34,14 +34,11 @@ def test_dummy():
         lower_assets=np.array([0.0]),
         upper_assets=np.array([1.0]),
         vola_uncertainty=np.zeros(1),
-    )
-
-    # problem = builder.build()
-    problem.solve(solver=cp.ECOS)
+    ).solve(solver=cp.ECOS)
 
     problem.problem.var_dict["weights"].value = np.array([2.0])
 
-    d = problem.solution()  # (names=["a"])
+    d = problem.solution()
     assert d == np.array([2.0])
 
     print(dict(builder.data))

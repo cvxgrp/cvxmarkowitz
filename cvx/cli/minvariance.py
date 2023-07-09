@@ -64,34 +64,3 @@ def minvariance(json_file, problem_file=None, assets=None, factors=None) -> None
     except Exception as e:
         click.echo(traceback.print_exception(type(e), e, e.__traceback__))
         raise e
-
-
-# if __name__ == '__main__':
-#
-#     covariance = rand_cov(10)
-#
-#     input_data = {}
-#     input_data["chol"] = cholesky(covariance)
-#     input_data["lower_assets"] = np.zeros(10)
-#     input_data["upper_assets"] = np.ones(10)
-#     input_data["vola_uncertainty"] = np.zeros(10)
-#
-#     write_json(json_file="matrix.json", data=input_data)
-#
-#     runner = CliRunner()
-#
-#     result = runner.invoke(minvariance, ["matrix.json", "problem.pkl"])
-#     print(result.output)
-
-# assets, factors = estimate_dimensions(input_data)
-# print(assets, factors)
-#
-# problem = MinVar(assets=10).build()
-# try:
-#      problem.update(**input_data)
-#      problem.solve()
-#      print(problem.solution())
-# except CvxError as e:
-#      print(e)
-#      raise(e)
-# minvariance(json_file="matrix.json")

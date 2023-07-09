@@ -33,18 +33,20 @@ class _Problem:
 
             model.update(**kwargs)
 
-        # set the parameters in the problem
-        print(self.problem.param_dict.keys())
-
         for name, model in self.model.items():
             for key in model.data.keys():
                 self.problem.param_dict[key].value = model.data[key].value
 
-    def solve(self, **kwargs):
+    def solve(self, solver=cp.ECOS, **kwargs):
         """
         Solve the problem
         """
-        return self.problem.solve(**kwargs)
+        value = self.problem.solve(solver=solver, **kwargs)
+
+        if self.problem.status is not cp.OPTIMAL:
+            raise CvxError(f"Problem status is {self.problem.status}")
+
+        return value
 
     def solution(self, variable="weights"):
         """

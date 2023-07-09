@@ -24,3 +24,20 @@ def test_cli_serialize(resource_dir, tmp_path):
     )
     assert result.exit_code == 0
     assert "Solution" in result.output
+
+
+def test_options(resource_dir):
+    runner = CliRunner()
+    result = runner.invoke(
+        minvariance, [str(resource_dir / "matrix.json"), "--assets", "20"]
+    )
+
+    assert result.exit_code == 0
+    assert "Solution" in result.output
+
+
+def test_infeasible(resource_dir):
+    runner = CliRunner()
+    result = runner.invoke(minvariance, [str(resource_dir / "matrix_infeasible.json")])
+
+    assert result.exit_code > 0

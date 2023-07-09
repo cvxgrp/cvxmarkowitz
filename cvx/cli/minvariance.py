@@ -16,7 +16,7 @@ from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
     "--assets",
     "-a",
     default=None,
-    type=float,
+    type=int,
     required=False,
     help="Number of assets",
 )
@@ -24,7 +24,7 @@ from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
     "--factors",
     "-f ",
     default=None,
-    type=float,
+    type=int,
     required=False,
     help="Number of factors",
 )

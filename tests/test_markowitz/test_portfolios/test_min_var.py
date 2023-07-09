@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from cvx.linalg import cholesky
-from cvx.markowitz.portfolios.min_var import MinVar
+from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
@@ -82,3 +82,26 @@ def test_min_var_robust(solver):
     problem.solve(solver=solver)
 
     assert problem.value > objective
+
+
+def test_dimensions():
+    input_data = {
+        # "chol": cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        "exposure": np.ones((2, 4)),
+        "upper_assets": np.ones(4),
+        "lower_assets": np.zeros(4),
+    }
+    assets, factors = estimate_dimensions(input_data)
+    assert assets == 4
+    assert factors == 2
+
+
+def test_dimensions_no_exposure():
+    input_data = {
+        # "chol": cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        "upper_assets": np.ones(4),
+        "lower_assets": np.zeros(4),
+    }
+    assets, factors = estimate_dimensions(input_data)
+    assert assets == 4
+    assert factors is None

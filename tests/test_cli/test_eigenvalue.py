@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
 
-import numpy as np
 import pytest
 from click.testing import CliRunner
+from numpyencoder import NumpyEncoder
 
 from cvx.cli.smallest_ev import smallest_ev
 from cvx.linalg.random import rand_cov
-
-
-class NumpyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return json.JSONEncoder.default(self, obj)
 
 
 def test_cli(resource_dir):

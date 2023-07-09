@@ -33,12 +33,11 @@ class _Problem:
 
             model.update(**kwargs)
 
-        # set the parameters in the problem
-        print(self.problem.param_dict.keys())
-
         for name, model in self.model.items():
             for key in model.data.keys():
                 self.problem.param_dict[key].value = model.data[key].value
+
+        return self
 
     def solve(self, **kwargs):
         """

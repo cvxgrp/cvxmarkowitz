@@ -3,10 +3,10 @@ import json
 
 import numpy as np
 import pytest
-from aux.random.rand_cov import rand_cov
 from click.testing import CliRunner
 
 from cvx.cli.smallest_ev import smallest_ev
+from cvx.linalg.random import rand_cov
 
 
 class NumpyEncoder(json.JSONEncoder):

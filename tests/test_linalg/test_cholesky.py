@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 import numpy as np
-from aux.random import rand_cov
 
 from cvx.linalg import cholesky
+from cvx.linalg.random import rand_cov
 
 
 def test_cholesky():

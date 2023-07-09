@@ -2345,6 +2345,21 @@ files = [
 ]
 
 [[package]]
+name = "numpyencoder"
+version = "0.3.0"
+description = "Python JSON encoder for handling Numpy data types."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "numpyencoder-0.3.0-py3-none-any.whl", hash = "sha256:e3f7cec9b40fc026ec4ea9fc2d0ef69d4f5f171edec8f51b4cf1c5144545495b"},
+    {file = "numpyencoder-0.3.0.tar.gz", hash = "sha256:79da1c662bcdc6260a3944426e1dc38c248a236b9b73faf26a9084f73932f870"},
+]
+
+[package.dependencies]
+numpy = ">=1.14.3"
+
+[[package]]
 name = "osqp"
 version = "0.6.3"
 description = "OSQP: The Operator Splitting QP Solver"
@@ -4402,4 +4417,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "5d31813dcb41eab1fedfb67aff053311e839cc784bc96cc484f713ad9d6f624e"
+content-hash = "9100d98bc9702a560aa341df4a30b9a62c12b084d96ee06c327d45c9d105848a"

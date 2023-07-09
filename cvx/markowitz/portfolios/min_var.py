@@ -8,6 +8,17 @@ import cvxpy as cp
 from cvx.markowitz.builder import Builder
 
 
+def estimate_dimensions(input_data):
+    """Estimate the dimensions of the problem from the input data"""
+    assets = input_data["lower_assets"].shape[0]
+    try:
+        factors = input_data["exposure"].shape[0]
+    except KeyError:
+        factors = None
+
+    return assets, factors
+
+
 @dataclass(frozen=True)
 class MinVar(Builder):
 

@@ -50,3 +50,20 @@ def test_missing_data():
     problem = builder.build()
     with pytest.raises(CvxError):
         problem.update(cov=np.eye(1))
+
+
+def test_infeasible_problem():
+    builder = DummyBuilder(assets=1)
+
+    problem = builder.build()
+
+    # check out lower bound above upper bound!
+    problem.update(
+        chol=np.eye(1),
+        lower_assets=np.array([1.0]),
+        upper_assets=np.array([0.0]),
+        vola_uncertainty=np.zeros(1),
+    )
+
+    with pytest.raises(CvxError):
+        problem.solve(solver=cp.ECOS)

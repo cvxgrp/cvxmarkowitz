@@ -39,11 +39,16 @@ class _Problem:
 
         return self
 
-    def solve(self, **kwargs):
+    def solve(self, solver=cp.ECOS, **kwargs):
         """
         Solve the problem
         """
-        return self.problem.solve(**kwargs)
+        value = self.problem.solve(solver=solver, **kwargs)
+
+        if self.problem.status is not cp.OPTIMAL:
+            raise CvxError(f"Problem status is {self.problem.status}")
+
+        return value
 
     def solution(self, variable="weights"):
         """

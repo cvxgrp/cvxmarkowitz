@@ -7,9 +7,9 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 import pytest
-from aux.random import rand_cov
 
 from cvx.linalg import PCA, cholesky
+from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel

@@ -17,20 +17,21 @@ from cvx.markowitz.risk import FactorModel, SampleCovariance
 class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
-    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
-    variables: Dict[str, cp.Variable] = field(default_factory=dict)
-    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
     # problem has var_dict and param_dict
 
     def update(self, **kwargs):
         """
-        Update the model
+        Update the problem
         """
         for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
                     raise CvxError(f"Missing data for {key} in model {name}")
 
+            # It's tempting to operate without the models at this stage.
+            # However, we would give up a lot of convenience. For example,
+            # the models can be prepared to deal with data that has not
+            # exactly the correct shape.
             model.update(**kwargs)
 
         for name, model in self.model.items():
@@ -62,6 +63,12 @@ class _Problem:
 
     def is_dpp(self):
         return self.problem.is_dpp()
+
+    @property
+    def data(self):
+        for name, model in self.model.items():
+            for key, value in model.data.items():
+                yield (name, key), value
 
 
 @dataclass(frozen=True)
@@ -123,16 +130,4 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
-        return _Problem(
-            problem=problem,
-            model=self.model,
-            constraints=self.constraints,
-            variables=self.variables,
-            parameter=self.parameter,
-        )
-
-    @property
-    def data(self):
-        for name, model in self.model.items():
-            for key, value in model.data.items():
-                yield (name, key), value
+        return _Problem(problem=problem, model=self.model)

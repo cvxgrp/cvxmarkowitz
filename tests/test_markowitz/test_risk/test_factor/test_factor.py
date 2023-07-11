@@ -78,9 +78,7 @@ def test_estimate_risk(solver):
     problem.solve(solver=solver)
 
     # assert prob.value == pytest.approx(0.14138117837204583)
-    assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
-        np.zeros(5), abs=1e-6
-    )
+    assert np.array(problem.solution()[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
 
     problem.update(
         chol=cholesky(rand_cov(10)),
@@ -97,22 +95,21 @@ def test_estimate_risk(solver):
     problem.solve(solver=solver)
 
     assert problem.value == pytest.approx(0.5454593844618784, abs=1e-3)
-    assert np.array(problem.variables["weights"].value[20:]) == pytest.approx(
-        np.zeros(5), abs=1e-3
-    )
+    assert np.array(problem.solution()[20:]) == pytest.approx(np.zeros(5), abs=1e-3)
 
-    data = dict(builder.data)
+    data = dict(problem.data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert data[("risk", "exposure")].value @ problem.variables[
-        "weights"
-    ].value == pytest.approx(problem.variables["factor_weights"].value, abs=1e-6)
+    assert data[("risk", "exposure")].value @ problem.solution() == pytest.approx(
+        problem.solution(variable="factor_weights"), abs=1e-6
+    )
 
     # test all entries of y are smaller than 0.1
-    assert np.all([problem.variables["factor_weights"].value <= 0.1 + 1e-4])
+    assert np.all([problem.solution(variable="factor_weights") <= 0.1 + 1e-4])
     # test all entries of y are larger than -0.1
-    print(problem.variables["factor_weights"].value)
-    assert np.all([problem.variables["factor_weights"].value >= -(0.1 + 1e-4)])
+    # print(problem.variables["factor_weights"].value)
+
+    assert np.all([problem.solution(variable="factor_weights") >= -(0.1 + 1e-4)])
 
 
 def test_factor_mini():

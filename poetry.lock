@@ -802,14 +802,14 @@ setuptools = "*"
 
 [[package]]
 name = "cvxsimulator"
-version = "0.6.0"
+version = "0.6.1"
 description = "Simple simulator for investors"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "cvxsimulator-0.6.0-py3-none-any.whl", hash = "sha256:99dc97728194c8ebab5856a9e98a1b92558ea706e00fdbb469a9c4ce0312c253"},
-    {file = "cvxsimulator-0.6.0.tar.gz", hash = "sha256:6090c31dd61df50fffd836ab7282fd6d8fa2fd93b20c4e07a7c793615933346f"},
+    {file = "cvxsimulator-0.6.1-py3-none-any.whl", hash = "sha256:ba4372041601a2937b9c7612ca6b07c394b4b27653592d40a635dc3591601d55"},
+    {file = "cvxsimulator-0.6.1.tar.gz", hash = "sha256:9e423bfff174abb3310a2942df08a9bcd9288e09a8cdfdbf4be3fc9c940b853b"},
 ]
 
 [package.dependencies]

@@ -10,9 +10,16 @@ packages = [{include = "cvx"}]
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 cvxpy = "*"
-click = "*"
-requests = "*"
-numpyencoder = "*"
+requests = { version = "*", optional = true }
+numpyencoder = { version = "*", optional = true }
+click = { version = "*", optional = true }
+
+[tool.poetry.extras]
+cli = ["click", "numpyencoder", "requests"]
+
+
+
+
 
 [tool.poetry.dev-dependencies]
 pytest = "7.2.0"

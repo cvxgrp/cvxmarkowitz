@@ -26,7 +26,7 @@ def test_dummy():
     assert "vola_uncertainty" in builder.model["risk"].data
 
     problem = builder.build()
-    print(problem.problem.parameters())
+    # print(problem.problem.parameters())
     # todo: risk model needs to be involved in DummyBuilder
 
     problem.update(
@@ -41,8 +41,7 @@ def test_dummy():
     d = problem.solution()
     assert d == np.array([2.0])
 
-    print(dict(builder.data))
-    assert np.allclose(dict(builder.data)[("risk", "chol")].value, np.eye(1))
+    assert np.allclose(dict(problem.data)[("risk", "chol")].value, np.eye(1))
 
 
 def test_missing_data():

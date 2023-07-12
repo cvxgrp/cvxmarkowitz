@@ -41,7 +41,6 @@ if __name__ == "__main__":
                 lower_assets=np.zeros(20),
                 upper_assets=np.ones(20),
             )
-
             logger.debug(t[-1])
 
             # solve the problem
@@ -52,7 +51,6 @@ if __name__ == "__main__":
             # update the builder
             b.set_weights(t[-1], weights=weights)
         except KeyError:
-            # KeyError could happen as covariance matrix is not yet defined for the first 30 days
             pass
 
     # --------------------------------------------------------------------------------------------

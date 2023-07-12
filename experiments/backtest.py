@@ -14,8 +14,6 @@ if __name__ == "__main__":
         "data/stock_prices.csv", index_col=0, header=0, parse_dates=True
     )
 
-    logger.info(f"Loaded prices. Shape: {prices.shape}")
-
     # --------------------------------------------------------------------------------------------
     # construct the "Markowitz engine", here use a very simple idea
     engine = MinVar(assets=20)

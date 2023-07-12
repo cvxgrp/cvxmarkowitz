@@ -32,27 +32,31 @@ if __name__ == "__main__":
 
     # --------------------------------------------------------------------------------------------
     # perform the iteration through time
-    for t, state in b:
+    for t, _ in b:
         try:
-            cc = cov[t[-1]]
-            logger.debug(t[-1])
             # update the problem
             problem.update(
-                chol=cholesky(cc.values),
+                chol=cholesky(cov[t[-1]].values),
                 vola_uncertainty=np.zeros(20),
                 lower_assets=np.zeros(20),
                 upper_assets=np.ones(20),
             )
 
+            logger.debug(t[-1])
+
             # solve the problem
             problem.solve()
-            weights = pd.Series(index=prices.columns, data=problem.solution())
+            weights = pd.Series(
+                index=prices.columns, data=problem.solution(variable="weights")
+            )
             # update the builder
-            b.set_weights(t[-1], weights=weights.tail(10))
+            b.set_weights(t[-1], weights=weights)
         except KeyError:
+            # KeyError could happen as covariance matrix is not yet defined for the first 30 days
             pass
 
     # --------------------------------------------------------------------------------------------
     # build the portfolio
     portfolio = b.build()
     portfolio.snapshot()
+    portfolio.metrics()

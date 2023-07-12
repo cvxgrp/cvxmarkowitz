@@ -802,13 +802,10 @@ setuptools = "*"
 
 [[package]]
 name = "cvxsimulator"
-version = "0.0.0"
 description = "Simple simulator for investors"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
-files = []
-develop = false
 
 [package.dependencies]
 numpy = "*"
@@ -4809,4 +4806,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "57ad6884c2ba501c3b82a74e8b8341c6285e9db84c5ab6294f6f23a77b2cdd7e"
+content-hash = "d2d2f36365519ceb7dcedcd7a05929d51cd3989985eeb98e94ded27f6bac2210"

@@ -26,5 +26,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       # Uncomment once the package is public
-      # - name: Coveralls GitHub Action
-      #   uses: coverallsapp/github-action@v2
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2

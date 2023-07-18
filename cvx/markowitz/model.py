@@ -10,6 +10,8 @@ from typing import Dict
 
 import cvxpy as cp
 
+from cvx.markowitz.cvxerror import CvxError
+
 
 @dataclass(frozen=True)
 class Model(ABC):
@@ -72,7 +74,6 @@ class ConstraintName(Enum):
         problem_constraints = [cls.try_from_string(c) for c in problem_constraints]
 
         required_constraints = set(cls.required_constraints())
-        assert required_constraints <= set(problem_constraints), (
-            f"Missing required constraints: "
-            f"{required_constraints - set(problem_constraints)}"
-        )
+        missing_constraints = required_constraints - set(problem_constraints)
+        if missing_constraints:
+            raise CvxError(f"Missing required constraints: {[c.name for c in missing_constraints]}")

@@ -26,7 +26,7 @@ mock = "*"
 jupyterlab = "*"
 jupyter-book = "0.15.1"
 
-[tool.peotry.group.linting.dependencies]
+[tool.poetry.group.linting.dependencies]
 pylint = "*"
 ruff = "0.0.277"
 pre-commit = "*"

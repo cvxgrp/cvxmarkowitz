@@ -6,9 +6,12 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+from cvx.markowitz.model import ConstraintName
 from cvx.linalg import cholesky
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
+
+C = ConstraintName
 
 if __name__ == "__main__":
     returns = (
@@ -25,7 +28,7 @@ if __name__ == "__main__":
     builder = MinVar(assets=20)
 
     # You can add constraints before you build the problem
-    builder.constraints["concentration"] = (
+    builder.constraints[C.CONCENTRATION] = (
         cp.sum_largest(builder.variables["weights"], 2) <= 0.4
     )
 

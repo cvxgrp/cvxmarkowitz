@@ -9,6 +9,7 @@ import cvxpy as cp
 
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.model import ConstraintName
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.risk import FactorModel, SampleCovariance
 
@@ -76,7 +77,7 @@ class Builder:
     assets: int = 0
     factors: int = None
     model: Dict[str, Model] = field(default_factory=dict)
-    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
+    constraints: Dict[str | ConstraintName, cp.Constraint] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
 
@@ -130,4 +131,12 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
-        return _Problem(problem=problem, model=self.model)
+
+        ConstraintName.validate_constraints(self.constraints.keys())
+        return _Problem(
+            problem=problem,
+            model=self.model,
+            constraints=self.constraints,
+            variables=self.variables,
+            parameter=self.parameter,
+        )

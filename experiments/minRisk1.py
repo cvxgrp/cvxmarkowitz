@@ -51,11 +51,11 @@ if __name__ == "__main__":
 
     # minvar.constraints
     # You can add constraints before you build the problem
-    # minvar.constraints["concentration"] = (
+    # minvar.constraints[C.CONCENTRATION] = (
     #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
     # )
     # this constraint is not needed as the problem is long only and fully-invested
-    # minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
+    # minvar.constraints[C.LEVERAGE] = cp.abs(minvar.weights_assets) <= 3.0
 
     problem = builder.build()
     assert problem.is_dpp(), "Problem is not DPP"

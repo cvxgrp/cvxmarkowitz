@@ -61,7 +61,7 @@ class ConstraintName(Enum):
         """
         try:
             return cls(string.lower())
-        except ValueError:
+        except (AttributeError, ValueError):
             return string
 
     @classmethod

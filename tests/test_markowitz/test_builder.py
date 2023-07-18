@@ -8,6 +8,9 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import Builder, CvxError
+from cvx.markowitz.model import ConstraintName
+
+C = ConstraintName
 
 
 @dataclass(frozen=True)
@@ -15,6 +18,10 @@ class DummyBuilder(Builder):
     @property
     def objective(self):
         return cp.Maximize(0.0 + 0.0 * self.model["risk"].estimate(self.variables))
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.constraints[C.BUDGET] = cp.sum(self.variables["weights"]) == 1.0
 
 
 def test_dummy():

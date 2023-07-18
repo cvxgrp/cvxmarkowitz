@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.markowitz.model import ConstraintName
 from cvx.linalg import cholesky
+from cvx.markowitz.model import ConstraintName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
 

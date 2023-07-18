@@ -6,10 +6,11 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.models.expected_returns import ExpectedReturns
 from cvx.markowitz.model import ConstraintName
+from cvx.markowitz.models.expected_returns import ExpectedReturns
 
 C = ConstraintName
+
 
 @dataclass(frozen=True)
 class MaxSharpe(Builder):

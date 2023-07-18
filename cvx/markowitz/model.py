@@ -76,4 +76,6 @@ class ConstraintName(Enum):
         required_constraints = set(cls.required_constraints())
         missing_constraints = required_constraints - set(problem_constraints)
         if missing_constraints:
-            raise CvxError(f"Missing required constraints: {[c.name for c in missing_constraints]}")
+            raise CvxError(
+                f"Missing required constraints: {[c.name for c in missing_constraints]}"
+            )

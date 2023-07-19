@@ -45,21 +45,6 @@ if __name__ == "__main__":
 
     holding_costs = pd.Series(data=0.0005, index=returns.columns)
 
-    # for name, constraint in approx("xxx", builder.variables["weights"], 0.0, 0.1):
-    #    builder.constraints[name] = constraint
-
-    #     minvar.constraints[name] = constraint
-
-    #     builder.constraints[name] = constraint
-
-    # minvar.constraints
-    # You can add constraints before you build the problem
-    # minvar.constraints[C.CONCENTRATION] = (
-    #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
-    # )
-    # this constraint is not needed as the problem is long only and fully-invested
-    # minvar.constraints[C.LEVERAGE] = cp.abs(minvar.weights_assets) <= 3.0
-
     problem = builder.build()
     assert problem.is_dpp(), "Problem is not DPP"
 
@@ -110,21 +95,9 @@ if __name__ == "__main__":
         idiosyncratic_vola_uncertainty=np.zeros(10),
     )
 
-    # for name, parameter in minvar.model.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
-
-    # for name, parameter in minvar.model.bounds_assets.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
-
-    # for name, parameter in minvar.model.bounds_factors.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
-
     x = problem.solve(verbose=True)
     logger.info(f"Minimum standard deviation: {x}")
 
-    # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value,
-    # index=pca.asset_names)}")
-    # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(
         f"Concentration: {cp.sum_largest(problem.solution(V.WEIGHTS.value), 2).value}"

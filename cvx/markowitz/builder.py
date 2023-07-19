@@ -133,10 +133,11 @@ class Builder:
         assert problem.is_dpp(), "Problem is not DPP"
 
         ConstraintName.validate_constraints(self.constraints.keys())
+
         return _Problem(
             problem=problem,
             model=self.model,
-            constraints=self.constraints,
-            variables=self.variables,
-            parameter=self.parameter,
+            # constraints=self.constraints,
+            # variables=self.variables,
+            # parameter=self.parameter,
         )

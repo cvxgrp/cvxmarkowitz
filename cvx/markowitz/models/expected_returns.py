@@ -10,6 +10,9 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.builder import CvxError
+from cvx.markowitz.model import VariableName
+
+V = VariableName
 
 
 @dataclass(frozen=True)
@@ -32,9 +35,9 @@ class ExpectedReturns(Model):
         )
 
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
-        return self.data["mu"] @ variables["weights"] - self.parameter[
+        return self.data["mu"] @ variables[V.WEIGHTS] - self.parameter[
             "mu_uncertainty"
-        ] @ cp.abs(variables["weights"])
+        ] @ cp.abs(variables[V.WEIGHTS])
 
     def update(self, **kwargs):
         exp_returns = kwargs["mu"]

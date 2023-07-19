@@ -8,29 +8,32 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import Builder, CvxError
-from cvx.markowitz.model import ConstraintName
+from cvx.markowitz.model import ConstraintName, ModelName, VariableName
 
 C = ConstraintName
+M = ModelName
 
 
 @dataclass(frozen=True)
 class DummyBuilder(Builder):
     @property
     def objective(self):
-        return cp.Maximize(0.0 + 0.0 * self.model["risk"].estimate(self.variables))
+        return cp.Maximize(
+            0.0 + 0.0 * self.model[ModelName.RISK].estimate(self.variables)
+        )
 
     def __post_init__(self):
         super().__post_init__()
-        self.constraints[C.BUDGET] = cp.sum(self.variables["weights"]) == 1.0
+        self.constraints[C.BUDGET] = cp.sum(self.variables[VariableName.WEIGHTS]) == 1.0
 
 
 def test_dummy():
     builder = DummyBuilder(assets=1)
 
-    assert "risk" in builder.model
-    assert "bound_assets" in builder.model
-    assert "chol" in builder.model["risk"].data
-    assert "vola_uncertainty" in builder.model["risk"].data
+    assert M.RISK in builder.model
+    assert M.BOUND_ASSETS in builder.model
+    assert "chol" in builder.model[ModelName.RISK].data
+    assert "vola_uncertainty" in builder.model[ModelName.RISK].data
 
     problem = builder.build()
     # print(problem.problem.parameters())
@@ -48,7 +51,8 @@ def test_dummy():
     d = problem.solution()
     assert d == np.array([2.0])
 
-    assert np.allclose(dict(problem.data)[("risk", "chol")].value, np.eye(1))
+    print(dict(problem.data))
+    assert np.allclose(dict(problem.data)[(M.RISK, "chol")].value, np.eye(1))
 
 
 def test_missing_data():

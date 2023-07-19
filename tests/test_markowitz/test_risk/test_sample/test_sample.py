@@ -9,8 +9,11 @@ import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.builder import CvxError
+from cvx.markowitz.model import ModelName, VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import SampleCovariance
+
+V = VariableName
 
 
 def test_sample():
@@ -24,7 +27,7 @@ def test_sample():
 
     # Note: dummy should be abs(weights)
     vola = riskmodel.estimate(
-        {"weights": np.array([1.0, 1.0]), "_abs": np.array([1.0, 1.0])}
+        {V.WEIGHTS: np.array([1.0, 1.0]), V._ABS: np.array([1.0, 1.0])}
     ).value
     np.testing.assert_almost_equal(vola, 2.0)
 
@@ -39,8 +42,8 @@ def test_sample_large():
     )
     vola = riskmodel.estimate(
         {
-            "weights": np.array([1.0, 1.0, 0.0, 0.0]),
-            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
+            V.WEIGHTS: np.array([1.0, 1.0, 0.0, 0.0]),
+            V._ABS: np.array([1.0, 1.0, 0.0, 0.0]),
         }
     ).value
 
@@ -58,7 +61,7 @@ def test_robust_sample():
 
     # Note: dummy should be abs(weights)
     vola = riskmodel.estimate(
-        {"weights": np.array([1.0, -1.0]), "_abs": np.array([1.0, 1.0])}
+        {V.WEIGHTS: np.array([1.0, -1.0]), V._ABS: np.array([1.0, 1.0])}
     ).value
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
@@ -73,8 +76,8 @@ def test_robust_sample_large():
     )
     vola = riskmodel.estimate(
         {
-            "weights": np.array([1.0, -1.0, 0.0, 0.0]),
-            "_abs": np.array([1.0, 1.0, 0.0, 0.0]),
+            V.WEIGHTS: np.array([1.0, -1.0, 0.0, 0.0]),
+            V._ABS: np.array([1.0, 1.0, 0.0, 0.0]),
         }
     ).value
 
@@ -89,8 +92,8 @@ def test_min_variance(solver):
     # define the problem
     builder = MinVar(assets=4)
 
-    assert "bound_assets" in builder.model
-    assert "risk" in builder.model
+    assert ModelName.BOUND_ASSETS in builder.model
+    assert ModelName.RISK in builder.model
 
     problem = builder.build()
 

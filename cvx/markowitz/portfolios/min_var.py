@@ -6,9 +6,11 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.model import ConstraintName
+from cvx.markowitz.model import ConstraintName, ModelName, VariableName
 
 C = ConstraintName
+V = VariableName
+M = ModelName
 
 
 def estimate_dimensions(input_data):
@@ -33,9 +35,9 @@ class MinVar(Builder):
 
     @property
     def objective(self):
-        return cp.Minimize(self.model["risk"].estimate(self.variables))
+        return cp.Minimize(self.model[M.RISK].estimate(self.variables))
 
     def __post_init__(self):
         super().__post_init__()
-        self.constraints[C.LONG_ONLY] = self.variables["weights"] >= 0
-        self.constraints[C.BUDGET] = cp.sum(self.variables["weights"]) == 1.0
+        self.constraints[C.LONG_ONLY] = self.variables[V.WEIGHTS] >= 0
+        self.constraints[C.BUDGET] = cp.sum(self.variables[V.WEIGHTS]) == 1.0

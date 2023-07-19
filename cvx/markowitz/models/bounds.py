@@ -8,13 +8,13 @@ from typing import Dict
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.model import Model
+from cvx.markowitz.model import Model, VariableName
 
 
 @dataclass(frozen=True)
 class Bounds(Model):
     name: str = ""
-    acting_on: str = "weights"
+    acting_on: str | VariableName = "weights"
 
     def estimate(self, variables: Dict[str, cp.Variable]):
         """No estimation for bounds"""

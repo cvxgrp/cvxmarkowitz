@@ -11,8 +11,12 @@ import pytest
 from cvx.linalg import PCA, cholesky
 from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.model import ModelName, VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
+
+V = VariableName
+M = ModelName
 
 
 @pytest.fixture()
@@ -37,10 +41,10 @@ def test_timeseries_model(returns):
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    variables = {"weights": cp.Variable(20), "factor_weights": cp.Variable(10)}
-    variables["weights"].value = 0.05 * np.ones(20)
-    variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
-    variables["_abs"] = cp.abs(variables["factor_weights"])
+    variables = {V.WEIGHTS: cp.Variable(20), V.FACTOR_WEIGHTS: cp.Variable(10)}
+    variables[V.WEIGHTS].value = 0.05 * np.ones(20)
+    variables[V.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[V.WEIGHTS]
+    variables[V._ABS] = cp.abs(variables[V.FACTOR_WEIGHTS])
 
     vola = model.estimate(variables).value
     np.testing.assert_almost_equal(vola, 0.009233894697646914)
@@ -98,32 +102,33 @@ def test_estimate_risk(solver):
     assert np.array(problem.solution()[20:]) == pytest.approx(np.zeros(5), abs=1e-3)
 
     data = dict(problem.data)
+    print(data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert data[("risk", "exposure")].value @ problem.solution() == pytest.approx(
-        problem.solution(variable="factor_weights"), abs=1e-6
+    assert data[(M.RISK, "exposure")].value @ problem.solution() == pytest.approx(
+        problem.solution(variable=V.FACTOR_WEIGHTS.value), abs=1e-6
     )
 
     # test all entries of y are smaller than 0.1
-    assert np.all([problem.solution(variable="factor_weights") <= 0.1 + 1e-4])
+    assert np.all([problem.solution(variable=V.FACTOR_WEIGHTS.value) <= 0.1 + 1e-4])
     # test all entries of y are larger than -0.1
     # print(problem.variables["factor_weights"].value)
 
-    assert np.all([problem.solution(variable="factor_weights") >= -(0.1 + 1e-4)])
+    assert np.all([problem.solution(variable=V.FACTOR_WEIGHTS.value) >= -(0.1 + 1e-4)])
 
 
 def test_factor_mini():
     model = FactorModel(assets=3, factors=2)
 
     variables = {
-        "weights": cp.Variable(3),
-        "factor_weights": cp.Variable(2),
-        "_abs": cp.Variable(2),
+        V.WEIGHTS: cp.Variable(3),
+        V.FACTOR_WEIGHTS: cp.Variable(2),
+        V._ABS: cp.Variable(2),
     }
 
-    assert "weights" in variables
-    assert "factor_weights" in variables
-    assert "_abs" in variables
+    assert V.WEIGHTS in variables
+    assert V.FACTOR_WEIGHTS in variables
+    assert V._ABS in variables
 
     for _, value in variables.items():
         assert type(value) == cp.Variable
@@ -136,12 +141,12 @@ def test_factor_mini():
         idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
     )
 
-    variables["weights"].value = np.array([0.5, 0.1, 0.2])
-    variables["factor_weights"] = model.data["exposure"] @ variables["weights"]
+    variables[V.WEIGHTS].value = np.array([0.5, 0.1, 0.2])
+    variables[V.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[V.WEIGHTS]
     # Note: dummy is abs(factor_weights)
-    variables["_abs"] = cp.abs(variables["factor_weights"])
+    variables[V._ABS] = cp.abs(variables[V.FACTOR_WEIGHTS])
 
-    assert variables["factor_weights"].value == pytest.approx(
+    assert variables[V.FACTOR_WEIGHTS].value == pytest.approx(
         np.array([0.7, 0.75]), abs=1e-6
     )
 

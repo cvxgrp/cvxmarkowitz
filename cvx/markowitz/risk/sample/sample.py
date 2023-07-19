@@ -11,6 +11,9 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.model import VariableName
+
+V = VariableName
 
 
 @dataclass(frozen=True)
@@ -39,8 +42,8 @@ class SampleCovariance(Model):
         return cp.norm2(
             cp.hstack(
                 [
-                    self.data["chol"] @ variables["weights"],
-                    self.data["vola_uncertainty"] @ variables["_abs"],
+                    self.data["chol"] @ variables[V.WEIGHTS],
+                    self.data["vola_uncertainty"] @ variables[V._ABS],
                 ]
             )
         )  #
@@ -63,6 +66,6 @@ class SampleCovariance(Model):
 
     def constraints(self, variables):
         return {
-            "dummy": variables["_abs"]
-            >= cp.abs(variables["weights"]),  # Robust risk dummy variable
+            "dummy": variables[V._ABS]
+            >= cp.abs(variables[V.WEIGHTS]),  # Robust risk dummy variable
         }

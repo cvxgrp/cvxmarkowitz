@@ -8,6 +8,9 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
+from cvx.markowitz.model import VariableName
+
+V = VariableName
 
 
 @dataclass(frozen=True)
@@ -33,7 +36,7 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.rows * (1 - self.alpha))
-        return -cp.sum_smallest(self.data["returns"] @ variables["weights"], k=k) / k
+        return -cp.sum_smallest(self.data["returns"] @ variables[V.WEIGHTS], k=k) / k
 
     def update(self, **kwargs):
         ret = kwargs["returns"]

@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 
 from cvx.linalg import cholesky
+from cvx.markowitz.model import ModelName
 from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 
 
@@ -20,9 +21,12 @@ def test_max_sharpe(solver):
     builder = MaxSharpe(assets=4)
     builder.parameter["sigma_max"].value = 1.0
 
-    assert "bound_assets" in builder.model
-    assert "risk" in builder.model
-    assert "return" in builder.model
+    assert ModelName.BOUND_ASSETS in builder.model
+    assert ModelName.RISK in builder.model
+    assert ModelName.RETURN in builder.model
+
+    # assert "risk" in builder.model
+    # assert "return" in builder.model
 
     problem = builder.build()
 

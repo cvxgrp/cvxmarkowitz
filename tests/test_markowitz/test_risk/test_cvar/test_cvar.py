@@ -8,8 +8,13 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
+from cvx.markowitz.model import ModelName, VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
+
+# C = ConstraintName
+M = ModelName
+V = VariableName
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
@@ -26,9 +31,9 @@ def test_estimate_risk(solver):
     builder = MinVar(assets=14)
 
     # overwrite the risk model
-    builder.model["risk"] = model
+    builder.model[M.RISK] = model
 
-    assert "bound_assets" in builder.model
+    assert ModelName.BOUND_ASSETS in builder.model
 
     problem = builder.build()
 

@@ -42,6 +42,19 @@ class Model(ABC):
         return {}
 
 
+class VariableName(Enum):
+    WEIGHTS = "weights"
+    FACTOR_WEIGHTS = "factor_weights"
+    _ABS = "_abs"
+
+
+class ModelName(Enum):
+    RISK = "risk"
+    RETURN = "return"
+    BOUND_ASSETS = "bound_assets"
+    BOUND_FACTORS = "bound_factors"
+
+
 class ConstraintName(Enum):
     BUDGET = "budget"
     CONCENTRATION = "concentration"

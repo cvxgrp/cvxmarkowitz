@@ -13,6 +13,8 @@ cvxpy = "*"
 requests = { version = "*", optional = true }
 numpyencoder = { version = "*", optional = true }
 click = { version = "*", optional = true }
+pyyaml = "6.0.0"
+
 
 [tool.poetry.extras]
 cli = ["click", "numpyencoder", "requests"]

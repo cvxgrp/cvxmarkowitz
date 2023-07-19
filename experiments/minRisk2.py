@@ -7,11 +7,12 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import cholesky
-from cvx.markowitz.model import ConstraintName
+from cvx.markowitz.model import ConstraintName, VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
 
 C = ConstraintName
+V = VariableName
 
 if __name__ == "__main__":
     returns = (
@@ -27,27 +28,42 @@ if __name__ == "__main__":
 
     builder = MinVar(assets=20)
 
+    builder.parameter["max_concentration"] = cp.Parameter(
+        1, name="max_concentration", nonneg=True
+    )
+
     # You can add constraints before you build the problem
     builder.constraints[C.CONCENTRATION] = (
-        cp.sum_largest(builder.variables["weights"], 2) <= 0.4
+        cp.sum_largest(builder.variables[V.WEIGHTS], 2)
+        <= builder.parameter["max_concentration"]
     )
 
     # here we add a constraints
     # w[19] + w[17] <= 0.0001
     # w[19] + w[17] >= -0.0001
 
-    builder.parameter["random"] = cp.Parameter(1, nonneg=True)
+    builder.parameter["random"] = cp.Parameter(1, name="random", nonneg=True)
 
     row = np.zeros(20)
     row[19] = 1
     row[17] = 1
 
     for name, constraint in approx(
-        "xxx", row @ builder.variables["weights"], 0.0, builder.parameter["random"]
+        "xxx", row @ builder.variables[V.WEIGHTS], 0.0, builder.parameter["random"]
     ):
+        # print(constraint)
         builder.constraints[name] = constraint
 
+    # problem = builder.build()
+    # print(problem.parameter)
+    # assert False
+
+    # print(builder.constraints)
+    # print(builder.parameter)
     problem = builder.build()
+    print(problem.parameter)
+    # assert False
+
     assert problem.is_dpp(), "Problem is not DPP"
 
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
@@ -59,17 +75,19 @@ if __name__ == "__main__":
         lower_assets=lower_bound_assets[returns.columns].values,
         upper_assets=upper_bound_assets[returns.columns].values,
         vola_uncertainty=np.zeros(20),
+        # max_concentration=np.array([0.4]),
         # weights=np.zeros(20),
         # holding_costs=holding_costs[returns.columns].values,
     )
     problem.parameter["random"].value = np.array([0.1])
+    problem.parameter["max_concentration"].value = np.array([0.4])
 
     logger.info("Start solving problems...")
     x = problem.solve()
     logger.info(f"Minimum standard deviation: {x}")
 
-    print(problem.variables["weights"].value)
-    print(problem.problem)
+    # print(problem.variables[V.WEIGHTS].value)
+    # print(problem.problem)
     # assert False
 
     # logger.info(f"weights assets:\n{minvar.solution(names=returns.columns)}")
@@ -93,5 +111,5 @@ if __name__ == "__main__":
     # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(
-        f"Concentration: {cp.sum_largest(problem.variables['weights'], 2).value}"
+        f"Concentration: {cp.sum_largest(problem.solution('weights'), 2).value}"
     )

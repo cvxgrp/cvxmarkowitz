@@ -7,7 +7,10 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import PCA, cholesky
+from cvx.markowitz.model import VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
+
+V = VariableName
 
 if __name__ == "__main__":
     returns = (
@@ -124,5 +127,5 @@ if __name__ == "__main__":
     # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
     logger.info(
-        f"Concentration: {cp.sum_largest(problem.variables['weights'], 2).value}"
+        f"Concentration: {cp.sum_largest(problem.solution(V.WEIGHTS.value), 2).value}"
     )

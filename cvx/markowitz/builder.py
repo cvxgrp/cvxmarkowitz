@@ -39,9 +39,12 @@ class _Problem:
             # exactly the correct shape.
             model.update(**kwargs)
 
-        for name, model in self.model.items():
-            for key in model.data.keys():
-                self.problem.param_dict[key].value = model.data[key].value
+        # for name, model in self.model.items():
+        #    for key in model.data.keys():
+        #        self.parameter[key].value = model.data[key].value
+
+        # for name, value in kwargs.items():
+        #    self.parameter[name].value = value
 
         return self
 
@@ -74,6 +77,10 @@ class _Problem:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
+
+    @property
+    def parameter(self):
+        return self.problem.param_dict
 
 
 @dataclass(frozen=True)
@@ -134,6 +141,8 @@ class Builder:
                 self.variables
             ).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
+
+        print(self.parameter)
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"

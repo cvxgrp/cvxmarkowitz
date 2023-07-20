@@ -72,7 +72,7 @@ class FactorModel(Model):
                     cp.multiply(self.data["idiosyncratic_vola"], variables[V.WEIGHTS]),
                     cp.multiply(
                         self.data["idiosyncratic_vola_uncertainty"],
-                        variables[VariableName.WEIGHTS],
+                        variables[V.WEIGHTS],
                     ),
                 ]
             )

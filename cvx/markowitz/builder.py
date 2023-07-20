@@ -111,7 +111,7 @@ class Builder:
             )
 
         else:
-            self.model[ModelName.RISK] = SampleCovariance(assets=self.assets)
+            self.model[M.RISK] = SampleCovariance(assets=self.assets)
             #
             # add variable for absolute weights
             self.variables[V._ABS] = cp.Variable(self.assets, name="_abs", nonneg=True)
@@ -122,7 +122,7 @@ class Builder:
 
         # add bounds on assets
         self.model[M.BOUND_ASSETS] = Bounds(
-            assets=self.assets, name="assets", acting_on=VariableName.WEIGHTS
+            assets=self.assets, name="assets", acting_on=V.WEIGHTS
         )
 
     @property

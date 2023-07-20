@@ -12,7 +12,6 @@ from cvx.markowitz.model import ModelName, VariableName
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
 
-# C = ConstraintName
 M = ModelName
 V = VariableName
 
@@ -33,7 +32,7 @@ def test_estimate_risk(solver):
     # overwrite the risk model
     builder.model[M.RISK] = model
 
-    assert ModelName.BOUND_ASSETS in builder.model
+    assert M.BOUND_ASSETS in builder.model
 
     problem = builder.build()
 

@@ -7,3 +7,4 @@ class DataNames:
     VOLA_UNCERTAINTY = "vola_uncertainty"
     LOWER_BOUND_ASSETS = "lower_assets"
     UPPER_BOUND_ASSETS = "upper_assets"
+    EXPOSURE = "exposure"

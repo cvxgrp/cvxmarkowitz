@@ -93,20 +93,20 @@ def test_min_var_robust(solver):
 
 def test_dimensions():
     input_data = {
-        "exposure": np.ones((2, 4)),
-        "upper_assets": np.ones(4),
-        "lower_assets": np.zeros(4),
+        D.EXPOSURE: np.ones((2, 4)),
+        D.UPPER_BOUND_ASSETS: np.ones(4),
+        D.LOWER_BOUND_ASSETS: np.zeros(4),
     }
-    assets, factors = estimate_dimensions(input_data)
+    assets, factors = estimate_dimensions(**input_data)
     assert assets == 4
     assert factors == 2
 
 
 def test_dimensions_no_exposure():
     input_data = {
-        "upper_assets": np.ones(4),
-        "lower_assets": np.zeros(4),
+        D.UPPER_BOUND_ASSETS: np.ones(4),
+        D.LOWER_BOUND_ASSETS: np.zeros(4),
     }
-    assets, factors = estimate_dimensions(input_data)
+    assets, factors = estimate_dimensions(**input_data)
     assert assets == 4
     assert factors is None

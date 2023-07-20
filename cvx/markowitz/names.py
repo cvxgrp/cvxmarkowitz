@@ -8,3 +8,4 @@ class DataNames:
     LOWER_BOUND_ASSETS = "lower_assets"
     UPPER_BOUND_ASSETS = "upper_assets"
     EXPOSURE = "exposure"
+    HOLDING_COSTS = "holding_costs"

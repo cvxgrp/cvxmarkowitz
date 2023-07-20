@@ -9,9 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
-from cvx.markowitz.model import VariableName
-
-V = VariableName
+from cvx.markowitz.names import VariableName as V
 
 
 @dataclass(frozen=True)
@@ -25,9 +23,7 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(
-        self, variables: Dict[str | VariableName, cp.Variable]
-    ) -> cp.Expression:
+    def estimate(self, variables: Dict[str | V, cp.Variable]) -> cp.Expression:
         return cp.sum(
             cp.power(
                 cp.abs(variables[V.WEIGHTS] - self.data["weights"]),

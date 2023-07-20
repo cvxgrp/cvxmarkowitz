@@ -11,11 +11,11 @@ import pytest
 from cvx.linalg import PCA, cholesky
 from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import ModelName, VariableName
+from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
 
-V = VariableName
 M = ModelName
 
 
@@ -105,13 +105,13 @@ def test_estimate_risk(solver):
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
     assert data[(M.RISK, "exposure")].value @ problem.variables[
-        V.WEIGHTS.value
-    ].value == pytest.approx(problem.variables[V.FACTOR_WEIGHTS.value].value, abs=1e-6)
+        V.WEIGHTS
+    ].value == pytest.approx(problem.variables[V.FACTOR_WEIGHTS].value, abs=1e-6)
 
     # test all entries of y are smaller than 0.1
-    assert np.all([problem.variables[V.FACTOR_WEIGHTS.value].value <= 0.1 + 1e-4])
+    assert np.all([problem.variables[V.FACTOR_WEIGHTS].value <= 0.1 + 1e-4])
     # test all entries of y are larger than -0.1
-    assert np.all([problem.variables[V.FACTOR_WEIGHTS.value].value >= -(0.1 + 1e-4)])
+    assert np.all([problem.variables[V.FACTOR_WEIGHTS].value >= -(0.1 + 1e-4)])
 
 
 def test_factor_mini():

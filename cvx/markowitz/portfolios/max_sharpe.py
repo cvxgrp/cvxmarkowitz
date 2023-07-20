@@ -6,11 +6,10 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.model import ConstraintName, ModelName, VariableName
+from cvx.markowitz.model import ConstraintName, ModelName
 from cvx.markowitz.models.expected_returns import ExpectedReturns
 
 C = ConstraintName
-V = VariableName
 M = ModelName
 
 

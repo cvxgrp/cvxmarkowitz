@@ -9,9 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
-from cvx.markowitz.model import VariableName
-
-V = VariableName
+from cvx.markowitz.names import VariableName as V
 
 
 class Names(Enum):

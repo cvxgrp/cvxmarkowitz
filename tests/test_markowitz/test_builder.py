@@ -8,11 +8,9 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import Builder, CvxError
-from cvx.markowitz.model import ConstraintName, ModelName, VariableName
-
-C = ConstraintName
-M = ModelName
-V = VariableName
+from cvx.markowitz.model import ConstraintName as C
+from cvx.markowitz.model import ModelName as M
+from cvx.markowitz.names import DataNames as D
 
 
 @dataclass(frozen=True)
@@ -60,10 +58,12 @@ def test_infeasible_problem():
 
     # check out lower bound above upper bound!
     problem.update(
-        chol=np.eye(1),
-        lower_assets=np.array([1.0]),
-        upper_assets=np.array([0.0]),
-        vola_uncertainty=np.zeros(1),
+        **{
+            D.CHOLESKY: np.eye(1),
+            D.LOWER_BOUND_ASSETS: np.array([1.0]),
+            D.UPPER_BOUND_ASSETS: np.array([0.0]),
+            D.VOLA_UNCERTAINTY: np.zeros(1),
+        }
     )
 
     with pytest.raises(CvxError):
@@ -72,4 +72,4 @@ def test_infeasible_problem():
 
 def test_builder_risk():
     builder = DummyBuilder(assets=1)
-    assert builder.risk == builder.model[ModelName.RISK]
+    assert builder.risk == builder.model[M.RISK]

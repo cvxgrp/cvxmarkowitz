@@ -5,10 +5,8 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.model import VariableName
 from cvx.markowitz.models.trading_costs import TradingCosts
-
-V = VariableName
+from cvx.markowitz.names import VariableName as V
 
 
 def test_trading_costs():

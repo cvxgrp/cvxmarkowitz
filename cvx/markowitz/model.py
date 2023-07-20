@@ -11,7 +11,6 @@ from typing import Dict
 import cvxpy as cp
 
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.names import DataNames
 
 
 @dataclass(frozen=True)
@@ -20,12 +19,10 @@ class Model(ABC):
 
     assets: int
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
-    data: Dict[str | DataNames, cp.Parameter] = field(default_factory=dict)
+    data: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     @abstractmethod
-    def estimate(
-        self, variables: Dict[str | VariableName, cp.Variable]
-    ) -> cp.Expression:
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """
         Estimate the variance given the portfolio weights
         """
@@ -43,12 +40,6 @@ class Model(ABC):
         Return the constraints for the risk model
         """
         return {}
-
-
-class VariableName(Enum):
-    WEIGHTS = "weights"
-    FACTOR_WEIGHTS = "factor_weights"
-    _ABS = "_abs"
 
 
 class ModelName(Enum):

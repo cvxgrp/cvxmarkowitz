@@ -9,3 +9,9 @@ class DataNames:
     UPPER_BOUND_ASSETS = "upper_assets"
     EXPOSURE = "exposure"
     HOLDING_COSTS = "holding_costs"
+
+
+class VariableName:
+    WEIGHTS = "weights"
+    FACTOR_WEIGHTS = "factor_weights"
+    _ABS = "_abs"

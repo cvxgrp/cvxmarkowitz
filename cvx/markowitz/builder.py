@@ -9,19 +9,17 @@ import cvxpy as cp
 
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import ConstraintName, ModelName, VariableName
+from cvx.markowitz.model import ConstraintName as C
+from cvx.markowitz.model import ModelName as M
 from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.risk import FactorModel, SampleCovariance
-
-V = VariableName
-M = ModelName
-C = ConstraintName
 
 
 @dataclass(frozen=True)
 class _Problem:
     problem: cp.Problem
-    model: Dict[str | ModelName, Model] = field(default_factory=dict)
+    model: Dict[str | M, Model] = field(default_factory=dict)
 
     def update(self, **kwargs):
         """
@@ -80,16 +78,16 @@ class _Problem:
 
     @property
     def weights(self):
-        return self.variables[V.WEIGHTS.value].value
+        return self.variables[V.WEIGHTS].value
 
 
 @dataclass(frozen=True)
 class Builder:
     assets: int = 0
     factors: int = None
-    model: Dict[str | ModelName, Model] = field(default_factory=dict)
-    constraints: Dict[str | ConstraintName, cp.Constraint] = field(default_factory=dict)
-    variables: Dict[str | VariableName, cp.Variable] = field(default_factory=dict)
+    model: Dict[str | M, Model] = field(default_factory=dict)
+    constraints: Dict[str | C, cp.Constraint] = field(default_factory=dict)
+    variables: Dict[str | V, cp.Variable] = field(default_factory=dict)
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     def __post_init__(self):
@@ -99,27 +97,23 @@ class Builder:
 
             # add variable for factor weights
             self.variables[V.FACTOR_WEIGHTS] = cp.Variable(
-                self.factors, name=V.FACTOR_WEIGHTS.value
+                self.factors, name=V.FACTOR_WEIGHTS
             )
             # add bounds for factor weights
             self.model[M.BOUND_FACTORS] = Bounds(
                 assets=self.factors, name="factors", acting_on=V.FACTOR_WEIGHTS
             )
             # add variable for absolute factor weights
-            self.variables[V._ABS] = cp.Variable(
-                self.factors, name=V._ABS.value, nonneg=True
-            )
+            self.variables[V._ABS] = cp.Variable(self.factors, name=V._ABS, nonneg=True)
 
         else:
             self.model[M.RISK] = SampleCovariance(assets=self.assets)
             # add variable for absolute weights
-            self.variables[V._ABS] = cp.Variable(
-                self.assets, name=V._ABS.value, nonneg=True
-            )
+            self.variables[V._ABS] = cp.Variable(self.assets, name=V._ABS, nonneg=True)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
-        self.variables[V.WEIGHTS] = cp.Variable(self.assets, name=V.WEIGHTS.value)
+        self.variables[V.WEIGHTS] = cp.Variable(self.assets, name=V.WEIGHTS)
 
         # add bounds on assets
         self.model[M.BOUND_ASSETS] = Bounds(
@@ -146,7 +140,7 @@ class Builder:
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
 
-        ConstraintName.validate_constraints(self.constraints.keys())
+        C.validate_constraints(self.constraints.keys())
 
         return _Problem(problem=problem, model=self.model)
 

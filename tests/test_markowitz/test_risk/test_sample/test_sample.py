@@ -9,11 +9,10 @@ import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.builder import CvxError
-from cvx.markowitz.model import ModelName, VariableName
+from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import SampleCovariance
-
-V = VariableName
 
 
 def test_sample():

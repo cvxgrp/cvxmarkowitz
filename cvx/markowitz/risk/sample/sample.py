@@ -11,10 +11,8 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import VariableName
 from cvx.markowitz.names import DataNames as D
-
-V = VariableName
+from cvx.markowitz.names import VariableName as V
 
 
 @dataclass(frozen=True)

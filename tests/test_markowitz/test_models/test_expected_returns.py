@@ -6,10 +6,8 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import CvxError
-from cvx.markowitz.model import VariableName
 from cvx.markowitz.models.expected_returns import ExpectedReturns
-
-V = VariableName
+from cvx.markowitz.names import VariableName as V
 
 
 def test_expected_returns():

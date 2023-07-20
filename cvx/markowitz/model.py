@@ -22,7 +22,9 @@ class Model(ABC):
     data: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     @abstractmethod
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(
+        self, variables: Dict[str | VariableName, cp.Variable]
+    ) -> cp.Expression:
         """
         Estimate the variance given the portfolio weights
         """

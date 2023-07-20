@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Dict
 
 import cvxpy as cp
@@ -13,6 +14,10 @@ from cvx.markowitz.model import VariableName
 V = VariableName
 
 
+class Names(Enum):
+    RETURNS = "returns"
+
+
 @dataclass(frozen=True)
 class CVar(Model):
     """Conditional value at risk model"""
@@ -22,9 +27,9 @@ class CVar(Model):
 
     def __post_init__(self):
         # self.k = int(self.n * (1 - self.alpha))
-        self.data["returns"] = cp.Parameter(
+        self.data[Names.RETURNS.value] = cp.Parameter(
             shape=(self.rows, self.assets),
-            name="returns",
+            name=Names.RETURNS.value,
             value=np.zeros((self.rows, self.assets)),
         )
 
@@ -36,11 +41,14 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.rows * (1 - self.alpha))
-        return -cp.sum_smallest(self.data["returns"] @ variables[V.WEIGHTS], k=k) / k
+        return (
+            -cp.sum_smallest(self.data[Names.RETURNS.value] @ variables[V.WEIGHTS], k=k)
+            / k
+        )
 
     def update(self, **kwargs):
         ret = kwargs["returns"]
         columns = ret.shape[1]
 
-        self.data["returns"].value = np.zeros((self.rows, self.assets))
-        self.data["returns"].value[:, :columns] = ret
+        self.data[Names.RETURNS.value].value = np.zeros((self.rows, self.assets))
+        self.data[Names.RETURNS.value].value[:, :columns] = ret

@@ -20,6 +20,13 @@ if __name__ == "__main__":
     # add additional constraints you like
     problem = engine.build()
 
+    # expected data for each update...
+    for tuple in problem.expected_names:
+        logger.info(tuple)
+
+    logger.info(set(problem.parameter.keys()))
+    logger.info(set(problem.model.keys()))
+
     # --------------------------------------------------------------------------------------------
     # construct the portfolio using a builder
     b = builder(prices=prices)
@@ -39,7 +46,6 @@ if __name__ == "__main__":
                 lower_assets=np.zeros(20),
                 upper_assets=np.ones(20),
             )
-            logger.debug(t[-1])
 
             # solve the problem
             problem.solve()

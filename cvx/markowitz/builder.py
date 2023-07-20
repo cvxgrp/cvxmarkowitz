@@ -39,13 +39,6 @@ class _Problem:
             # exactly the correct shape.
             model.update(**kwargs)
 
-        # for name, model in self.model.items():
-        #    for key in model.data.keys():
-        #        self.parameter[key].value = model.data[key].value
-
-        # for name, value in kwargs.items():
-        #    self.parameter[name].value = value
-
         return self
 
     def solve(self, solver=cp.ECOS, **kwargs):
@@ -81,6 +74,12 @@ class _Problem:
     @property
     def parameter(self):
         return self.problem.param_dict
+
+    @property
+    def expected_names(self):
+        for name, model in self.model.items():
+            for key in model.data.keys():
+                yield (name, key)
 
 
 @dataclass(frozen=True)

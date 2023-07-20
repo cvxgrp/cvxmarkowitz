@@ -20,6 +20,16 @@ def test_serialize(tmp_path):
     covariance = rand_cov(10)
 
     input_data = {}
+    # print(set(problem.expected_names))
+    assert set(problem.expected_names) == {
+        "chol",
+        "lower_assets",
+        "upper_assets",
+        "vola_uncertainty",
+    }
+
+    # assert False
+
     input_data["chol"] = cholesky(covariance)
     input_data["lower_assets"] = np.zeros(10)
     input_data["upper_assets"] = np.ones(10)

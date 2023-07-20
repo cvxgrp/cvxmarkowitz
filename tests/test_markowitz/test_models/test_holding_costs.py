@@ -5,7 +5,10 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
+from cvx.markowitz.model import VariableName
 from cvx.markowitz.models.holding_costs import HoldingCosts
+
+V = VariableName
 
 
 def test_holding_costs():
@@ -19,6 +22,6 @@ def test_holding_costs():
     # here it's important that the weights
     weights = cp.Variable(assets)
     weights.value = np.array([-0.4, 0.7, 0.0])
-    variables = {"weights": weights}
+    variables = {V.WEIGHTS: weights}
 
     assert model.estimate(variables).value == pytest.approx(0.04)

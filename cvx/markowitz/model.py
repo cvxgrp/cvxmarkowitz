@@ -11,6 +11,7 @@ from typing import Dict
 import cvxpy as cp
 
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.names import DataNames
 
 
 @dataclass(frozen=True)
@@ -19,7 +20,7 @@ class Model(ABC):
 
     assets: int
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
-    data: Dict[str, cp.Parameter] = field(default_factory=dict)
+    data: Dict[str | DataNames, cp.Parameter] = field(default_factory=dict)
 
     @abstractmethod
     def estimate(

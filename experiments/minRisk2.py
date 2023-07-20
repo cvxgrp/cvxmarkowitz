@@ -8,6 +8,7 @@ from loguru import logger
 
 from cvx.linalg import cholesky
 from cvx.markowitz.model import ConstraintName, VariableName
+from cvx.markowitz.names import DataNames
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
 
@@ -71,13 +72,12 @@ if __name__ == "__main__":
 
     ####################################################################################################################
     problem.update(
-        chol=cholesky(returns.cov().values),
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        vola_uncertainty=np.zeros(20),
-        # max_concentration=np.array([0.4]),
-        # weights=np.zeros(20),
-        # holding_costs=holding_costs[returns.columns].values,
+        **{
+            DataNames.CHOLESKY: cholesky(returns.cov().values),
+            DataNames.VOLA_UNCERTAINTY: np.zeros(20),
+            DataNames.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            DataNames.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+        }
     )
     problem.parameter["random"].value = np.array([0.1])
     problem.parameter["max_concentration"].value = np.array([0.4])

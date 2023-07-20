@@ -9,6 +9,7 @@ import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
 
 
@@ -25,10 +26,12 @@ def test_min_var(solver):
     problem = builder.build()
 
     problem.update(
-        chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
-        lower_assets=np.zeros(2),
-        upper_assets=np.ones(2),
-        vola_uncertainty=np.zeros(2),
+        **{
+            D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.VOLA_UNCERTAINTY: np.zeros(2),
+        }
     )
 
     objective = problem.solve(solver=solver)
@@ -56,10 +59,12 @@ def test_min_var_robust(solver):
     problem = builder.build()
 
     problem.update(
-        chol=cholesky(np.array([[2.0, 0.4], [0.4, 3.0]])),
-        lower_assets=np.zeros(2),
-        upper_assets=np.ones(2),
-        vola_uncertainty=np.array([0.15, 0.3]),
+        **{
+            D.CHOLESKY: cholesky(np.array([[2.0, 0.4], [0.4, 3.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.VOLA_UNCERTAINTY: np.array([0.15, 0.3]),
+        }
     )
 
     objective = problem.solve(solver=solver)
@@ -73,10 +78,12 @@ def test_min_var_robust(solver):
     assert objective == pytest.approx(1.1971448, abs=1e-5)
 
     problem.update(
-        chol=cholesky(np.array([[2.0, 0.4], [0.4, 3.0]])),
-        lower_assets=np.zeros(2),
-        upper_assets=np.ones(2),
-        vola_uncertainty=np.array([0.3, 0.6]),
+        **{
+            D.CHOLESKY: cholesky(np.array([[2.0, 0.4], [0.4, 3.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.VOLA_UNCERTAINTY: np.array([0.3, 0.6]),
+        }
     )
 
     problem.solve(solver=solver)
@@ -86,7 +93,6 @@ def test_min_var_robust(solver):
 
 def test_dimensions():
     input_data = {
-        # "chol": cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         "exposure": np.ones((2, 4)),
         "upper_assets": np.ones(4),
         "lower_assets": np.zeros(4),
@@ -98,7 +104,6 @@ def test_dimensions():
 
 def test_dimensions_no_exposure():
     input_data = {
-        # "chol": cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         "upper_assets": np.ones(4),
         "lower_assets": np.zeros(4),
     }

@@ -49,9 +49,7 @@ if __name__ == "__main__":
 
             # solve the problem
             problem.solve()
-            weights = pd.Series(
-                index=prices.columns, data=problem.solution(variable="weights")
-            )
+            weights = pd.Series(index=prices.columns, data=problem.weights)
             # update the builder
             b.set_weights(t[-1], weights=weights)
         except KeyError:

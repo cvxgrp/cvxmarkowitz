@@ -99,6 +99,4 @@ if __name__ == "__main__":
     logger.info(f"Minimum standard deviation: {x}")
 
     logger.info(f"{problem}")
-    logger.info(
-        f"Concentration: {cp.sum_largest(problem.solution(V.WEIGHTS.value), 2).value}"
-    )
+    logger.info(f"Concentration: {cp.sum_largest(problem.weights, 2).value}")

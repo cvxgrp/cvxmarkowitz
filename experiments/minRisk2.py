@@ -49,7 +49,7 @@ if __name__ == "__main__":
     row[17] = 1
 
     for name, constraint in approx(
-        "xxx", row @ builder.variables[V.WEIGHTS], 0.0, builder.parameter["random"]
+        "xxx", row @ builder.weights, 0.0, builder.parameter["random"]
     ):
         # print(constraint)
         builder.constraints[name] = constraint
@@ -110,6 +110,4 @@ if __name__ == "__main__":
     logger.info(f"Minimum standard deviation: {x}")
     # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
-    logger.info(
-        f"Concentration: {cp.sum_largest(problem.solution('weights'), 2).value}"
-    )
+    logger.info(f"Concentration: {cp.sum_largest(problem.weights, 2).value}")

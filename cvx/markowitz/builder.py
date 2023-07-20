@@ -157,3 +157,7 @@ class Builder:
     @property
     def risk(self):
         return self.model[M.RISK]
+
+    @property
+    def factor_weights(self):
+        return self.variables[V.FACTOR_WEIGHTS]

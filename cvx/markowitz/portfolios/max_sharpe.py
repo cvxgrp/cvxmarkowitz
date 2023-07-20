@@ -36,8 +36,8 @@ class MaxSharpe(Builder):
             nonneg=True, name="maximal volatility"
         )
 
-        self.constraints[C.LONG_ONLY] = self.variables[V.WEIGHTS] >= 0
-        self.constraints[C.BUDGET] = cp.sum(self.variables[V.WEIGHTS]) == 1.0
+        self.constraints[C.LONG_ONLY] = self.weights >= 0
+        self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
         self.constraints[C.RISK] = (
-            self.model[M.RISK].estimate(self.variables) <= self.parameter["sigma_max"]
+            self.risk.estimate(self.variables) <= self.parameter["sigma_max"]
         )

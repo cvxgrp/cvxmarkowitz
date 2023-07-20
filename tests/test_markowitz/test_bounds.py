@@ -5,7 +5,10 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
+from cvx.markowitz.model import VariableName
 from cvx.markowitz.models.bounds import Bounds
+
+V = VariableName
 
 
 def test_raise_not_implemented():
@@ -31,7 +34,7 @@ def test_constraints():
 
 
 def test_wrong_action_on():
-    variables = {"weights": cp.Variable(3)}
+    variables = {V.WEIGHTS: cp.Variable(3)}
     bounds = Bounds(assets=3, name="assets", acting_on="wrong")
 
     with pytest.raises(KeyError):

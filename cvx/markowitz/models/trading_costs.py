@@ -9,6 +9,9 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz import Model
+from cvx.markowitz.model import VariableName
+
+V = VariableName
 
 
 @dataclass(frozen=True)
@@ -22,16 +25,20 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(
+        self, variables: Dict[str | VariableName, cp.Variable]
+    ) -> cp.Expression:
         return cp.sum(
             cp.power(
-                cp.abs(variables["weights"] - self.data["weights"]),
+                cp.abs(variables[V.WEIGHTS] - self.data["weights"]),
                 p=self.parameter["power"],
             )
         )
 
+    def _update(self, x):
+        z = np.zeros(self.assets)
+        z[: len(x)] = x
+        return z
+
     def update(self, **kwargs):
-        weights = kwargs["weights"]
-        num = weights.shape[0]
-        self.data["weights"].value = np.zeros(self.assets)
-        self.data["weights"].value[:num] = weights
+        self.data["weights"].value = self._update(kwargs["weights"])

@@ -25,9 +25,6 @@ def test_max_sharpe(solver):
     assert ModelName.RISK in builder.model
     assert ModelName.RETURN in builder.model
 
-    # assert "risk" in builder.model
-    # assert "return" in builder.model
-
     problem = builder.build()
 
     problem.update(
@@ -42,7 +39,7 @@ def test_max_sharpe(solver):
     problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
-        problem.solution(),
+        problem.weights,
         np.array([5.5556e-01, 4.444e-01, 0.0, 0.0]),
         decimal=4,
     )

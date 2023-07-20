@@ -35,17 +35,22 @@ class Bounds(Model):
             value=np.ones(self.assets),
         )
 
-    def update(self, **kwargs):
-        lower = kwargs[self._f("lower")]
-        self.data[self._f("lower")].value = np.zeros(self.assets)
-        self.data[self._f("lower")].value[: len(lower)] = lower
+    def _update(self, x):
+        z = np.zeros(self.assets)
+        z[: len(x)] = x
+        return z
 
-        upper = kwargs[self._f("upper")]
-        self.data[self._f("upper")].value = np.zeros(self.assets)
-        self.data[self._f("upper")].value[: len(upper)] = upper
+    def update(self, **kwargs):
+        # lower = kwargs[self._f("lower")]
+        self.data[self._f("lower")].value = self._update(
+            kwargs[self._f("lower")]
+        )  # np.zeros(self.assets)
+
+        # upper = kwargs[self._f("upper")]
+        self.data[self._f("upper")].value = self._update(kwargs[self._f("upper")])
 
     def constraints(
-        self, variables: Dict[str, cp.Variable]
+        self, variables: Dict[str | VariableName, cp.Variable]
     ) -> Dict[str, cp.Expression]:
         return {
             f"lower bound {self.name}": variables[self.acting_on]

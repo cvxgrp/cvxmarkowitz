@@ -28,8 +28,10 @@ class HoldingCosts(Model):
             cp.neg(cp.multiply(variables[V.WEIGHTS], self.data["holding_costs"]))
         )
 
+    def _update(self, x):
+        z = np.zeros(self.assets)
+        z[: len(x)] = x
+        return z
+
     def update(self, **kwargs):
-        costs = kwargs["holding_costs"]
-        num = costs.shape[0]
-        self.data["holding_costs"].value = np.zeros(self.assets)
-        self.data["holding_costs"].value[:num] = costs
+        self.data["holding_costs"].value = self._update(kwargs["holding_costs"])

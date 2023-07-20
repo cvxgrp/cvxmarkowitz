@@ -34,21 +34,23 @@ class ExpectedReturns(Model):
             nonneg=True,
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Dict[str | V, cp.Variable]) -> cp.Expression:
         return self.data["mu"] @ variables[V.WEIGHTS] - self.parameter[
             "mu_uncertainty"
         ] @ cp.abs(variables[V.WEIGHTS])
 
+    def _update(self, x):
+        z = np.zeros(self.assets)
+        z[: len(x)] = x
+        return z
+
     def update(self, **kwargs):
         exp_returns = kwargs["mu"]
-        num = exp_returns.shape[0]
-        self.data["mu"].value = np.zeros(self.assets)
-        self.data["mu"].value[:num] = exp_returns
+        self.data["mu"].value = self._update(exp_returns)
 
         # Robust return estimate
         uncertainty = kwargs["mu_uncertainty"]
         if not uncertainty.shape[0] == exp_returns.shape[0]:
             raise CvxError("Mismatch in length for mu and mu_uncertainty")
 
-        self.parameter["mu_uncertainty"].value = np.zeros(self.assets)
-        self.parameter["mu_uncertainty"].value[:num] = uncertainty
+        self.parameter["mu_uncertainty"].value = self._update(uncertainty)

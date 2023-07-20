@@ -52,10 +52,7 @@ class SampleCovariance(Model):
                     self.data[Names.VOLA_UNCERTAINTY.value] @ variables[V._ABS],
                 ]
             )
-        )  #
-
-        # return cp.sum_squares(self.data["chol"] @ variables["weights"]) \
-        # + (self.data["vola_uncertainty"] @ cp.abs(variables["weights"]))**2  # Robust risk
+        )
 
     def update(self, **kwargs):
         if not kwargs["vola_uncertainty"].shape[0] == kwargs["chol"].shape[0]:

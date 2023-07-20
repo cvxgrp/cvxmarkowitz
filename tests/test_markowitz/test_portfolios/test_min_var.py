@@ -36,7 +36,7 @@ def test_min_var(solver):
     np.testing.assert_almost_equal(problem.value, 0.9354143466222262)
 
     np.testing.assert_almost_equal(
-        problem.solution(), np.array([0.75, 0.25, 0.0, 0.0]), decimal=3
+        problem.weights, np.array([0.75, 0.25, 0.0, 0.0]), decimal=3
     )
 
     assert objective == pytest.approx(0.9354143, abs=1e-5)
@@ -48,7 +48,6 @@ def test_min_var_robust(solver):
         pytest.skip("Skipping MOSEK test on CI")
 
     # define the problem
-
     builder = MinVar(assets=4)
 
     assert ModelName.BOUND_ASSETS in builder.model
@@ -66,7 +65,7 @@ def test_min_var_robust(solver):
     objective = problem.solve(solver=solver)
 
     np.testing.assert_almost_equal(
-        problem.solution(),
+        problem.weights,
         np.array([0.626406, 0.373594, 0.0, 0.0]),  # Computed analytically
         decimal=4,
     )

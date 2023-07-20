@@ -12,19 +12,18 @@ from cvx.markowitz.model import ConstraintName, ModelName, VariableName
 
 C = ConstraintName
 M = ModelName
+V = VariableName
 
 
 @dataclass(frozen=True)
 class DummyBuilder(Builder):
     @property
     def objective(self):
-        return cp.Maximize(
-            0.0 + 0.0 * self.model[ModelName.RISK].estimate(self.variables)
-        )
+        return cp.Maximize(0.0 + 0.0 * self.risk.estimate(self.variables))
 
     def __post_init__(self):
         super().__post_init__()
-        self.constraints[C.BUDGET] = cp.sum(self.variables[VariableName.WEIGHTS]) == 1.0
+        self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
 
 
 def test_dummy():
@@ -32,12 +31,10 @@ def test_dummy():
 
     assert M.RISK in builder.model
     assert M.BOUND_ASSETS in builder.model
-    assert "chol" in builder.model[ModelName.RISK].data
-    assert "vola_uncertainty" in builder.model[ModelName.RISK].data
+    assert "chol" in builder.risk.data
+    assert "vola_uncertainty" in builder.risk.data
 
     problem = builder.build()
-    # print(problem.problem.parameters())
-    # todo: risk model needs to be involved in DummyBuilder
 
     problem.update(
         chol=np.eye(1),
@@ -46,12 +43,6 @@ def test_dummy():
         vola_uncertainty=np.zeros(1),
     ).solve(solver=cp.ECOS)
 
-    problem.problem.var_dict["weights"].value = np.array([2.0])
-
-    d = problem.solution()
-    assert d == np.array([2.0])
-
-    print(dict(problem.data))
     assert np.allclose(dict(problem.data)[(M.RISK, "chol")].value, np.eye(1))
 
 
@@ -77,3 +68,8 @@ def test_infeasible_problem():
 
     with pytest.raises(CvxError):
         problem.solve(solver=cp.ECOS)
+
+
+def test_builder_risk():
+    builder = DummyBuilder(assets=1)
+    assert builder.risk == builder.model[ModelName.RISK]

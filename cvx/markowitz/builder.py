@@ -22,7 +22,6 @@ C = ConstraintName
 class _Problem:
     problem: cp.Problem
     model: Dict[str | ModelName, Model] = field(default_factory=dict)
-    # problem has var_dict and param_dict
 
     def update(self, **kwargs):
         """
@@ -52,12 +51,6 @@ class _Problem:
 
         return value
 
-    def solution(self, variable: str = "weights"):
-        """
-        Return the solution
-        """
-        return self.problem.var_dict[variable].value
-
     @property
     def value(self):
         return self.problem.value
@@ -76,10 +69,18 @@ class _Problem:
         return self.problem.param_dict
 
     @property
+    def variables(self):
+        return self.problem.var_dict
+
+    @property
     def expected_names(self):
         for name, model in self.model.items():
             for key in model.data.keys():
                 yield (name, key)
+
+    @property
+    def weights(self):
+        return self.variables[V.WEIGHTS.value].value
 
 
 @dataclass(frozen=True)
@@ -111,9 +112,10 @@ class Builder:
 
         else:
             self.model[M.RISK] = SampleCovariance(assets=self.assets)
-            #
             # add variable for absolute weights
-            self.variables[V._ABS] = cp.Variable(self.assets, name="_abs", nonneg=True)
+            self.variables[V._ABS] = cp.Variable(
+                self.assets, name=V._ABS.value, nonneg=True
+            )
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
@@ -147,3 +149,11 @@ class Builder:
         ConstraintName.validate_constraints(self.constraints.keys())
 
         return _Problem(problem=problem, model=self.model)
+
+    @property
+    def weights(self):
+        return self.variables[V.WEIGHTS]
+
+    @property
+    def risk(self):
+        return self.model[M.RISK]

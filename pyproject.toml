@@ -13,12 +13,12 @@ cvxpy = "*"
 requests = { version = "*", optional = true }
 numpyencoder = { version = "*", optional = true }
 click = { version = "*", optional = true }
+fire = { version = "^0.5.0", optional = true }
 pyyaml = "6.0.0"
-fire = "^0.5.0"
 
 
 [tool.poetry.extras]
-cli = ["click", "numpyencoder", "requests"]
+cli = ["click", "numpyencoder", "requests", "fire"]
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.2.0"

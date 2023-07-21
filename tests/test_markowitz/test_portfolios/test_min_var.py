@@ -26,8 +26,7 @@ def problem(builder):
 
 
 def test_models_builder(builder):
-    assert M.BOUND_ASSETS in builder.model
-    assert M.RISK in builder.model
+    assert builder.model.keys() == {M.BOUND_ASSETS, M.RISK}
 
 
 def test_constraints(builder):

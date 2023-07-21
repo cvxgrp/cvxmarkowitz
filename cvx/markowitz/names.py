@@ -15,3 +15,10 @@ class VariableName:
     WEIGHTS = "weights"
     FACTOR_WEIGHTS = "factor_weights"
     _ABS = "_abs"
+
+
+class ModelName:
+    RISK = "risk"
+    RETURN = "return"
+    BOUND_ASSETS = "bound_assets"
+    BOUND_FACTORS = "bound_factors"

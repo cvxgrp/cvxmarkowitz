@@ -8,11 +8,9 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
-
-M = ModelName
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])

@@ -8,8 +8,8 @@ import numpy as np
 import pytest
 
 from cvx.linalg import cholesky
-from cvx.markowitz.model import ModelName
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
 
 
@@ -20,8 +20,8 @@ def test_min_var(solver):
 
     builder = MinVar(assets=4)
 
-    assert ModelName.BOUND_ASSETS in builder.model
-    assert ModelName.RISK in builder.model
+    assert M.BOUND_ASSETS in builder.model
+    assert M.RISK in builder.model
 
     problem = builder.build()
 
@@ -53,8 +53,8 @@ def test_min_var_robust(solver):
     # define the problem
     builder = MinVar(assets=4)
 
-    assert ModelName.BOUND_ASSETS in builder.model
-    assert ModelName.RISK in builder.model
+    assert M.BOUND_ASSETS in builder.model
+    assert M.RISK in builder.model
 
     problem = builder.build()
 

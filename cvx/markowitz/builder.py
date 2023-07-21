@@ -10,8 +10,8 @@ import cvxpy as cp
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import ConstraintName as C
-from cvx.markowitz.model import ModelName as M
 from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.risk import FactorModel, SampleCovariance
 
@@ -85,9 +85,9 @@ class _Problem:
 class Builder:
     assets: int = 0
     factors: int = None
-    model: Dict[str | M, Model] = field(default_factory=dict)
-    constraints: Dict[str | C, cp.Constraint] = field(default_factory=dict)
-    variables: Dict[str | V, cp.Variable] = field(default_factory=dict)
+    model: Dict[str, Model] = field(default_factory=dict)
+    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
+    variables: Dict[str, cp.Variable] = field(default_factory=dict)
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
 
     def __post_init__(self):

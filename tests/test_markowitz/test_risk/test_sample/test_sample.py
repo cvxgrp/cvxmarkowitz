@@ -9,7 +9,7 @@ import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.builder import CvxError
-from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import SampleCovariance
@@ -91,8 +91,8 @@ def test_min_variance(solver):
     # define the problem
     builder = MinVar(assets=4)
 
-    assert ModelName.BOUND_ASSETS in builder.model
-    assert ModelName.RISK in builder.model
+    assert M.BOUND_ASSETS in builder.model
+    assert M.RISK in builder.model
 
     problem = builder.build()
 

@@ -9,8 +9,8 @@ import pytest
 
 from cvx.markowitz.builder import Builder, CvxError
 from cvx.markowitz.model import ConstraintName as C
-from cvx.markowitz.model import ModelName as M
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import ModelName as M
 
 
 @dataclass(frozen=True)

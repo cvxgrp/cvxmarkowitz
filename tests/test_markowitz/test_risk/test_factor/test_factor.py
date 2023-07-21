@@ -11,12 +11,10 @@ import pytest
 from cvx.linalg import PCA, cholesky
 from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
-
-M = ModelName
 
 
 @pytest.fixture()

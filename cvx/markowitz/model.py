@@ -42,13 +42,6 @@ class Model(ABC):
         return {}
 
 
-class ModelName(Enum):
-    RISK = "risk"
-    RETURN = "return"
-    BOUND_ASSETS = "bound_assets"
-    BOUND_FACTORS = "bound_factors"
-
-
 class ConstraintName(Enum):
     BUDGET = "budget"
     CONCENTRATION = "concentration"

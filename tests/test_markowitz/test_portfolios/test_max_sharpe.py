@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from cvx.linalg import cholesky
-from cvx.markowitz.model import ModelName
+from cvx.markowitz.names import ModelName
 from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 
 

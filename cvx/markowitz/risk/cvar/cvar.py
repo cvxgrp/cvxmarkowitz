@@ -10,6 +10,7 @@ import numpy as np
 from cvx.markowitz import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import VariableName as V
+from cvx.markowitz.utils.aux import fill_matrix
 
 
 @dataclass(frozen=True)
@@ -38,8 +39,6 @@ class CVar(Model):
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[V.WEIGHTS], k=k) / k
 
     def update(self, **kwargs):
-        ret = kwargs["returns"]
-        columns = ret.shape[1]
-
-        self.data[D.RETURNS].value = np.zeros((self.rows, self.assets))
-        self.data[D.RETURNS].value[:, :columns] = ret
+        self.data[D.RETURNS].value = fill_matrix(
+            rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
+        )

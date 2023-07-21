@@ -11,6 +11,7 @@ import numpy as np
 from cvx.markowitz import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import VariableName as V
+from cvx.markowitz.utils.aux import fill_vector
 
 
 @dataclass(frozen=True)
@@ -27,10 +28,7 @@ class HoldingCosts(Model):
             cp.neg(cp.multiply(variables[V.WEIGHTS], self.data[D.HOLDING_COSTS]))
         )
 
-    def _update(self, x):
-        z = np.zeros(self.assets)
-        z[: len(x)] = x
-        return z
-
     def update(self, **kwargs):
-        self.data[D.HOLDING_COSTS].value = self._update(kwargs[D.HOLDING_COSTS])
+        self.data[D.HOLDING_COSTS].value = fill_vector(
+            num=self.assets, x=kwargs[D.HOLDING_COSTS]
+        )

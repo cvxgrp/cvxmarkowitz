@@ -10,6 +10,7 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.names import VariableName as V
+from cvx.markowitz.utils.aux import fill_vector
 
 
 @dataclass(frozen=True)
@@ -31,10 +32,5 @@ class TradingCosts(Model):
             )
         )
 
-    def _update(self, x):
-        z = np.zeros(self.assets)
-        z[: len(x)] = x
-        return z
-
     def update(self, **kwargs):
-        self.data["weights"].value = self._update(kwargs["weights"])
+        self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])

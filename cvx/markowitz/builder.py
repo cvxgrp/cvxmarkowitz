@@ -143,8 +143,6 @@ class Builder:
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
 
-        # C.validate_constraints(self.constraints.keys())
-
         return _Problem(problem=problem, model=self.model)
 
     @property

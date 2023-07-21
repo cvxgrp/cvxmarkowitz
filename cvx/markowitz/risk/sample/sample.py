@@ -13,6 +13,7 @@ from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import VariableName as V
+from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 
 
 @dataclass(frozen=True)
@@ -51,14 +52,12 @@ class SampleCovariance(Model):
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 
-        chol = kwargs[D.CHOLESKY]
-        rows = chol.shape[0]
-        self.data[D.CHOLESKY].value = np.zeros((self.assets, self.assets))
-        self.data[D.CHOLESKY].value[:rows, :rows] = chol
-
-        # Robust risk
-        self.data[D.VOLA_UNCERTAINTY].value = np.zeros(self.assets)
-        self.data[D.VOLA_UNCERTAINTY].value[:rows] = kwargs[D.VOLA_UNCERTAINTY]
+        self.data[D.CHOLESKY].value = fill_matrix(
+            rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY]
+        )
+        self.data[D.VOLA_UNCERTAINTY].value = fill_vector(
+            num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY]
+        )
 
     def constraints(self, variables):
         return {

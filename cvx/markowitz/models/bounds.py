@@ -9,6 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
+from cvx.markowitz.utils.aux import fill_vector
 
 
 @dataclass(frozen=True)
@@ -35,19 +36,13 @@ class Bounds(Model):
             value=np.ones(self.assets),
         )
 
-    def _update(self, x):
-        z = np.zeros(self.assets)
-        z[: len(x)] = x
-        return z
-
     def update(self, **kwargs):
-        # lower = kwargs[self._f("lower")]
-        self.data[self._f("lower")].value = self._update(
-            kwargs[self._f("lower")]
-        )  # np.zeros(self.assets)
-
-        # upper = kwargs[self._f("upper")]
-        self.data[self._f("upper")].value = self._update(kwargs[self._f("upper")])
+        self.data[self._f("lower")].value = fill_vector(
+            num=self.assets, x=kwargs[self._f("lower")]
+        )
+        self.data[self._f("upper")].value = fill_vector(
+            num=self.assets, x=kwargs[self._f("upper")]
+        )
 
     def constraints(
         self, variables: Dict[str, cp.Variable]

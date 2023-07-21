@@ -6,11 +6,9 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.model import ConstraintName
 from cvx.markowitz.models.expected_returns import ExpectedReturns
+from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import ModelName as M
-
-C = ConstraintName
 
 
 @dataclass(frozen=True)

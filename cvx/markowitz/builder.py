@@ -9,7 +9,6 @@ import cvxpy as cp
 
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import ConstraintName as C
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.names import VariableName as V
@@ -140,7 +139,7 @@ class Builder:
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
 
-        C.validate_constraints(self.constraints.keys())
+        # C.validate_constraints(self.constraints.keys())
 
         return _Problem(problem=problem, model=self.model)
 

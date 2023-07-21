@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
-from cvx.markowitz.model import ConstraintName as C
+from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
 
 

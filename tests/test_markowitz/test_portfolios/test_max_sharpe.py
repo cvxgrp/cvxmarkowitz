@@ -9,6 +9,7 @@ import pytest
 
 from cvx.linalg import cholesky
 from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
 
@@ -55,12 +56,14 @@ def test_max_sharpe(solver, problem):
         pytest.skip("Skipping MOSEK test on CI")
 
     problem.update(
-        chol=cholesky(np.array([[1.0, 0.6], [0.6, 2.0]])),
-        lower_assets=np.zeros(2),
-        upper_assets=np.ones(2),
-        mu=np.array([0.25, 0.30]),
-        mu_uncertainty=np.zeros(2),
-        vola_uncertainty=np.zeros(2),
+        **{
+            D.CHOLESKY: cholesky(np.array([[1.0, 0.6], [0.6, 2.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.MU: np.array([0.25, 0.30]),
+            D.MU_UNCERTAINTY: np.zeros(2),
+            D.VOLA_UNCERTAINTY: np.zeros(2),
+        }
     )
 
     problem.solve(solver=solver)

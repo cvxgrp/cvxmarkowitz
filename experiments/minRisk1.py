@@ -7,6 +7,7 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import PCA, cholesky
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
 
 if __name__ == "__main__":
@@ -51,17 +52,19 @@ if __name__ == "__main__":
     # distinguish between data and parameters
     # clean up at the end, e.g. integer lots
     problem.update(
-        chol=cholesky(pca.cov),
-        exposure=pca.exposure,
-        idiosyncratic_vola=pca.idiosyncratic_vola,
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        lower_factors=lower_bound_factors.values,
-        upper_factors=upper_bound_factors.values,
-        weights=np.zeros(20),
-        holding_costs=holding_costs[returns.columns].values,
-        systematic_vola_uncertainty=np.zeros(10),
-        idiosyncratic_vola_uncertainty=np.zeros(20),
+        **{
+            D.CHOLESKY: cholesky(pca.cov),
+            D.EXPOSURE: pca.exposure,
+            D.IDIOSYNCRATIC_VOLA: pca.idiosyncratic_vola,
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+            D.LOWER_BOUND_FACTORS: lower_bound_factors.values,
+            D.UPPER_BOUND_FACTORS: upper_bound_factors.values,
+            D.WEIGHTS: np.zeros(20),
+            D.HOLDING_COSTS: holding_costs[returns.columns].values,
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
+        }
     )
 
     # minvar.parameter["kappa"].value = kappa[returns.columns].values
@@ -79,17 +82,19 @@ if __name__ == "__main__":
     pca = PCA(returns=returns.values, n_components=5)
 
     problem.update(
-        chol=cholesky(pca.cov),
-        exposure=pca.exposure,
-        idiosyncratic_vola=pca.idiosyncratic_vola,
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        lower_factors=lower_bound_factors[range(5)].values,
-        upper_factors=upper_bound_factors[range(5)].values,
-        weights=np.zeros(10),
-        holding_costs=holding_costs[returns.columns].values,
-        systematic_vola_uncertainty=np.zeros(5),
-        idiosyncratic_vola_uncertainty=np.zeros(10),
+        **{
+            D.CHOLESKY: cholesky(pca.cov),
+            D.EXPOSURE: pca.exposure,
+            D.IDIOSYNCRATIC_VOLA: pca.idiosyncratic_vola,
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+            D.LOWER_BOUND_FACTORS: lower_bound_factors[range(5)].values,
+            D.UPPER_BOUND_FACTORS: upper_bound_factors[range(5)].values,
+            D.WEIGHTS: np.zeros(10),
+            D.HOLDING_COSTS: holding_costs[returns.columns].values,
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(5),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(10),
+        }
     )
 
     x = problem.solve(verbose=True)

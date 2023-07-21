@@ -15,6 +15,7 @@ def fill_matrix(x, rows, cols):
     """
     Fill a matrix of size (rows, cols) with x
     """
+    # I had no luck with ndarray.resize()
     z = np.zeros((rows, cols))
     (n, m) = np.shape(x)
     z[:n, :m] = x

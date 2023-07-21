@@ -17,10 +17,10 @@ def returns(resource_dir):
 
 
 def test_pca(returns):
-    xxx = PCA(returns=returns, n_components=10)
+    pca = PCA(returns=returns, n_components=10)
 
     assert np.allclose(
-        xxx.explained_variance,
+        pca.explained_variance,
         np.array(
             [
                 0.33383825,
@@ -40,16 +40,16 @@ def test_pca(returns):
 
 def test_idiosyncratic_with_max_factors(returns):
     # as many components as vectors, hence the residual should be zero
-    xxx = PCA(returns=returns, n_components=20)
-    assert np.allclose(xxx.idiosyncratic_returns.std(), np.zeros(20))
+    pca = PCA(returns=returns, n_components=20)
+    assert np.allclose(pca.idiosyncratic_returns.std(), np.zeros(20))
 
 
 def test_idiosyncratic(returns):
-    xxx = PCA(returns=returns, n_components=15)
+    pca = PCA(returns=returns, n_components=15)
 
     assert np.allclose(
         returns,
-        xxx.factors @ xxx.exposure + xxx.idiosyncratic_returns,
+        pca.factors @ pca.exposure + pca.idiosyncratic_returns,
     )
 
 

@@ -22,6 +22,7 @@ def test_constraints():
     variables = {V.WEIGHTS: cp.Variable(3)}
     bounds = Bounds(assets=3, name="assets", acting_on=V.WEIGHTS)
 
+    # todo: Update with DataNames
     bounds.update(
         lower_assets=np.array([0.1, 0.2]), upper_assets=np.array([0.3, 0.4, 0.5])
     )

@@ -27,6 +27,7 @@ def test_max_sharpe(solver):
 
     problem = builder.build()
 
+    # todo: Update with DataNames
     problem.update(
         chol=cholesky(np.array([[1.0, 0.6], [0.6, 2.0]])),
         lower_assets=np.zeros(2),

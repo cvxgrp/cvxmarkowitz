@@ -9,13 +9,12 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
-from cvx.markowitz.names import VariableName as V
 
 
 @dataclass(frozen=True)
 class Bounds(Model):
     name: str = ""
-    acting_on: str | V = "weights"
+    acting_on: str = "weights"
 
     def estimate(self, variables: Dict[str, cp.Variable]):
         """No estimation for bounds"""
@@ -51,7 +50,7 @@ class Bounds(Model):
         self.data[self._f("upper")].value = self._update(kwargs[self._f("upper")])
 
     def constraints(
-        self, variables: Dict[str | V, cp.Variable]
+        self, variables: Dict[str, cp.Variable]
     ) -> Dict[str, cp.Expression]:
         return {
             f"lower bound {self.name}": variables[self.acting_on]

@@ -31,6 +31,7 @@ def test_timeseries_model(returns):
 
     model = FactorModel(assets=20, factors=10)
 
+    # todo: Update with DataNames
     model.update(
         chol=cholesky(factors.cov),
         exposure=factors.exposure,
@@ -65,6 +66,7 @@ def test_estimate_risk(solver):
 
     problem = builder.build()
 
+    # todo: Update with DataNames
     problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
@@ -82,6 +84,7 @@ def test_estimate_risk(solver):
     # assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(problem.weights[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
 
+    # todo: Update with DataNames
     problem.update(
         chol=cholesky(rand_cov(10)),
         exposure=np.random.randn(10, 20),
@@ -102,14 +105,14 @@ def test_estimate_risk(solver):
     data = dict(problem.data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert data[(M.RISK, "exposure")].value @ problem.variables[
-        V.WEIGHTS
-    ].value == pytest.approx(problem.variables[V.FACTOR_WEIGHTS].value, abs=1e-6)
+    assert data[(M.RISK, "exposure")].value @ problem.weights == pytest.approx(
+        problem.factor_weights, abs=1e-6
+    )
 
     # test all entries of y are smaller than 0.1
-    assert np.all([problem.variables[V.FACTOR_WEIGHTS].value <= 0.1 + 1e-4])
+    assert np.all([problem.factor_weights <= 0.1 + 1e-4])
     # test all entries of y are larger than -0.1
-    assert np.all([problem.variables[V.FACTOR_WEIGHTS].value >= -(0.1 + 1e-4)])
+    assert np.all([problem.factor_weights >= -(0.1 + 1e-4)])
 
 
 def test_factor_mini():
@@ -121,6 +124,7 @@ def test_factor_mini():
         V._ABS: cp.Variable(2),
     }
 
+    # todo: Update with DataNames
     model.update(
         chol=np.eye(2),
         exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
@@ -155,6 +159,7 @@ def test_mismatch():
     model = FactorModel(assets=3, factors=2)
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         model.update(
             chol=np.eye(2),
             idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
@@ -163,6 +168,7 @@ def test_mismatch():
         )
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         model.update(
             chol=np.eye(2),
             exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
@@ -172,6 +178,7 @@ def test_mismatch():
         )
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         model.update(
             chol=np.eye(2),
             exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
@@ -181,6 +188,7 @@ def test_mismatch():
         )
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         model.update(
             chol=np.eye(2),
             exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
@@ -190,6 +198,7 @@ def test_mismatch():
         )
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         model.update(
             chol=np.eye(1),
             exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),

@@ -18,7 +18,7 @@ from cvx.markowitz.risk import FactorModel, SampleCovariance
 @dataclass(frozen=True)
 class _Problem:
     problem: cp.Problem
-    model: Dict[str | M, Model] = field(default_factory=dict)
+    model: Dict[str, Model] = field(default_factory=dict)
 
     def update(self, **kwargs):
         """
@@ -78,6 +78,10 @@ class _Problem:
     @property
     def weights(self):
         return self.variables[V.WEIGHTS].value
+
+    @property
+    def factor_weights(self):
+        return self.variables[V.FACTOR_WEIGHTS].value
 
 
 @dataclass(frozen=True)

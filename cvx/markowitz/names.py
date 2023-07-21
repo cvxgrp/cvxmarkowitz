@@ -3,6 +3,8 @@
 
 
 class DataNames:
+    RETURNS = "returns"
+    MU = "mu"
     CHOLESKY = "chol"
     VOLA_UNCERTAINTY = "vola_uncertainty"
     LOWER_BOUND_ASSETS = "lower_assets"

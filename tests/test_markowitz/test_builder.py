@@ -29,16 +29,18 @@ def test_dummy():
 
     assert M.RISK in builder.model
     assert M.BOUND_ASSETS in builder.model
-    assert "chol" in builder.risk.data
-    assert "vola_uncertainty" in builder.risk.data
+    assert D.CHOLESKY in builder.risk.data
+    assert D.VOLA_UNCERTAINTY in builder.risk.data
 
     problem = builder.build()
 
     problem.update(
-        chol=np.eye(1),
-        lower_assets=np.array([0.0]),
-        upper_assets=np.array([1.0]),
-        vola_uncertainty=np.zeros(1),
+        **{
+            D.CHOLESKY: np.eye(1),
+            D.LOWER_BOUND_ASSETS: np.array([0.0]),
+            D.UPPER_BOUND_ASSETS: np.array([1.0]),
+            D.VOLA_UNCERTAINTY: np.zeros(1),
+        }
     ).solve(solver=cp.ECOS)
 
     assert np.allclose(dict(problem.data)[(M.RISK, "chol")].value, np.eye(1))

@@ -17,6 +17,7 @@ from cvx.markowitz.risk import SampleCovariance
 
 def test_sample():
     riskmodel = SampleCovariance(assets=2)
+    # todo: Update with DataNames
     riskmodel.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
@@ -33,6 +34,7 @@ def test_sample():
 
 def test_sample_large():
     riskmodel = SampleCovariance(assets=4)
+    # todo: Update with DataNames
     riskmodel.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
@@ -51,6 +53,7 @@ def test_sample_large():
 
 def test_robust_sample():
     riskmodel = SampleCovariance(assets=2)
+    # todo: Update with DataNames
     riskmodel.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
@@ -67,6 +70,7 @@ def test_robust_sample():
 
 def test_robust_sample_large():
     riskmodel = SampleCovariance(assets=4)
+    # todo: Update with DataNames
     riskmodel.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
@@ -96,6 +100,7 @@ def test_min_variance(solver):
 
     problem = builder.build()
 
+    # todo: Update with DataNames
     problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
         lower_assets=np.zeros(2),
@@ -110,7 +115,7 @@ def test_min_variance(solver):
         problem.weights, np.array([0.75, 0.25, 0.0, 0.0]), decimal=3
     )
 
-    # It's enough to only update the value for the cholesky decomposition
+    # todo: Update with DataNames
     problem.update(
         chol=cholesky(np.array([[1.0, 0.5], [0.5, 4.0]])),
         lower_assets=np.zeros(2),
@@ -131,6 +136,7 @@ def test_mismatch():
     riskmodel = SampleCovariance(assets=4)
 
     with pytest.raises(CvxError):
+        # todo: Update with DataNames
         riskmodel.update(
             chol=cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
             lower_assets=np.zeros(2),

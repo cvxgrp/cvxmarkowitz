@@ -12,6 +12,7 @@ from cvx.markowitz.names import VariableName as V
 def test_trading_costs():
     assets = 3
     model = TradingCosts(assets=assets)
+    # todo: Update with DataNames
     model.update(weights=np.array([0.1, 0.2]))
 
     # weights not explicitly set are zero

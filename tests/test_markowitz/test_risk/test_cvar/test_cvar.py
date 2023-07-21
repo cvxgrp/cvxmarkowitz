@@ -33,6 +33,7 @@ def test_estimate_risk(solver):
 
     problem = builder.build()
 
+    # todo: Update with DataNames
     problem.update(
         returns=np.random.randn(50, 10),
         lower_assets=np.zeros(10),
@@ -43,7 +44,7 @@ def test_estimate_risk(solver):
     problem.solve(solver=solver)
     assert problem.value == pytest.approx(0.50587206, abs=1e-5)
 
-    # it's enough to only update the R value...
+    # todo: Update with DataNames
     problem.update(
         returns=np.random.randn(50, 10),
         lower_assets=np.zeros(10),

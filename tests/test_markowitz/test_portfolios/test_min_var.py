@@ -11,7 +11,6 @@ from cvx.linalg import cholesky
 from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
 
 
@@ -60,7 +59,7 @@ def test_parameters(problem):
 
 
 def test_variables(problem):
-    assert problem.variables.keys() == {V.WEIGHTS, V._ABS}
+    assert problem.variables.keys() == {D.WEIGHTS, D._ABS}
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])

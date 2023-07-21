@@ -8,7 +8,6 @@ import pytest
 from cvx.markowitz.builder import CvxError
 from cvx.markowitz.models.expected_returns import ExpectedReturns
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 
 
 def test_expected_returns():
@@ -24,7 +23,7 @@ def test_expected_returns():
 
     weights = cp.Variable(assets)
     weights.value = np.array([1.0, 1.0, 2.0])
-    variables = {V.WEIGHTS: weights}
+    variables = {D.WEIGHTS: weights}
 
     assert model.estimate(variables).value == pytest.approx(0.3)
 
@@ -46,7 +45,7 @@ def test_expected_returns_robust():
 
     weights = cp.Variable(assets)
     weights.value = np.array([1.0, 1.0, 2.0])
-    variables = {V.WEIGHTS: weights}
+    variables = {D.WEIGHTS: weights}
 
     assert model.estimate(variables).value == pytest.approx(0.26)
 

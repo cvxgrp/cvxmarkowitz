@@ -10,7 +10,6 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -25,7 +24,7 @@ class HoldingCosts(Model):
 
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return cp.sum(
-            cp.neg(cp.multiply(variables[V.WEIGHTS], self.data[D.HOLDING_COSTS]))
+            cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS]))
         )
 
     def update(self, **kwargs):

@@ -16,8 +16,9 @@ class DataNames:
     IDIOSYNCRATIC_VOLA = "idiosyncratic_vola"
     IDIOSYNCRATIC_VOLA_UNCERTAINTY = "idiosyncratic_vola_uncertainty"
     SYSTEMATIC_VOLA_UNCERTAINTY = "systematic_vola_uncertainty"
-
-    # systematic_vola_uncertainty
+    FACTOR_WEIGHTS = "factor_weights"
+    WEIGHTS = "weights"
+    _ABS = "_abs"
 
 
 class VariableName:

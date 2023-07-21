@@ -11,7 +11,6 @@ import numpy as np
 from cvx.markowitz import Model
 from cvx.markowitz.builder import CvxError
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -35,9 +34,9 @@ class ExpectedReturns(Model):
         )
 
     def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
-        return self.data[D.MU] @ variables[V.WEIGHTS] - self.parameter[
+        return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[
             "mu_uncertainty"
-        ] @ cp.abs(variables[V.WEIGHTS])
+        ] @ cp.abs(variables[D.WEIGHTS])
 
     def update(self, **kwargs):
         exp_returns = kwargs[D.MU]

@@ -9,7 +9,6 @@ import numpy as np
 
 from cvx.markowitz import Model
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.utils.aux import fill_matrix
 
 
@@ -36,7 +35,7 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.rows * (1 - self.alpha))
-        return -cp.sum_smallest(self.data[D.RETURNS] @ variables[V.WEIGHTS], k=k) / k
+        return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
     def update(self, **kwargs):
         self.data[D.RETURNS].value = fill_matrix(

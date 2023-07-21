@@ -13,7 +13,6 @@ from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import FactorModel
 
@@ -46,10 +45,10 @@ def test_timeseries_model(returns):
         idiosyncratic_vola_uncertainty=np.zeros(20),
     )
 
-    variables = {V.WEIGHTS: cp.Variable(20), V.FACTOR_WEIGHTS: cp.Variable(10)}
-    variables[V.WEIGHTS].value = 0.05 * np.ones(20)
-    variables[V.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[V.WEIGHTS]
-    variables[V._ABS] = cp.abs(variables[V.FACTOR_WEIGHTS])
+    variables = {D.WEIGHTS: cp.Variable(20), D.FACTOR_WEIGHTS: cp.Variable(10)}
+    variables[D.WEIGHTS].value = 0.05 * np.ones(20)
+    variables[D.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[D.WEIGHTS]
+    variables[D._ABS] = cp.abs(variables[D.FACTOR_WEIGHTS])
 
     vola = model.estimate(variables).value
     np.testing.assert_almost_equal(vola, 0.009233894697646914)
@@ -72,7 +71,6 @@ def test_estimate_risk(solver):
 
     problem = builder.build()
 
-    # todo: Update with DataNames
     problem.update(
         **{
             D.CHOLESKY: cholesky(rand_cov(10)),
@@ -84,14 +82,6 @@ def test_estimate_risk(solver):
             D.UPPER_BOUND_FACTORS: np.ones(10),
             D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
             D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
-            # exposure=np.random.randn(10, 20),
-            # idiosyncratic_vola=np.random.randn(20),
-            # lower_assets=np.zeros(20),
-            # upper_assets=np.ones(20),
-            # lower_factors=np.zeros(10),
-            # upper_factors=np.ones(10),
-            # systematic_vola_uncertainty=np.zeros(10),
-            # idiosyncratic_vola_uncertainty=np.zeros(20)
         }
     )
 
@@ -135,9 +125,9 @@ def test_factor_mini():
     model = FactorModel(assets=3, factors=2)
 
     variables = {
-        V.WEIGHTS: cp.Variable(3),
-        V.FACTOR_WEIGHTS: cp.Variable(2),
-        V._ABS: cp.Variable(2),
+        D.WEIGHTS: cp.Variable(3),
+        D.FACTOR_WEIGHTS: cp.Variable(2),
+        D._ABS: cp.Variable(2),
     }
 
     # todo: Update with DataNames
@@ -149,12 +139,12 @@ def test_factor_mini():
         idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
     )
 
-    variables[V.WEIGHTS].value = np.array([0.5, 0.1, 0.2])
-    variables[V.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[V.WEIGHTS]
+    variables[D.WEIGHTS].value = np.array([0.5, 0.1, 0.2])
+    variables[D.FACTOR_WEIGHTS] = model.data["exposure"] @ variables[D.WEIGHTS]
     # Note: dummy is abs(factor_weights)
-    variables[V._ABS] = cp.abs(variables[V.FACTOR_WEIGHTS])
+    variables[D._ABS] = cp.abs(variables[D.FACTOR_WEIGHTS])
 
-    assert variables[V.FACTOR_WEIGHTS].value == pytest.approx(
+    assert variables[D.FACTOR_WEIGHTS].value == pytest.approx(
         np.array([0.7, 0.75]), abs=1e-6
     )
 

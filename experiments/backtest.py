@@ -6,7 +6,7 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg.cholesky import cholesky
-from cvx.markowitz.names import DataNames
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.simulator.builder import builder
 
@@ -43,10 +43,10 @@ if __name__ == "__main__":
             # update the problem
             problem.update(
                 **{
-                    DataNames.CHOLESKY: cholesky(cov[t[-1]].values),
-                    DataNames.VOLA_UNCERTAINTY: np.zeros(20),
-                    DataNames.LOWER_BOUND_ASSETS: np.zeros(20),
-                    DataNames.UPPER_BOUND_ASSETS: np.ones(20),
+                    D.CHOLESKY: cholesky(cov[t[-1]].values),
+                    D.VOLA_UNCERTAINTY: np.zeros(20),
+                    D.LOWER_BOUND_ASSETS: np.zeros(20),
+                    D.UPPER_BOUND_ASSETS: np.ones(20),
                 }
             )
 

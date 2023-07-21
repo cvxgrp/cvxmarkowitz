@@ -7,13 +7,11 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import cholesky
-from cvx.markowitz.model import ConstraintName, VariableName
-from cvx.markowitz.names import DataNames
+from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
-
-C = ConstraintName
-V = VariableName
 
 if __name__ == "__main__":
     returns = (
@@ -73,10 +71,10 @@ if __name__ == "__main__":
     ####################################################################################################################
     problem.update(
         **{
-            DataNames.CHOLESKY: cholesky(returns.cov().values),
-            DataNames.VOLA_UNCERTAINTY: np.zeros(20),
-            DataNames.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
-            DataNames.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+            D.CHOLESKY: cholesky(returns.cov().values),
+            D.VOLA_UNCERTAINTY: np.zeros(20),
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
         }
     )
     problem.parameter["random"].value = np.array([0.1])
@@ -97,12 +95,12 @@ if __name__ == "__main__":
 
     # second solve, should be a lot faster as the problem is DPP
     problem.update(
-        chol=cholesky(returns.cov().values),
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        vola_uncertainty=np.zeros(10),
-        # weights=np.zeros(10),
-        # holding_costs=holding_costs[returns.columns].values,
+        **{
+            D.CHOLESKY: cholesky(returns.cov().values),
+            D.VOLA_UNCERTAINTY: np.zeros(10),
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+        }
     )
     problem.parameter["random"].value = np.array([0.1])
 

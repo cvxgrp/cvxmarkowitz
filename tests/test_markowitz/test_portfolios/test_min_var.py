@@ -8,9 +8,60 @@ import numpy as np
 import pytest
 
 from cvx.linalg import cholesky
+from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
+from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
+
+
+@pytest.fixture()
+def builder():
+    return MinVar(assets=4)
+
+
+@pytest.fixture()
+def problem(builder):
+    return builder.build()
+
+
+def test_models_builder(builder):
+    assert M.BOUND_ASSETS in builder.model
+    assert M.RISK in builder.model
+
+
+def test_constraints(builder):
+    assert set(builder.constraints.keys()) == {C.BUDGET, C.LONG_ONLY}
+
+
+def test_factor_weights(builder):
+    with pytest.raises(KeyError):
+        builder.factor_weights
+
+
+def test_weights(builder):
+    assert builder.weights.shape == (4,)
+
+
+def test_is_dpp(problem):
+    assert problem.is_dpp()
+
+
+def test_models_problem(problem):
+    assert problem.model.keys() == {M.BOUND_ASSETS, M.RISK}
+
+
+def test_parameters(problem):
+    assert problem.parameter.keys() == {
+        D.CHOLESKY,
+        D.LOWER_BOUND_ASSETS,
+        D.UPPER_BOUND_ASSETS,
+        D.VOLA_UNCERTAINTY,
+    }
+
+
+def test_variables(problem):
+    assert problem.variables.keys() == {V.WEIGHTS, V._ABS}
 
 
 @pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
@@ -18,12 +69,7 @@ def test_min_var(solver):
     if os.getenv("CI", False) and solver == cp.MOSEK:
         pytest.skip("Skipping MOSEK test on CI")
 
-    builder = MinVar(assets=4)
-
-    assert M.BOUND_ASSETS in builder.model
-    assert M.RISK in builder.model
-
-    problem = builder.build()
+    problem = MinVar(assets=4).build()
 
     problem.update(
         **{
@@ -51,12 +97,7 @@ def test_min_var_robust(solver):
         pytest.skip("Skipping MOSEK test on CI")
 
     # define the problem
-    builder = MinVar(assets=4)
-
-    assert M.BOUND_ASSETS in builder.model
-    assert M.RISK in builder.model
-
-    problem = builder.build()
+    problem = MinVar(assets=4).build()
 
     problem.update(
         **{

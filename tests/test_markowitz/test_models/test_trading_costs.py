@@ -12,11 +12,11 @@ from cvx.markowitz.names import VariableName as V
 def test_trading_costs():
     assets = 3
     model = TradingCosts(assets=assets)
-    # todo: Update with DataNames
-    model.update(weights=np.array([0.1, 0.2]))
+
+    model.update(**{V.WEIGHTS: np.array([0.1, 0.2])})
 
     # weights not explicitly set are zero
-    assert model.data["weights"].value == pytest.approx(np.array([0.1, 0.2, 0.0]))
+    assert model.data[V.WEIGHTS].value == pytest.approx(np.array([0.1, 0.2, 0.0]))
 
     # here it's important that the weights
     weights = cp.Variable(assets)

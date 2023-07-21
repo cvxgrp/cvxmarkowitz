@@ -28,9 +28,9 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.assets)),
         )
 
-        self.data["idiosyncratic_vola"] = cp.Parameter(
+        self.data[D.IDIOSYNCRATIC_VOLA] = cp.Parameter(
             shape=self.assets,
-            name="idiosyncratic_vola",
+            name=D.IDIOSYNCRATIC_VOLA,
             value=np.zeros(self.assets),
         )
 
@@ -40,16 +40,16 @@ class FactorModel(Model):
             value=np.zeros((self.factors, self.factors)),
         )
 
-        self.data["systematic_vola_uncertainty"] = cp.Parameter(
+        self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY] = cp.Parameter(
             shape=self.factors,
-            name="systematic_vola_uncertainty",
+            name=D.SYSTEMATIC_VOLA_UNCERTAINTY,
             value=np.zeros(self.factors),
             nonneg=True,
         )
 
-        self.data["idiosyncratic_vola_uncertainty"] = cp.Parameter(
+        self.data[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY] = cp.Parameter(
             shape=self.assets,
-            name="idiosyncratic_vola_uncertainty",
+            name=D.IDIOSYNCRATIC_VOLA_UNCERTAINTY,
             value=np.zeros(self.assets),
             nonneg=True,
         )
@@ -67,9 +67,9 @@ class FactorModel(Model):
         return cp.norm2(
             cp.hstack(
                 [
-                    cp.multiply(self.data["idiosyncratic_vola"], variables[V.WEIGHTS]),
+                    cp.multiply(self.data[D.IDIOSYNCRATIC_VOLA], variables[V.WEIGHTS]),
                     cp.multiply(
-                        self.data["idiosyncratic_vola_uncertainty"],
+                        self.data[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY],
                         variables[V.WEIGHTS],
                     ),
                 ]
@@ -81,15 +81,20 @@ class FactorModel(Model):
             cp.hstack(
                 [
                     self.data[D.CHOLESKY] @ variables[V.FACTOR_WEIGHTS],
-                    self.data["systematic_vola_uncertainty"] @ variables[V._ABS],
+                    self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY] @ variables[V._ABS],
                 ]
             )
         )
 
     def update(self, **kwargs):
+        # check the keywords
+        for key in self.data.keys():
+            if key not in kwargs.keys():
+                raise CvxError(f"Missing keyword {key}")
+
         if (
-            not kwargs["idiosyncratic_vola"].shape[0]
-            == kwargs["idiosyncratic_vola_uncertainty"].shape[0]
+            not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0]
+            == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]
         ):
             raise CvxError(
                 "Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty"
@@ -98,33 +103,36 @@ class FactorModel(Model):
         exposure = kwargs[D.EXPOSURE]
         k, assets = exposure.shape
 
-        if not kwargs["idiosyncratic_vola"].shape[0] == assets:
+        if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == assets:
             raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")
 
         if not kwargs[D.EXPOSURE].shape[0] == k:
             raise CvxError("Mismatch in size of chol and exposure")
 
-        if not kwargs["systematic_vola_uncertainty"].shape[0] == k:
+        if not kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] == k:
             raise CvxError(
                 "Mismatch in length of systematic_vola_uncertainty and exposure"
             )
 
+        if not kwargs[D.CHOLESKY].shape[0] == k:
+            raise CvxError("Mismatch in size of chol and exposure")
+
         self.data[D.EXPOSURE].value = fill_matrix(
             rows=self.factors, cols=self.assets, x=kwargs["exposure"]
         )
-        self.data["idiosyncratic_vola"].value = fill_vector(
-            num=self.assets, x=kwargs["idiosyncratic_vola"]
+        self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(
+            num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA]
         )
         self.data[D.CHOLESKY].value = fill_matrix(
-            rows=self.factors, cols=self.factors, x=kwargs["chol"]
+            rows=self.factors, cols=self.factors, x=kwargs[D.CHOLESKY]
         )
 
         # Robust risk
-        self.data["systematic_vola_uncertainty"].value = fill_vector(
-            num=self.factors, x=kwargs["systematic_vola_uncertainty"]
+        self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY].value = fill_vector(
+            num=self.factors, x=kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY]
         )
-        self.data["idiosyncratic_vola_uncertainty"].value = fill_vector(
-            num=self.assets, x=kwargs["idiosyncratic_vola_uncertainty"]
+        self.data[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].value = fill_vector(
+            num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY]
         )
 
     def constraints(self, variables):

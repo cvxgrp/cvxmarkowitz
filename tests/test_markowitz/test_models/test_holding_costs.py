@@ -13,8 +13,7 @@ from cvx.markowitz.names import VariableName as V
 def test_holding_costs():
     assets = 3
     model = HoldingCosts(assets=assets)
-    # todo: Update with DataNames
-    model.update(holding_costs=np.array([0.1, 0.2]))
+    model.update(**{D.HOLDING_COSTS: np.array([0.1, 0.2])})
 
     # weights not explicitly set are zero
     assert model.data[D.HOLDING_COSTS].value == pytest.approx(np.array([0.1, 0.2, 0.0]))

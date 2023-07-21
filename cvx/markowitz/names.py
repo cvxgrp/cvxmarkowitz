@@ -11,6 +11,11 @@ class DataNames:
     UPPER_BOUND_ASSETS = "upper_assets"
     EXPOSURE = "exposure"
     HOLDING_COSTS = "holding_costs"
+    IDIOSYNCRATIC_VOLA = "idiosyncratic_vola"
+    IDIOSYNCRATIC_VOLA_UNCERTAINTY = "idiosyncratic_vola_uncertainty"
+    SYSTEMATIC_VOLA_UNCERTAINTY = "systematic_vola_uncertainty"
+
+    # systematic_vola_uncertainty
 
 
 class VariableName:

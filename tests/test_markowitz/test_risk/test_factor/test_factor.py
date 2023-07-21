@@ -11,6 +11,7 @@ import pytest
 from cvx.linalg import PCA, cholesky
 from cvx.linalg.random import rand_cov
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
@@ -23,6 +24,11 @@ def returns(resource_dir):
         resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
     )
     return prices.pct_change().fillna(0.0).values
+
+
+@pytest.fixture()
+def factor_model():
+    return FactorModel(assets=3, factors=2)
 
 
 def test_timeseries_model(returns):
@@ -155,54 +161,52 @@ def test_factor_mini():
     assert model.estimate(variables=variables).value == pytest.approx(total)
 
 
-def test_mismatch():
-    model = FactorModel(assets=3, factors=2)
-
+def test_missing_key(factor_model):
     with pytest.raises(CvxError):
-        # todo: Update with DataNames
-        model.update(
-            chol=np.eye(2),
-            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
-            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
-            exposure=np.array([[1, 0], [1, 0.5]]),
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.eye(2),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+            }
         )
 
+
+def test_mismatch_idiosyncratic_vola(factor_model):
     with pytest.raises(CvxError):
-        # todo: Update with DataNames
-        model.update(
-            chol=np.eye(2),
-            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-            idiosyncratic_vola=np.array([0.1, 0.1]),
-            systematic_vola_uncertainty=np.array([0.2, 0.1]),
-            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.eye(2),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+                D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.1]),
+            }
         )
 
+
+def test_mismatch_systematic_vola(factor_model):
     with pytest.raises(CvxError):
-        # todo: Update with DataNames
-        model.update(
-            chol=np.eye(2),
-            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
-            systematic_vola_uncertainty=np.array([0.2]),
-            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.eye(2),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+                D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2]),
+            }
         )
 
-    with pytest.raises(CvxError):
-        # todo: Update with DataNames
-        model.update(
-            chol=np.eye(2),
-            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
-            systematic_vola_uncertainty=np.array([0.2, 0.1]),
-            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3]),
-        )
 
+def test_mismatch_matrix(factor_model):
     with pytest.raises(CvxError):
-        # todo: Update with DataNames
-        model.update(
-            chol=np.eye(1),
-            exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-            idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
-            systematic_vola_uncertainty=np.array([0.2, 0.1]),
-            idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.eye(1),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+                D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.3]),
+            }
         )

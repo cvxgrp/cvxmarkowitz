@@ -21,12 +21,6 @@ class DataNames:
     _ABS = "_abs"
 
 
-class VariableName:
-    WEIGHTS = "weights"
-    FACTOR_WEIGHTS = "factor_weights"
-    _ABS = "_abs"
-
-
 class ModelName:
     RISK = "risk"
     RETURN = "return"

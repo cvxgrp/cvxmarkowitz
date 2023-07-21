@@ -11,7 +11,6 @@ import numpy as np
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 
 
@@ -67,10 +66,10 @@ class FactorModel(Model):
         return cp.norm2(
             cp.hstack(
                 [
-                    cp.multiply(self.data[D.IDIOSYNCRATIC_VOLA], variables[V.WEIGHTS]),
+                    cp.multiply(self.data[D.IDIOSYNCRATIC_VOLA], variables[D.WEIGHTS]),
                     cp.multiply(
                         self.data[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY],
-                        variables[V.WEIGHTS],
+                        variables[D.WEIGHTS],
                     ),
                 ]
             )
@@ -80,8 +79,8 @@ class FactorModel(Model):
         return cp.norm2(
             cp.hstack(
                 [
-                    self.data[D.CHOLESKY] @ variables[V.FACTOR_WEIGHTS],
-                    self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY] @ variables[V._ABS],
+                    self.data[D.CHOLESKY] @ variables[D.FACTOR_WEIGHTS],
+                    self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY] @ variables[D._ABS],
                 ]
             )
         )
@@ -135,8 +134,8 @@ class FactorModel(Model):
     def constraints(self, variables):
         # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
         return {
-            "factors": variables[V.FACTOR_WEIGHTS]
-            == self.data[D.EXPOSURE] @ variables[V.WEIGHTS],
-            "_abs": variables[V._ABS]
-            >= cp.abs(variables[V.FACTOR_WEIGHTS]),  # Robust risk dummy variable
+            "factors": variables[D.FACTOR_WEIGHTS]
+            == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],
+            "_abs": variables[D._ABS]
+            >= cp.abs(variables[D.FACTOR_WEIGHTS]),  # Robust risk dummy variable
         }

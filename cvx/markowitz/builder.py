@@ -10,8 +10,8 @@ import cvxpy as cp
 from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.risk import FactorModel, SampleCovariance
 
 
@@ -77,11 +77,11 @@ class _Problem:
 
     @property
     def weights(self):
-        return self.variables[V.WEIGHTS].value
+        return self.variables[D.WEIGHTS].value
 
     @property
     def factor_weights(self):
-        return self.variables[V.FACTOR_WEIGHTS].value
+        return self.variables[D.FACTOR_WEIGHTS].value
 
 
 @dataclass(frozen=True)
@@ -99,28 +99,28 @@ class Builder:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
 
             # add variable for factor weights
-            self.variables[V.FACTOR_WEIGHTS] = cp.Variable(
-                self.factors, name=V.FACTOR_WEIGHTS
+            self.variables[D.FACTOR_WEIGHTS] = cp.Variable(
+                self.factors, name=D.FACTOR_WEIGHTS
             )
             # add bounds for factor weights
             self.model[M.BOUND_FACTORS] = Bounds(
-                assets=self.factors, name="factors", acting_on=V.FACTOR_WEIGHTS
+                assets=self.factors, name="factors", acting_on=D.FACTOR_WEIGHTS
             )
             # add variable for absolute factor weights
-            self.variables[V._ABS] = cp.Variable(self.factors, name=V._ABS, nonneg=True)
+            self.variables[D._ABS] = cp.Variable(self.factors, name=D._ABS, nonneg=True)
 
         else:
             self.model[M.RISK] = SampleCovariance(assets=self.assets)
             # add variable for absolute weights
-            self.variables[V._ABS] = cp.Variable(self.assets, name=V._ABS, nonneg=True)
+            self.variables[D._ABS] = cp.Variable(self.assets, name=D._ABS, nonneg=True)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
-        self.variables[V.WEIGHTS] = cp.Variable(self.assets, name=V.WEIGHTS)
+        self.variables[D.WEIGHTS] = cp.Variable(self.assets, name=D.WEIGHTS)
 
         # add bounds on assets
         self.model[M.BOUND_ASSETS] = Bounds(
-            assets=self.assets, name="assets", acting_on=V.WEIGHTS
+            assets=self.assets, name="assets", acting_on=D.WEIGHTS
         )
 
     @property
@@ -147,7 +147,7 @@ class Builder:
 
     @property
     def weights(self):
-        return self.variables[V.WEIGHTS]
+        return self.variables[D.WEIGHTS]
 
     @property
     def risk(self):
@@ -155,4 +155,4 @@ class Builder:
 
     @property
     def factor_weights(self):
-        return self.variables[V.FACTOR_WEIGHTS]
+        return self.variables[D.FACTOR_WEIGHTS]

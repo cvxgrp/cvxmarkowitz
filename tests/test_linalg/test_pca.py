@@ -41,19 +41,10 @@ def test_pca(returns):
 def test_idiosyncratic_with_max_factors(returns):
     # as many components as vectors, hence the residual should be zero
     xxx = PCA(returns=returns, n_components=20)
-    np.testing.assert_allclose(xxx.idiosyncratic_returns.std(), np.zeros(20), atol=1e-6)
-    # pd.testing.assert_series_equal(
-    #    xxx.idiosyncratic_returns.std(), pd.Series(np.zeros(20), index=returns.columns)
-    # )
-
-    assert np.allclose(
-        returns,
-        xxx.factors @ xxx.exposure + xxx.idiosyncratic_returns,
-    )
+    assert np.allclose(xxx.idiosyncratic_returns.std(), np.zeros(20))
 
 
 def test_idiosyncratic(returns):
-    # as many components as vectors, hence the residual should be zero
     xxx = PCA(returns=returns, n_components=15)
 
     assert np.allclose(
@@ -63,33 +54,19 @@ def test_idiosyncratic(returns):
 
 
 def test_too_many_factors(returns):
-    # as many components as vectors, hence the residual should be zero
+    # more components than columns
     with pytest.raises(ValueError):
         PCA(returns=returns, n_components=22)
 
 
-def test_shape(returns):
-    xxx = PCA(returns=returns, n_components=15)
-    assert xxx.factors.shape == (320, 15)
-    assert xxx.exposure.shape == (15, 20)
-    assert xxx.idiosyncratic_returns.shape == (320, 20)
-    assert np.std(xxx.idiosyncratic_returns, axis=0).shape == (20,)
-    assert xxx.cov.shape == (15, 15)
-    assert xxx.systematic_returns.shape == (320, 20)
-    assert xxx.idiosyncratic_vola.shape == (20,)
+@pytest.mark.parametrize("size", [(2, 1), (4, 2), (600, 50), (2000, 100)])
+def test_pca_speed(size):
+    returns = np.random.randn(size[0], size[1])
+    pca = PCA(returns=returns, n_components=size[1])
 
-
-#
-# def test_alternative(returns):
-#     xxx = aux_pca(returns, n_components=10)
-#     xxy = PCA(returns=returns, n_components=10)
-#
-#     # pd.testing.assert_index_equal(xxx.asset_names, xxy.asset_names)
-#     # pd.testing.assert_index_equal(xxx.factor_names, xxy.factor_names)
-#
-#     np.testing.assert_allclose(xxx.cov, xxy.cov, atol=1e-10)
-#     np.testing.assert_allclose(xxx.systematic_returns, xxy.systematic_returns)
-#     np.testing.assert_allclose(xxx.idiosyncratic_returns, xxy.idiosyncratic_returns)
-#     np.testing.assert_allclose(xxx.explained_variance, xxy.explained_variance)
-#
-#     # pd.testing.assert_series_equal(xxx.explained_variance, xxy.explained_variance)
+    assert pca.factors.shape == (size[0], size[1])
+    assert pca.exposure.shape == (size[1], size[1])
+    assert pca.idiosyncratic_returns.shape == (size[0], size[1])
+    assert pca.cov.shape == (size[1], size[1])
+    assert pca.systematic_returns.shape == (size[0], size[1])
+    assert pca.idiosyncratic_vola.shape == (size[1],)

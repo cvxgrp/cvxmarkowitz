@@ -15,7 +15,7 @@ def valid(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
     # make sure matrix  is quadratic
     if matrix.shape[0] != matrix.shape[1]:
-        raise AssertionError
+        raise ValueError("Matrix must be quadratic")
 
     _valid = np.isfinite(np.diag(matrix))
     return _valid, matrix[:, _valid][_valid]

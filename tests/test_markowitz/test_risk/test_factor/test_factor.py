@@ -74,15 +74,25 @@ def test_estimate_risk(solver):
 
     # todo: Update with DataNames
     problem.update(
-        chol=cholesky(rand_cov(10)),
-        exposure=np.random.randn(10, 20),
-        idiosyncratic_vola=np.random.randn(20),
-        lower_assets=np.zeros(20),
-        upper_assets=np.ones(20),
-        lower_factors=np.zeros(10),
-        upper_factors=np.ones(10),
-        systematic_vola_uncertainty=np.zeros(10),
-        idiosyncratic_vola_uncertainty=np.zeros(20),
+        **{
+            D.CHOLESKY: cholesky(rand_cov(10)),
+            D.EXPOSURE: np.random.randn(10, 20),
+            D.IDIOSYNCRATIC_VOLA: np.random.randn(20),
+            D.LOWER_BOUND_ASSETS: np.zeros(20),
+            D.UPPER_BOUND_ASSETS: np.ones(20),
+            D.LOWER_BOUND_FACTORS: np.zeros(10),
+            D.UPPER_BOUND_FACTORS: np.ones(10),
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
+            # exposure=np.random.randn(10, 20),
+            # idiosyncratic_vola=np.random.randn(20),
+            # lower_assets=np.zeros(20),
+            # upper_assets=np.ones(20),
+            # lower_factors=np.zeros(10),
+            # upper_factors=np.ones(10),
+            # systematic_vola_uncertainty=np.zeros(10),
+            # idiosyncratic_vola_uncertainty=np.zeros(20)
+        }
     )
 
     problem.solve(solver=solver)

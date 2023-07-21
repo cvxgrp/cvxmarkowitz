@@ -106,9 +106,6 @@ class FactorModel(Model):
         if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == assets:
             raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")
 
-        if not kwargs[D.EXPOSURE].shape[0] == k:
-            raise CvxError("Mismatch in size of chol and exposure")
-
         if not kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] == k:
             raise CvxError(
                 "Mismatch in length of systematic_vola_uncertainty and exposure"

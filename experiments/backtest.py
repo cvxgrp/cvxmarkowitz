@@ -22,8 +22,8 @@ if __name__ == "__main__":
     problem = engine.build()
 
     # expected data for each update...
-    for tuple in problem.expected_names:
-        logger.info(tuple)
+    # for tuple in problem.expected_names:
+    #     logger.info(tuple)
 
     logger.info(set(problem.parameter.keys()))
     logger.info(set(problem.model.keys()))

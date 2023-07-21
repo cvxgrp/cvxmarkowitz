@@ -36,13 +36,14 @@ def test_timeseries_model(returns):
 
     model = FactorModel(assets=20, factors=10)
 
-    # todo: Update with DataNames
     model.update(
-        chol=cholesky(factors.cov),
-        exposure=factors.exposure,
-        idiosyncratic_vola=factors.idiosyncratic_vola,
-        systematic_vola_uncertainty=np.zeros(10),
-        idiosyncratic_vola_uncertainty=np.zeros(20),
+        **{
+            D.CHOLESKY: cholesky(factors.cov),
+            D.EXPOSURE: factors.exposure,
+            D.IDIOSYNCRATIC_VOLA: factors.idiosyncratic_vola,
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
+        }
     )
 
     variables = {D.WEIGHTS: cp.Variable(20), D.FACTOR_WEIGHTS: cp.Variable(10)}
@@ -90,17 +91,18 @@ def test_estimate_risk(solver):
     # assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(problem.weights[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
 
-    # todo: Update with DataNames
     problem.update(
-        chol=cholesky(rand_cov(10)),
-        exposure=np.random.randn(10, 20),
-        idiosyncratic_vola=np.random.randn(20),
-        lower_assets=np.zeros(20),
-        upper_assets=np.ones(20),
-        lower_factors=-0.1 * np.ones(10),
-        upper_factors=0.1 * np.ones(10),
-        systematic_vola_uncertainty=np.zeros(10),
-        idiosyncratic_vola_uncertainty=np.zeros(20),
+        **{
+            D.CHOLESKY: cholesky(rand_cov(10)),
+            D.EXPOSURE: np.random.randn(10, 20),
+            D.IDIOSYNCRATIC_VOLA: np.random.randn(20),
+            D.LOWER_BOUND_ASSETS: np.zeros(20),
+            D.UPPER_BOUND_ASSETS: np.ones(20),
+            D.LOWER_BOUND_FACTORS: -0.1 * np.ones(10),
+            D.UPPER_BOUND_FACTORS: +0.1 * np.ones(10),
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
+        }
     )
 
     problem.solve(solver=solver)
@@ -130,13 +132,14 @@ def test_factor_mini():
         D._ABS: cp.Variable(2),
     }
 
-    # todo: Update with DataNames
     model.update(
-        chol=np.eye(2),
-        exposure=np.array([[1, 0, 1], [1, 0.5, 1]]),
-        idiosyncratic_vola=np.array([0.1, 0.1, 0.1]),
-        systematic_vola_uncertainty=np.array([0.2, 0.1]),
-        idiosyncratic_vola_uncertainty=np.array([0.3, 0.3, 0.3]),
+        **{
+            D.CHOLESKY: np.eye(2),
+            D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+            D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.1]),
+        }
     )
 
     variables[D.WEIGHTS].value = np.array([0.5, 0.1, 0.2])
@@ -181,6 +184,19 @@ def test_mismatch_idiosyncratic_vola(factor_model):
                 D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1]),
                 D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
                 D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+                D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.1]),
+            }
+        )
+
+
+def test_mismatch_exposure_idiosyncratic_vola(factor_model):
+    with pytest.raises(CvxError):
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.eye(2),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.3]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.ones((4, 4)),
                 D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.1]),
             }
         )

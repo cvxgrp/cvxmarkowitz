@@ -25,3 +25,10 @@ def test_cholesky_not_square():
     a = np.random.randn(12, 10)
     with pytest.raises(np.linalg.LinAlgError):
         cholesky(a)
+
+
+@pytest.mark.parametrize("size", [1, 2, 4, 8, 16, 32, 64, 128, 256, 512])
+def test_cholesky_speed(size):
+    a = rand_cov(size)
+    u = cholesky(a)
+    assert np.allclose(a, np.transpose(u) @ u)

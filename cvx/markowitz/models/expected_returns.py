@@ -8,8 +8,8 @@ from typing import Dict
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz import Model
 from cvx.markowitz.builder import CvxError
+from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.utils.aux import fill_vector
 

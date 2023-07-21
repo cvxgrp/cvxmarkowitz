@@ -8,8 +8,8 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 

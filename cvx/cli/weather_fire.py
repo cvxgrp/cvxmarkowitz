@@ -22,12 +22,14 @@ def cli(metric: str, latitude: float = 37.4419, longitude: float = -122.143) -> 
 
     if r.status_code == 200:
         if metric in r.json()["current_weather"]:
-            print(r.json()["current_weather"][metric])
+            x = r.json()["current_weather"][metric]
+            print(x)
+            return x
         else:
-            print("Metric not supported!")
+            raise ValueError("Metric not supported!")
     else:
-        print("Open-Meteo is down!")
+        raise ConnectionError("Open-Meteo is down!")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     fire.Fire(cli)

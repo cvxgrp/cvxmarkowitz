@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.names import DataNames as D
 
 
 def test_raise_not_implemented():
@@ -17,21 +18,28 @@ def test_raise_not_implemented():
 
 
 def test_constraints():
-    variables = {"weights": cp.Variable(3)}
-    bounds = Bounds(assets=3, name="assets")
+    variables = {D.WEIGHTS: cp.Variable(3)}
+    bounds = Bounds(assets=3, name="assets", acting_on=D.WEIGHTS)
 
     bounds.update(
-        lower_assets=np.array([0.1, 0.2]), upper_assets=np.array([0.3, 0.4, 0.5])
+        **{
+            D.LOWER_BOUND_ASSETS: np.array([0.1, 0.2]),
+            D.UPPER_BOUND_ASSETS: np.array([0.3, 0.4, 0.5]),
+        }
     )
 
-    assert bounds.data["lower_assets"].value == pytest.approx(np.array([0.1, 0.2, 0]))
-    assert bounds.data["upper_assets"].value == pytest.approx(np.array([0.3, 0.4, 0.5]))
+    assert bounds.data[D.LOWER_BOUND_ASSETS].value == pytest.approx(
+        np.array([0.1, 0.2, 0])
+    )
+    assert bounds.data[D.UPPER_BOUND_ASSETS].value == pytest.approx(
+        np.array([0.3, 0.4, 0.5])
+    )
 
     assert len(bounds.constraints(variables)) == 2
 
 
 def test_wrong_action_on():
-    variables = {"weights": cp.Variable(3)}
+    variables = {D.WEIGHTS: cp.Variable(3)}
     bounds = Bounds(assets=3, name="assets", acting_on="wrong")
 
     with pytest.raises(KeyError):

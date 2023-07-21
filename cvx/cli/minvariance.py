@@ -46,7 +46,7 @@ def minvariance(json_file, problem_file=None, assets=None, factors=None) -> None
                 # useful as the user can specify coarse upper bounds
                 problem = MinVar(assets=assets, factors=factors).build()
             else:
-                assets, factors = estimate_dimensions(input_data)
+                assets, factors = estimate_dimensions(**input_data)
                 click.echo(
                     f"Estimated the numbers of assets as {assets} and factors as {factors}"
                 )
@@ -59,7 +59,7 @@ def minvariance(json_file, problem_file=None, assets=None, factors=None) -> None
 
         problem.update(**input_data)
         problem.solve()
-        click.echo(f"Solution: {problem.solution()}")
+        click.echo(f"Solution: {problem.weights}")
 
     except Exception as e:
         click.echo(traceback.print_exception(type(e), e, e.__traceback__))

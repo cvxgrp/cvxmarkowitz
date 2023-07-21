@@ -8,40 +8,42 @@ import numpy as np
 import pytest
 
 from cvx.markowitz.builder import Builder, CvxError
+from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import ModelName as M
 
 
 @dataclass(frozen=True)
 class DummyBuilder(Builder):
     @property
     def objective(self):
-        return cp.Maximize(0.0 + 0.0 * self.model["risk"].estimate(self.variables))
+        return cp.Maximize(0.0 + 0.0 * self.risk.estimate(self.variables))
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
 
 
 def test_dummy():
     builder = DummyBuilder(assets=1)
 
-    assert "risk" in builder.model
-    assert "bound_assets" in builder.model
-    assert "chol" in builder.model["risk"].data
-    assert "vola_uncertainty" in builder.model["risk"].data
+    assert M.RISK in builder.model
+    assert M.BOUND_ASSETS in builder.model
+    assert D.CHOLESKY in builder.risk.data
+    assert D.VOLA_UNCERTAINTY in builder.risk.data
 
     problem = builder.build()
-    # print(problem.problem.parameters())
-    # todo: risk model needs to be involved in DummyBuilder
 
     problem.update(
-        chol=np.eye(1),
-        lower_assets=np.array([0.0]),
-        upper_assets=np.array([1.0]),
-        vola_uncertainty=np.zeros(1),
+        **{
+            D.CHOLESKY: np.eye(1),
+            D.LOWER_BOUND_ASSETS: np.array([0.0]),
+            D.UPPER_BOUND_ASSETS: np.array([1.0]),
+            D.VOLA_UNCERTAINTY: np.zeros(1),
+        }
     ).solve(solver=cp.ECOS)
 
-    problem.problem.var_dict["weights"].value = np.array([2.0])
-
-    d = problem.solution()
-    assert d == np.array([2.0])
-
-    assert np.allclose(dict(problem.data)[("risk", "chol")].value, np.eye(1))
+    assert np.allclose(dict(problem.data)[(M.RISK, "chol")].value, np.eye(1))
 
 
 def test_missing_data():
@@ -58,11 +60,18 @@ def test_infeasible_problem():
 
     # check out lower bound above upper bound!
     problem.update(
-        chol=np.eye(1),
-        lower_assets=np.array([1.0]),
-        upper_assets=np.array([0.0]),
-        vola_uncertainty=np.zeros(1),
+        **{
+            D.CHOLESKY: np.eye(1),
+            D.LOWER_BOUND_ASSETS: np.array([1.0]),
+            D.UPPER_BOUND_ASSETS: np.array([0.0]),
+            D.VOLA_UNCERTAINTY: np.zeros(1),
+        }
     )
 
     with pytest.raises(CvxError):
         problem.solve(solver=cp.ECOS)
+
+
+def test_builder_risk():
+    builder = DummyBuilder(assets=1)
+    assert builder.risk == builder.model[M.RISK]

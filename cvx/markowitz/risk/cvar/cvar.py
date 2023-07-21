@@ -7,7 +7,9 @@ from typing import Dict
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz import Model
+from cvx.markowitz.model import Model
+from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.utils.aux import fill_matrix
 
 
 @dataclass(frozen=True)
@@ -19,9 +21,9 @@ class CVar(Model):
 
     def __post_init__(self):
         # self.k = int(self.n * (1 - self.alpha))
-        self.data["returns"] = cp.Parameter(
+        self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),
-            name="returns",
+            name=D.RETURNS,
             value=np.zeros((self.rows, self.assets)),
         )
 
@@ -33,11 +35,9 @@ class CVar(Model):
         # k = int(n * (1 - self.alpha))
         # average value of the k elements in the left tail
         k = int(self.rows * (1 - self.alpha))
-        return -cp.sum_smallest(self.data["returns"] @ variables["weights"], k=k) / k
+        return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
     def update(self, **kwargs):
-        ret = kwargs["returns"]
-        columns = ret.shape[1]
-
-        self.data["returns"].value = np.zeros((self.rows, self.assets))
-        self.data["returns"].value[:, :columns] = ret
+        self.data[D.RETURNS].value = fill_matrix(
+            rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
+        )

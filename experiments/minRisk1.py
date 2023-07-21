@@ -7,6 +7,7 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg import PCA, cholesky
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
 
 if __name__ == "__main__":
@@ -42,21 +43,6 @@ if __name__ == "__main__":
 
     holding_costs = pd.Series(data=0.0005, index=returns.columns)
 
-    # for name, constraint in approx("xxx", builder.variables["weights"], 0.0, 0.1):
-    #    builder.constraints[name] = constraint
-
-    #     minvar.constraints[name] = constraint
-
-    #     builder.constraints[name] = constraint
-
-    # minvar.constraints
-    # You can add constraints before you build the problem
-    # minvar.constraints["concentration"] = (
-    #    cp.sum_largest(minvar.weights_assets, 2) <= 0.4
-    # )
-    # this constraint is not needed as the problem is long only and fully-invested
-    # minvar.constraints["leverage"] = cp.abs(minvar.weights_assets) <= 3.0
-
     problem = builder.build()
     assert problem.is_dpp(), "Problem is not DPP"
 
@@ -66,17 +52,19 @@ if __name__ == "__main__":
     # distinguish between data and parameters
     # clean up at the end, e.g. integer lots
     problem.update(
-        chol=cholesky(pca.cov),
-        exposure=pca.exposure,
-        idiosyncratic_vola=pca.idiosyncratic_vola,
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        lower_factors=lower_bound_factors.values,
-        upper_factors=upper_bound_factors.values,
-        weights=np.zeros(20),
-        holding_costs=holding_costs[returns.columns].values,
-        systematic_vola_uncertainty=np.zeros(10),
-        idiosyncratic_vola_uncertainty=np.zeros(20),
+        **{
+            D.CHOLESKY: cholesky(pca.cov),
+            D.EXPOSURE: pca.exposure,
+            D.IDIOSYNCRATIC_VOLA: pca.idiosyncratic_vola,
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+            D.LOWER_BOUND_FACTORS: lower_bound_factors.values,
+            D.UPPER_BOUND_FACTORS: upper_bound_factors.values,
+            D.WEIGHTS: np.zeros(20),
+            D.HOLDING_COSTS: holding_costs[returns.columns].values,
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
+        }
     )
 
     # minvar.parameter["kappa"].value = kappa[returns.columns].values
@@ -94,35 +82,23 @@ if __name__ == "__main__":
     pca = PCA(returns=returns.values, n_components=5)
 
     problem.update(
-        chol=cholesky(pca.cov),
-        exposure=pca.exposure,
-        idiosyncratic_vola=pca.idiosyncratic_vola,
-        lower_assets=lower_bound_assets[returns.columns].values,
-        upper_assets=upper_bound_assets[returns.columns].values,
-        lower_factors=lower_bound_factors[range(5)].values,
-        upper_factors=upper_bound_factors[range(5)].values,
-        weights=np.zeros(10),
-        holding_costs=holding_costs[returns.columns].values,
-        systematic_vola_uncertainty=np.zeros(5),
-        idiosyncratic_vola_uncertainty=np.zeros(10),
+        **{
+            D.CHOLESKY: cholesky(pca.cov),
+            D.EXPOSURE: pca.exposure,
+            D.IDIOSYNCRATIC_VOLA: pca.idiosyncratic_vola,
+            D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,
+            D.UPPER_BOUND_ASSETS: upper_bound_assets[returns.columns].values,
+            D.LOWER_BOUND_FACTORS: lower_bound_factors[range(5)].values,
+            D.UPPER_BOUND_FACTORS: upper_bound_factors[range(5)].values,
+            D.WEIGHTS: np.zeros(10),
+            D.HOLDING_COSTS: holding_costs[returns.columns].values,
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(5),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(10),
+        }
     )
-
-    # for name, parameter in minvar.model.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
-
-    # for name, parameter in minvar.model.bounds_assets.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
-
-    # for name, parameter in minvar.model.bounds_factors.data.items():
-    #    logger.info(f"{name}: {parameter.value}")
 
     x = problem.solve(verbose=True)
     logger.info(f"Minimum standard deviation: {x}")
 
-    # logger.info(f"weights assets:\n{pd.Series(data=minvar.weights_assets.value,
-    # index=pca.asset_names)}")
-    # logger.info(f"Solution:\n{minvar.solution(returns.columns)}")
     logger.info(f"{problem}")
-    logger.info(
-        f"Concentration: {cp.sum_largest(problem.variables['weights'], 2).value}"
-    )
+    logger.info(f"Concentration: {cp.sum_largest(problem.weights, 2).value}")

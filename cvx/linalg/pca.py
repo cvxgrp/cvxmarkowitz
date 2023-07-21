@@ -21,8 +21,11 @@ class PCA:
         # compute the principal components without sklearn
         # 1. compute the correlation
         cov = np.cov(self.returns.T)
+        cov = np.atleast_2d(cov)
+
         # 2. compute the eigenvalues and eigenvectors
         self.eigenvalues, eigenvectors = np.linalg.eigh(cov)
+
         # 3. sort the eigenvalues in descending order
         idx = self.eigenvalues.argsort()[::-1]
         self.eigenvalues = self.eigenvalues[idx]
@@ -38,7 +41,7 @@ class PCA:
 
     @property
     def cov(self) -> np.ndarray:
-        return np.cov(self.factors.T)
+        return np.atleast_2d(np.cov(self.factors.T))
 
     @property
     def systematic_returns(self) -> np.ndarray:

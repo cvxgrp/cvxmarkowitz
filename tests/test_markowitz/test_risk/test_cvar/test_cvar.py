@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Import necessary libraries
 from __future__ import annotations
 
 import os
@@ -8,6 +7,8 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
+from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
 
@@ -26,27 +27,31 @@ def test_estimate_risk(solver):
     builder = MinVar(assets=14)
 
     # overwrite the risk model
-    builder.model["risk"] = model
+    builder.model[M.RISK] = model
 
-    assert "bound_assets" in builder.model
+    assert M.BOUND_ASSETS in builder.model
 
     problem = builder.build()
 
     problem.update(
-        returns=np.random.randn(50, 10),
-        lower_assets=np.zeros(10),
-        upper_assets=np.ones(10),
+        **{
+            D.RETURNS: np.random.randn(50, 10),
+            D.LOWER_BOUND_ASSETS: np.zeros(10),
+            D.UPPER_BOUND_ASSETS: np.ones(10),
+        }
     )
 
     # problem = builder.build()
     problem.solve(solver=solver)
     assert problem.value == pytest.approx(0.50587206, abs=1e-5)
 
-    # it's enough to only update the R value...
     problem.update(
-        returns=np.random.randn(50, 10),
-        lower_assets=np.zeros(10),
-        upper_assets=np.ones(10),
+        **{
+            D.RETURNS: np.random.randn(50, 10),
+            D.LOWER_BOUND_ASSETS: np.zeros(10),
+            D.UPPER_BOUND_ASSETS: np.ones(10),
+        }
     )
+
     problem.solve(solver=solver)
     assert problem.value == pytest.approx(0.4355917, abs=1e-5)

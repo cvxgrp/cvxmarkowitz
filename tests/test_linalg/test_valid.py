@@ -17,5 +17,5 @@ def test_valid():
 
 def test_invalid():
     a = np.zeros((3, 2))
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError, match="Matrix must be quadratic"):
         valid(a)

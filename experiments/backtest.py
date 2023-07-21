@@ -6,6 +6,7 @@ import pandas as pd
 from loguru import logger
 
 from cvx.linalg.cholesky import cholesky
+from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.simulator.builder import builder
 
@@ -19,6 +20,13 @@ if __name__ == "__main__":
     engine = MinVar(assets=20)
     # add additional constraints you like
     problem = engine.build()
+
+    # expected data for each update...
+    # for tuple in problem.expected_names:
+    #     logger.info(tuple)
+
+    logger.info(set(problem.parameter.keys()))
+    logger.info(set(problem.model.keys()))
 
     # --------------------------------------------------------------------------------------------
     # construct the portfolio using a builder
@@ -34,18 +42,17 @@ if __name__ == "__main__":
         try:
             # update the problem
             problem.update(
-                chol=cholesky(cov[t[-1]].values),
-                vola_uncertainty=np.zeros(20),
-                lower_assets=np.zeros(20),
-                upper_assets=np.ones(20),
+                **{
+                    D.CHOLESKY: cholesky(cov[t[-1]].values),
+                    D.VOLA_UNCERTAINTY: np.zeros(20),
+                    D.LOWER_BOUND_ASSETS: np.zeros(20),
+                    D.UPPER_BOUND_ASSETS: np.ones(20),
+                }
             )
-            logger.debug(t[-1])
 
             # solve the problem
             problem.solve()
-            weights = pd.Series(
-                index=prices.columns, data=problem.solution(variable="weights")
-            )
+            weights = pd.Series(index=prices.columns, data=problem.weights)
             # update the builder
             b.set_weights(t[-1], weights=weights)
         except KeyError:

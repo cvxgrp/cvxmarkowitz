@@ -7,9 +7,11 @@ from typing import Dict
 
 import cvxpy as cp
 
-from cvx.markowitz import Model
 from cvx.markowitz.cvxerror import CvxError
+from cvx.markowitz.model import Model
 from cvx.markowitz.models.bounds import Bounds
+from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.risk import FactorModel, SampleCovariance
 
 
@@ -17,7 +19,6 @@ from cvx.markowitz.risk import FactorModel, SampleCovariance
 class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
-    # problem has var_dict and param_dict
 
     def update(self, **kwargs):
         """
@@ -34,10 +35,6 @@ class _Problem:
             # exactly the correct shape.
             model.update(**kwargs)
 
-        for name, model in self.model.items():
-            for key in model.data.keys():
-                self.problem.param_dict[key].value = model.data[key].value
-
         return self
 
     def solve(self, solver=cp.ECOS, **kwargs):
@@ -50,12 +47,6 @@ class _Problem:
             raise CvxError(f"Problem status is {self.problem.status}")
 
         return value
-
-    def solution(self, variable="weights"):
-        """
-        Return the solution
-        """
-        return self.problem.var_dict[variable].value
 
     @property
     def value(self):
@@ -70,6 +61,22 @@ class _Problem:
             for key, value in model.data.items():
                 yield (name, key), value
 
+    @property
+    def parameter(self):
+        return self.problem.param_dict
+
+    @property
+    def variables(self):
+        return self.problem.var_dict
+
+    @property
+    def weights(self):
+        return self.variables[D.WEIGHTS].value
+
+    @property
+    def factor_weights(self):
+        return self.variables[D.FACTOR_WEIGHTS].value
+
 
 @dataclass(frozen=True)
 class Builder:
@@ -83,32 +90,31 @@ class Builder:
     def __post_init__(self):
         # pick the correct risk model
         if self.factors is not None:
-            self.model["risk"] = FactorModel(assets=self.assets, factors=self.factors)
+            self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
 
             # add variable for factor weights
-            self.variables["factor_weights"] = cp.Variable(
-                self.factors, name="factor_weights"
+            self.variables[D.FACTOR_WEIGHTS] = cp.Variable(
+                self.factors, name=D.FACTOR_WEIGHTS
             )
             # add bounds for factor weights
-            self.model["bounds_factors"] = Bounds(
-                assets=self.factors, name="factors", acting_on="factor_weights"
+            self.model[M.BOUND_FACTORS] = Bounds(
+                assets=self.factors, name="factors", acting_on=D.FACTOR_WEIGHTS
             )
             # add variable for absolute factor weights
-            self.variables["_abs"] = cp.Variable(self.factors, name="_abs", nonneg=True)
+            self.variables[D._ABS] = cp.Variable(self.factors, name=D._ABS, nonneg=True)
 
         else:
-            self.model["risk"] = SampleCovariance(assets=self.assets)
-            #
+            self.model[M.RISK] = SampleCovariance(assets=self.assets)
             # add variable for absolute weights
-            self.variables["_abs"] = cp.Variable(self.assets, name="_abs", nonneg=True)
+            self.variables[D._ABS] = cp.Variable(self.assets, name=D._ABS, nonneg=True)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
-        self.variables["weights"] = cp.Variable(self.assets, name="weights")
+        self.variables[D.WEIGHTS] = cp.Variable(self.assets, name=D.WEIGHTS)
 
         # add bounds on assets
-        self.model["bound_assets"] = Bounds(
-            assets=self.assets, name="assets", acting_on="weights"
+        self.model[M.BOUND_ASSETS] = Bounds(
+            assets=self.assets, name="assets", acting_on=D.WEIGHTS
         )
 
     @property
@@ -130,4 +136,17 @@ class Builder:
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"
+
         return _Problem(problem=problem, model=self.model)
+
+    @property
+    def weights(self):
+        return self.variables[D.WEIGHTS]
+
+    @property
+    def risk(self):
+        return self.model[M.RISK]
+
+    @property
+    def factor_weights(self):
+        return self.variables[D.FACTOR_WEIGHTS]

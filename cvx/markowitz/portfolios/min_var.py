@@ -6,13 +6,15 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
+from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.names import DataNames as D
 
 
-def estimate_dimensions(input_data):
+def estimate_dimensions(**kwargs):
     """Estimate the dimensions of the problem from the input data"""
-    assets = input_data["lower_assets"].shape[0]
+    assets = kwargs[D.LOWER_BOUND_ASSETS].shape[0]
     try:
-        factors = input_data["exposure"].shape[0]
+        factors = kwargs[D.EXPOSURE].shape[0]
     except KeyError:
         factors = None
 
@@ -30,9 +32,9 @@ class MinVar(Builder):
 
     @property
     def objective(self):
-        return cp.Minimize(self.model["risk"].estimate(self.variables))
+        return cp.Minimize(self.risk.estimate(self.variables))
 
     def __post_init__(self):
         super().__post_init__()
-        self.constraints["long-only"] = self.variables["weights"] >= 0
-        self.constraints["fully-invested"] = cp.sum(self.variables["weights"]) == 1.0
+        self.constraints[C.LONG_ONLY] = self.weights >= 0
+        self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0

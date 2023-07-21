@@ -20,6 +20,16 @@ def test_serialize(tmp_path):
     covariance = rand_cov(10)
 
     input_data = {}
+    # print(set(problem.expected_names))
+    # assert set(problem.expected_names) == {
+    #     "chol",
+    #     "lower_assets",
+    #     "upper_assets",
+    #     "vola_uncertainty",
+    # }
+
+    # assert False
+
     input_data["chol"] = cholesky(covariance)
     input_data["lower_assets"] = np.zeros(10)
     input_data["upper_assets"] = np.ones(10)
@@ -27,10 +37,10 @@ def test_serialize(tmp_path):
 
     problem.update(**input_data)
     sol1 = problem.solve()
-    sol1 = problem.solution()
+    sol1 = problem.weights
 
     problem_recovered.update(**input_data)
     sol2 = problem_recovered.solve()
-    sol2 = problem_recovered.solution()
+    sol2 = problem_recovered.weights
 
     np.testing.assert_array_equal(sol1, sol2)

@@ -7,11 +7,10 @@ KERNEL=$(shell poetry version | cut -d' ' -f1)
 
 .PHONY: install
 install:  ## Install a virtual environment
-	@poetry install -vv
+	@poetry install -vv --all-extras
 
 .PHONY: kernel
 kernel: install ## Create a kernel for jupyter lab
-	@echo ${KERNEL}
 	@poetry run pip install ipykernel
 	@poetry run python -m ipykernel install --user --name=${KERNEL}
 

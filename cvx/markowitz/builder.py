@@ -69,12 +69,6 @@ class _Problem:
     def variables(self):
         return self.problem.var_dict
 
-    # @property
-    # def expected_names(self):
-    #     for name, model in self.model.items():
-    #         for key in model.data.keys():
-    #             yield (name, key)
-
     @property
     def weights(self):
         return self.variables[D.WEIGHTS].value

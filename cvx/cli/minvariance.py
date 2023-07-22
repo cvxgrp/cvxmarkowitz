@@ -5,7 +5,7 @@ import click
 
 from cvx.cli.aux.io import exists
 from cvx.cli.aux.json import read_json
-from cvx.cli.aux.problem import deserialize_problem, serialize_problem
+from cvx.markowitz.builder import deserialize
 from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
 
 
@@ -37,7 +37,7 @@ def minvariance(json_file, problem_file=None, assets=None, factors=None) -> None
 
         if does_exist:
             # the problem has been serialized before and we can reuse it
-            problem = deserialize_problem(problem_file)
+            problem = deserialize(problem_file)
 
         else:
             # build the problem from scratch
@@ -55,7 +55,7 @@ def minvariance(json_file, problem_file=None, assets=None, factors=None) -> None
             # We have constructed the problem, write it to file if the file has been specified
             if problem_file is not None:
                 click.echo(f"Serializing problem in {problem_file}")
-                serialize_problem(problem, problem_file)
+                problem.serialize(problem_file)
 
         problem.update(**input_data)
         problem.solve()

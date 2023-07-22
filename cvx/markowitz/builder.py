@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+import pickle
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict
@@ -13,6 +14,11 @@ from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.risk import FactorModel, SampleCovariance
+
+
+def deserialize(problem_file):
+    with open(problem_file, "rb") as infile:
+        return pickle.load(infile)
 
 
 @dataclass(frozen=True)
@@ -76,6 +82,10 @@ class _Problem:
     @property
     def factor_weights(self):
         return self.variables[D.FACTOR_WEIGHTS].value
+
+    def serialize(self, problem_file):
+        with open(problem_file, "wb") as outfile:
+            pickle.dump(self, outfile)
 
 
 @dataclass(frozen=True)

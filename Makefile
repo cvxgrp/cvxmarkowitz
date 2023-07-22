@@ -44,6 +44,9 @@ coverage: ## test and coverage
 		xdg-open htmlcov/index.html 2> /dev/null; \
 	fi
 
+.PHONY: tree
+tree: install ## make a tree
+	@poetry show --tree
 
 .PHONY: help
 help:  ## Display this help screen

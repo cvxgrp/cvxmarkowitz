@@ -51,7 +51,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-eigenvalue = "cvx.cli.smallest_ev:smallest_ev"
 weather-fire = "cvx.cli.weather_fire:fff"
 
 [tool.ruff]

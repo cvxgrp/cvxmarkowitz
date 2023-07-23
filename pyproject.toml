@@ -12,12 +12,11 @@ python = ">=3.8,<4.0"
 cvxpy = "*"
 requests = { version = "*", optional = true }
 numpyencoder = { version = "*", optional = true }
-click = { version = "*", optional = true }
 fire = { version = "^0.5.0", optional = true }
 
 
 [tool.poetry.extras]
-cli = ["click", "numpyencoder", "requests", "fire"]
+cli = ["numpyencoder", "requests", "fire"]
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.2.0"

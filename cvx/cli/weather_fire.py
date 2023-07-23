@@ -30,7 +30,7 @@ def cli(metric: str, latitude: float = 37.4419, longitude: float = -122.143) -> 
         raise ConnectionError("Open-Meteo is down!")
 
 
-def fff():  # pragma: no cover
+def main():  # pragma: no cover
     """
     Run the CLI using Fire
     """

@@ -2,7 +2,7 @@
 name = "cvxmarkowitz"
 version = "0.0.0"
 description = "Markowitz"
-authors = ["Thomas Schmelzer"]
+authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
 readme = "README.md"
 repository = "https://github.com/cvxgrp/cvxmarkowitz"
 packages = [{include = "cvx"}]

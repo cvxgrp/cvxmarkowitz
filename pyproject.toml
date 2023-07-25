@@ -12,13 +12,11 @@ python = ">=3.8,<4.0"
 cvxpy = "*"
 requests = { version = "*", optional = true }
 numpyencoder = { version = "*", optional = true }
-click = { version = "*", optional = true }
-pyyaml = "6.0.0"
-fire = "^0.5.0"
+fire = { version = "^0.5.0", optional = true }
 
 
 [tool.poetry.extras]
-cli = ["click", "numpyencoder", "requests"]
+cli = ["numpyencoder", "requests", "fire"]
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.2.0"
@@ -28,6 +26,7 @@ mock = "*"
 [tool.poetry.group.jupyter.dependencies]
 jupyterlab = "*"
 jupyter-book = "0.15.1"
+pyyaml = "6.0.0"
 
 [tool.poetry.group.linting.dependencies]
 pylint = "*"
@@ -51,8 +50,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-weather = "cvx.cli.weather:cli"
-eigenvalue = "cvx.cli.smallest_ev:smallest_ev"
+weather-fire = "cvx.cli.weather_fire:main"
+
+# Relevant documentation:
+# https://medium.com/clarityai-engineering/how-to-create-and-distribute-a-minimalist-cli-tool-with-python-poetry-click-and-pipx-c0580af4c026
 
 [tool.ruff]
 select = ["E", "F", "I"]

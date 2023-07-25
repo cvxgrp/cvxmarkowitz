@@ -1,43 +1,26 @@
 # -*- coding: utf-8 -*-
-from click.testing import CliRunner
+import pytest
 
-from cvx.cli.minvariance import minvariance
+from cvx.cli.minvariance import cli as minvariance
+from cvx.markowitz.cvxerror import CvxError
 
 
 def test_cli(resource_dir):
-    runner = CliRunner()
-    result = runner.invoke(minvariance, [str(resource_dir / "matrix.json")])
-    assert result.exit_code == 0
-    assert "Solution" in result.output
+    minvariance(json_file=resource_dir / "matrix.json")
 
 
 def test_cli_serialize(resource_dir, tmp_path):
-    runner = CliRunner()
-    result = runner.invoke(
-        minvariance, [str(resource_dir / "matrix.json"), str(tmp_path / "problem.pkl")]
+    minvariance(
+        json_file=resource_dir / "matrix.json", problem_file=tmp_path / "problem.pkl"
     )
-    assert result.exit_code == 0
-    assert "Solution" in result.output
 
-    result = runner.invoke(
-        minvariance, [str(resource_dir / "matrix.json"), str(tmp_path / "problem.pkl")]
-    )
-    assert result.exit_code == 0
-    assert "Solution" in result.output
+    minvariance(resource_dir / "matrix.json", tmp_path / "problem.pkl")
 
 
 def test_options(resource_dir):
-    runner = CliRunner()
-    result = runner.invoke(
-        minvariance, [str(resource_dir / "matrix.json"), "--assets", "20"]
-    )
-
-    assert result.exit_code == 0
-    assert "Solution" in result.output
+    minvariance(resource_dir / "matrix.json", assets=20)
 
 
 def test_infeasible(resource_dir):
-    runner = CliRunner()
-    result = runner.invoke(minvariance, [str(resource_dir / "matrix_infeasible.json")])
-
-    assert result.exit_code > 0
+    with pytest.raises(CvxError):
+        minvariance(resource_dir / "matrix_infeasible.json")

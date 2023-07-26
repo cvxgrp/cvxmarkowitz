@@ -10,13 +10,7 @@ packages = [{include = "cvx"}]
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 cvxpy = "*"
-requests = { version = "*", optional = true }
-numpyencoder = { version = "*", optional = true }
-fire = { version = "^0.5.0", optional = true }
-
-
-[tool.poetry.extras]
-cli = ["numpyencoder", "requests", "fire"]
+fire = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "7.2.0"
@@ -48,9 +42,6 @@ cvxsimulator = { git = "https://github.com/cvxgrp/simulator", branch = "main"}
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-weather-fire = "cvx.cli.weather_fire:main"
 
 # Relevant documentation:
 # https://medium.com/clarityai-engineering/how-to-create-and-distribute-a-minimalist-cli-tool-with-python-poetry-click-and-pipx-c0580af4c026

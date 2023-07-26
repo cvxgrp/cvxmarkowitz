@@ -9,6 +9,7 @@ from cvx.markowitz.builder import Builder
 from cvx.markowitz.models.expected_returns import ExpectedReturns
 from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import ModelName as M
+from cvx.markowitz.names import ParameterName as P
 
 
 @dataclass(frozen=True)
@@ -29,12 +30,12 @@ class MaxSharpe(Builder):
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)
 
-        self.parameter["sigma_max"] = cp.Parameter(
+        self.parameter[P.SIGMA_MAX] = cp.Parameter(
             nonneg=True, name="maximal volatility"
         )
 
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
         self.constraints[C.RISK] = (
-            self.risk.estimate(self.variables) <= self.parameter["sigma_max"]
+            self.risk.estimate(self.variables) <= self.parameter[P.SIGMA_MAX]
         )

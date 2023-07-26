@@ -11,7 +11,7 @@ from cvx.linalg import cholesky
 from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.portfolios.min_var import MinVar, estimate_dimensions
+from cvx.markowitz.portfolios.min_var import MinVar
 
 
 @pytest.fixture()
@@ -128,24 +128,3 @@ def test_min_var_robust(solver):
     problem.solve(solver=solver)
 
     assert problem.value > objective
-
-
-def test_dimensions():
-    input_data = {
-        D.EXPOSURE: np.ones((2, 4)),
-        D.UPPER_BOUND_ASSETS: np.ones(4),
-        D.LOWER_BOUND_ASSETS: np.zeros(4),
-    }
-    assets, factors = estimate_dimensions(**input_data)
-    assert assets == 4
-    assert factors == 2
-
-
-def test_dimensions_no_exposure():
-    input_data = {
-        D.UPPER_BOUND_ASSETS: np.ones(4),
-        D.LOWER_BOUND_ASSETS: np.zeros(4),
-    }
-    assets, factors = estimate_dimensions(**input_data)
-    assert assets == 4
-    assert factors is None

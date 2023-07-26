@@ -35,3 +35,7 @@ class ConstraintName:
     LONG_ONLY = "long_only"
     LEVERAGE = "leverage"
     RISK = "risk"
+
+
+class ParameterName:
+    SIGMA_MAX = "sigma_max"

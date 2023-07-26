@@ -7,18 +7,6 @@ import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
 from cvx.markowitz.names import ConstraintName as C
-from cvx.markowitz.names import DataNames as D
-
-
-def estimate_dimensions(**kwargs):
-    """Estimate the dimensions of the problem from the input data"""
-    assets = kwargs[D.LOWER_BOUND_ASSETS].shape[0]
-    try:
-        factors = kwargs[D.EXPOSURE].shape[0]
-    except KeyError:
-        factors = None
-
-    return assets, factors
 
 
 @dataclass(frozen=True)

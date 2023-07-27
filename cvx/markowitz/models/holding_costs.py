@@ -17,7 +17,7 @@ from cvx.markowitz.utils.aux import fill_vector
 class HoldingCosts(Model):
     """Model for holding costs"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[D.HOLDING_COSTS] = cp.Parameter(
             shape=self.assets, name=D.HOLDING_COSTS, value=np.zeros(self.assets)
         )
@@ -27,7 +27,7 @@ class HoldingCosts(Model):
             cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS]))
         )
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         self.data[D.HOLDING_COSTS].value = fill_vector(
             num=self.assets, x=kwargs[D.HOLDING_COSTS]
         )

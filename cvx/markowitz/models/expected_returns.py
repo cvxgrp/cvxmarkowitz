@@ -8,7 +8,7 @@ from typing import Dict
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.builder import CvxError
+from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.utils.aux import fill_vector
@@ -18,7 +18,7 @@ from cvx.markowitz.utils.aux import fill_vector
 class ExpectedReturns(Model):
     """Model for expected returns"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[D.MU] = cp.Parameter(
             shape=self.assets,
             name=D.MU,
@@ -38,7 +38,7 @@ class ExpectedReturns(Model):
             "mu_uncertainty"
         ] @ cp.abs(variables[D.WEIGHTS])
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)
 

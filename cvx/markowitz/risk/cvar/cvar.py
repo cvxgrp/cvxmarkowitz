@@ -19,7 +19,7 @@ class CVar(Model):
     alpha: float = 0.95
     rows: int = 0
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # self.k = int(self.n * (1 - self.alpha))
         self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),
@@ -37,7 +37,7 @@ class CVar(Model):
         k = int(self.rows * (1 - self.alpha))
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         self.data[D.RETURNS].value = fill_matrix(
             rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
         )

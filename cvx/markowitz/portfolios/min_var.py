@@ -19,10 +19,10 @@ class MinVar(Builder):
     """
 
     @property
-    def objective(self):
+    def objective(self) -> cp.Objective:
         return cp.Minimize(self.risk.estimate(self.variables))
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         super().__post_init__()
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0

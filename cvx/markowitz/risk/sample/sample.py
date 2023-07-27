@@ -19,7 +19,7 @@ from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 class SampleCovariance(Model):
     """Risk model based on the Cholesky decomposition of the sample cov matrix"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[D.CHOLESKY] = cp.Parameter(
             shape=(self.assets, self.assets),
             name=D.CHOLESKY,
@@ -47,7 +47,7 @@ class SampleCovariance(Model):
             )
         )
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 
@@ -58,7 +58,9 @@ class SampleCovariance(Model):
             num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY]
         )
 
-    def constraints(self, variables):
+    def constraints(
+        self, variables: Dict[str, cp.Variable]
+    ) -> Dict[str, cp.Expression]:
         return {
             "dummy": variables[D._ABS]
             >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable

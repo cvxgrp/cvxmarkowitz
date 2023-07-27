@@ -17,14 +17,14 @@ class Bounds(Model):
     name: str = ""
     acting_on: str = "weights"
 
-    def estimate(self, variables: Dict[str, cp.Variable]):
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """No estimation for bounds"""
         raise NotImplementedError("No estimation for bounds")
 
-    def _f(self, str):
-        return f"{str}_{self.name}"
+    def _f(self, string: str) -> str:
+        return f"{string}_{self.name}"
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[self._f("lower")] = cp.Parameter(
             shape=self.assets,
             name=self._f("lower"),
@@ -36,7 +36,7 @@ class Bounds(Model):
             value=np.ones(self.assets),
         )
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         self.data[self._f("lower")].value = fill_vector(
             num=self.assets, x=kwargs[self._f("lower")]
         )

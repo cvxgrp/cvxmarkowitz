@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Any, Dict
 
 import cvxpy as cp
 
@@ -25,7 +25,7 @@ class Model(ABC):
         """
 
     @abstractmethod
-    def update(self, **kwargs):
+    def update(self, **kwargs: Dict[str, Any]) -> None:
         """
         Update the data in the risk model
         """

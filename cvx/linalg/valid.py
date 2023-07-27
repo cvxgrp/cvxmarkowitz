@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import numpy as np
+import numpy.typing as npt
 
 
-def valid(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def valid(
+    matrix: npt.NDArray[np.float64],
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """
     Construct the valid subset of matrix (correlation) matrix
     :param matrix: n x n matrix

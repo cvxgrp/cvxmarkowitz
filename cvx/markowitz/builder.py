@@ -4,9 +4,12 @@ from __future__ import annotations
 import pickle
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict
+from os import PathLike
+from typing import Dict, Optional
 
 import cvxpy as cp
+import numpy as np
+import numpy.typing as npt
 
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
@@ -16,7 +19,9 @@ from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.risk import FactorModel, SampleCovariance
 
 
-def deserialize(problem_file):
+def deserialize(
+    problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
+) -> _Problem:
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)
 
@@ -58,7 +63,7 @@ class _Problem:
     def value(self):
         return self.problem.value
 
-    def is_dpp(self):
+    def is_dpp(self) -> bool:
         return self.problem.is_dpp()
 
     @property
@@ -68,22 +73,24 @@ class _Problem:
                 yield (name, key), value
 
     @property
-    def parameter(self):
+    def parameter(self) -> Dict[str, cp.Parameter]:
         return self.problem.param_dict
 
     @property
-    def variables(self):
+    def variables(self) -> Dict[str, cp.Variable]:
         return self.problem.var_dict
 
     @property
-    def weights(self):
+    def weights(self) -> npt.NDArray[np.float64]:
         return self.variables[D.WEIGHTS].value
 
     @property
-    def factor_weights(self):
+    def factor_weights(self) -> npt.NDArray[np.float64]:
         return self.variables[D.FACTOR_WEIGHTS].value
 
-    def serialize(self, problem_file):
+    def serialize(
+        self, problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int
+    ) -> None:
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 
@@ -91,13 +98,13 @@ class _Problem:
 @dataclass(frozen=True)
 class Builder:
     assets: int = 0
-    factors: int = None
+    factors: Optional[int] = None
     model: Dict[str, Model] = field(default_factory=dict)
     constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
     variables: Dict[str, cp.Variable] = field(default_factory=dict)
     parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # pick the correct risk model
         if self.factors is not None:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
@@ -129,12 +136,12 @@ class Builder:
 
     @property
     @abstractmethod
-    def objective(self):
+    def objective(self) -> cp.Expression:
         """
         Return the objective function
         """
 
-    def build(self):
+    def build(self) -> _Problem:
         """
         Build the cvxpy problem
         """
@@ -150,13 +157,13 @@ class Builder:
         return _Problem(problem=problem, model=self.model)
 
     @property
-    def weights(self):
+    def weights(self) -> cp.Variable:
         return self.variables[D.WEIGHTS]
 
     @property
-    def risk(self):
+    def risk(self) -> Model:
         return self.model[M.RISK]
 
     @property
-    def factor_weights(self):
+    def factor_weights(self) -> cp.Variable:
         return self.variables[D.FACTOR_WEIGHTS]

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -20,7 +21,7 @@ class FactorModel(Model):
 
     factors: int = 0
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[D.EXPOSURE] = cp.Parameter(
             shape=(self.factors, self.assets),
             name=D.EXPOSURE,
@@ -53,7 +54,7 @@ class FactorModel(Model):
             nonneg=True,
         )
 
-    def estimate(self, variables) -> cp.Expression:
+    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         """
         Compute the total variance
         """
@@ -62,7 +63,7 @@ class FactorModel(Model):
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-    def _residual_risk(self, variables):
+    def _residual_risk(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return cp.norm2(
             cp.hstack(
                 [
@@ -75,7 +76,7 @@ class FactorModel(Model):
             )
         )
 
-    def _systematic_risk(self, variables):
+    def _systematic_risk(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
         return cp.norm2(
             cp.hstack(
                 [
@@ -85,7 +86,7 @@ class FactorModel(Model):
             )
         )
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> None:
         # check the keywords
         for key in self.data.keys():
             if key not in kwargs.keys():
@@ -131,7 +132,9 @@ class FactorModel(Model):
             num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY]
         )
 
-    def constraints(self, variables):
+    def constraints(
+        self, variables: Dict[str, cp.Variable]
+    ) -> Dict[str, cp.Expression]:
         # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
         return {
             "factors": variables[D.FACTOR_WEIGHTS]

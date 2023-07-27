@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import cvxpy as cp
+
+from cvx.markowitz.builder import Builder
+from cvx.markowitz.models.expected_returns import ExpectedReturns
+from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.names import ModelName as M
+from cvx.markowitz.names import ParameterName as P
+
+
+@dataclass(frozen=True)
+class SoftRisk(Builder):
+
+    """
+    maximize w^T mu - omega * (sigma - sigma_target)_+
+    subject to w >= 0, w^T 1 = 1, sigma <= sigma_max
+    """
+
+    @property
+    def objective(self):
+        expected_return = self.model[M.RETURN].estimate(self.variables)
+        risk = self.risk.estimate(self.variables)
+        soft_risk = self.parameter[P.OMEGA] * cp.pos(
+            risk - self.parameter[P.SIGMA_TARGET]
+        )
+        return cp.Maximize(expected_return - soft_risk)
+
+    def __post_init__(self):
+        super().__post_init__()
+
+        self.model[M.RETURN] = ExpectedReturns(assets=self.assets)
+
+        self.parameter[P.SIGMA_MAX] = cp.Parameter(nonneg=True, name="limit volatility")
+
+        self.parameter[P.SIGMA_TARGET] = cp.Parameter(
+            nonneg=True, name="target volatility"
+        )
+
+        self.parameter[P.OMEGA] = cp.Parameter(nonneg=True, name="risk priority")
+
+        self.constraints[C.LONG_ONLY] = self.weights >= 0
+        self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
+        self.constraints[C.RISK] = (
+            self.risk.estimate(self.variables) <= self.parameter[P.SIGMA_MAX]
+        )

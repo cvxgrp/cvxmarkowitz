@@ -8,7 +8,6 @@ from loguru import logger
 from cvx.linalg import cholesky
 from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import VariableName as V
 from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.portfolios.utils import approx
 
@@ -32,8 +31,7 @@ if __name__ == "__main__":
 
     # You can add constraints before you build the problem
     builder.constraints[C.CONCENTRATION] = (
-        cp.sum_largest(builder.variables[V.WEIGHTS], 2)
-        <= builder.parameter["max_concentration"]
+        cp.sum_largest(builder.weights, 2) <= builder.parameter["max_concentration"]
     )
 
     # here we add a constraints

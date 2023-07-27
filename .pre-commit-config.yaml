@@ -29,9 +29,7 @@ repos:
     hooks:
       - id: mypy
         files: cvx
-        # More work needed...
         args: [ --strict, --ignore-missing-imports, --explicit-package-bases ]
-        #args: [--ignore-missing-imports, --explicit-package-bases]
 
 
   # enforcing the use of new python syntax with pyupgrade

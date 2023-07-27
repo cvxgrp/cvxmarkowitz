@@ -12,6 +12,7 @@ import numpy as np
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.types import Types, UpdateData
 from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 
 
@@ -34,7 +35,7 @@ class SampleCovariance(Model):
         )
 
     # x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Types.Variables) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of
         self.cov"""
 
@@ -47,7 +48,7 @@ class SampleCovariance(Model):
             )
         )
 
-    def update(self, **kwargs) -> None:
+    def update(self, **kwargs: UpdateData) -> None:
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 

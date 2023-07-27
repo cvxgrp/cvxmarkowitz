@@ -5,9 +5,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Dict
 
 import cvxpy as cp
+
+from cvx.markowitz.types import Types, UpdateData
 
 
 @dataclass(frozen=True)
@@ -15,24 +17,22 @@ class Model(ABC):
     """Abstract risk model"""
 
     assets: int
-    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
-    data: Dict[str, cp.Parameter] = field(default_factory=dict)
+    parameter: Types.Parameter = field(default_factory=dict)
+    data: Types.Parameter = field(default_factory=dict)
 
     @abstractmethod
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Types.Variables) -> cp.Expression:
         """
         Estimate the variance given the portfolio weights
         """
 
     @abstractmethod
-    def update(self, **kwargs: Dict[str, Any]) -> None:
+    def update(self, **kwargs: UpdateData) -> None:
         """
         Update the data in the risk model
         """
 
-    def constraints(
-        self, variables: Dict[str, cp.Variable]
-    ) -> Dict[str, cp.Expression]:
+    def constraints(self, variables: Types.Variables) -> Dict[str, cp.Expression]:
         """
         Return the constraints for the risk model
         """

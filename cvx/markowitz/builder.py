@@ -5,23 +5,24 @@ import pickle
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Dict, Optional
+from typing import Any, Dict, Generator, Optional, Tuple
 
 import cvxpy as cp
 import numpy as np
-import numpy.typing as npt
 
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.risk import FactorModel, SampleCovariance
+from cvx.markowitz.risk.factor.factor import FactorModel
+from cvx.markowitz.risk.sample.sample import SampleCovariance
+from cvx.markowitz.types import Types, UpdateData
 
 
 def deserialize(
     problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
-) -> _Problem:
+) -> Any:
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)
 
@@ -31,7 +32,7 @@ class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: UpdateData) -> _Problem:
         """
         Update the problem
         """
@@ -48,7 +49,7 @@ class _Problem:
 
         return self
 
-    def solve(self, solver=cp.ECOS, **kwargs):
+    def solve(self, solver: str = cp.ECOS, **kwargs: Any) -> float:
         """
         Solve the problem
         """
@@ -57,40 +58,38 @@ class _Problem:
         if self.problem.status is not cp.OPTIMAL:
             raise CvxError(f"Problem status is {self.problem.status}")
 
-        return value
+        return float(value)
 
     @property
-    def value(self):
-        return self.problem.value
+    def value(self) -> float:
+        return float(self.problem.value)
 
     def is_dpp(self) -> bool:
-        return self.problem.is_dpp()
+        return bool(self.problem.is_dpp())
 
     @property
-    def data(self):
+    def data(self) -> Generator[Tuple[Tuple[str, str], Types.Matrix], None, None]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
 
     @property
-    def parameter(self) -> Dict[str, cp.Parameter]:
-        return self.problem.param_dict
+    def parameter(self) -> Types.Parameter:
+        return dict(self.problem.param_dict.items())
 
     @property
-    def variables(self) -> Dict[str, cp.Variable]:
-        return self.problem.var_dict
+    def variables(self) -> Types.Variables:
+        return dict(self.problem.var_dict.items())
 
     @property
-    def weights(self) -> npt.NDArray[np.float64]:
-        return self.variables[D.WEIGHTS].value
+    def weights(self) -> Types.Matrix:
+        return np.array(self.variables[D.WEIGHTS].value)
 
     @property
-    def factor_weights(self) -> npt.NDArray[np.float64]:
-        return self.variables[D.FACTOR_WEIGHTS].value
+    def factor_weights(self) -> Types.Matrix:
+        return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
-    def serialize(
-        self, problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int
-    ) -> None:
+    def serialize(self, problem_file: Types.File) -> None:
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 

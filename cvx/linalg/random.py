@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+from cvx.linalg.types import Matrix
 
-def rand_cov(n: int) -> np.typing.NDArray[np.float64]:
+
+def rand_cov(n: int) -> Matrix:
     a = np.random.randn(n, n)
-    return np.transpose(a) @ (a)
+    return np.array(np.transpose(a) @ (a))

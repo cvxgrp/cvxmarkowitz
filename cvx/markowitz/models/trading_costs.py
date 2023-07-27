@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
 
 import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.types import Types, UpdateData
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -25,7 +25,7 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Types.Variables) -> cp.Expression:
         return cp.sum(
             cp.power(
                 cp.abs(variables[D.WEIGHTS] - self.data["weights"]),
@@ -33,5 +33,5 @@ class TradingCosts(Model):
             )
         )
 
-    def update(self, **kwargs) -> None:
+    def update(self, **kwargs: UpdateData) -> None:
         self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])

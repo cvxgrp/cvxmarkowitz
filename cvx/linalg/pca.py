@@ -5,12 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
-import numpy.typing as npt
+
+from cvx.linalg.types import Matrix
 
 
 @dataclass
 class PCA:
-    returns: np.typing.NDArray[np.float64]
+    returns: Matrix
     n_components: int = 0
 
     def __post_init__(self) -> None:
@@ -37,21 +38,23 @@ class PCA:
         self.exposure = np.transpose(eigenvectors[:, : self.n_components])
 
     @property
-    def explained_variance(self) -> npt.NDArray[np.float64]:
-        return self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues)
+    def explained_variance(self) -> Matrix:
+        return np.array(
+            self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues)
+        )
 
     @property
-    def cov(self) -> npt.NDArray[np.float64]:
+    def cov(self) -> Matrix:
         return np.atleast_2d(np.cov(self.factors.T))
 
     @property
-    def systematic_returns(self) -> npt.NDArray[np.float64]:
-        return self.factors @ self.exposure
+    def systematic_returns(self) -> Matrix:
+        return np.array(self.factors @ self.exposure)
 
     @property
-    def idiosyncratic_returns(self) -> npt.NDArray[np.float64]:
+    def idiosyncratic_returns(self) -> Matrix:
         return self.returns - self.systematic_returns
 
     @property
-    def idiosyncratic_vola(self) -> npt.NDArray[np.float64]:
-        return np.std(self.idiosyncratic_returns, axis=0)
+    def idiosyncratic_vola(self) -> Matrix:
+        return np.array(np.std(self.idiosyncratic_returns, axis=0))

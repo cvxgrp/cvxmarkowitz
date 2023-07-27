@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import numpy as np
-import numpy.typing as npt
+
+from cvx.linalg.types import Matrix
 
 
-def valid(
-    matrix: npt.NDArray[np.float64],
-) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:
     """
     Construct the valid subset of matrix (correlation) matrix
     :param matrix: n x n matrix

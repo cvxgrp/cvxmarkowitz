@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-import numpy.typing as npt
+
+from cvx.markowitz.types import Types
 
 
-def fill_vector(x: npt.NDArray[np.float64], num: int) -> npt.NDArray[np.float64]:
+def fill_vector(x: Types.Matrix, num: int) -> Types.Matrix:
     """
     Fill a vector of length num with x
     """
@@ -12,9 +13,7 @@ def fill_vector(x: npt.NDArray[np.float64], num: int) -> npt.NDArray[np.float64]
     return z
 
 
-def fill_matrix(
-    x: npt.NDArray[np.float64], rows: int, cols: int
-) -> npt.NDArray[np.float64]:
+def fill_matrix(x: Types.Matrix, rows: int, cols: int) -> Types.Matrix:
     """
     Fill a matrix of size (rows, cols) with x
     """

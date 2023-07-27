@@ -9,6 +9,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
+from cvx.markowitz.types import Types, UpdateData
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -17,7 +18,7 @@ class Bounds(Model):
     name: str = ""
     acting_on: str = "weights"
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Types.Variables) -> cp.Expression:
         """No estimation for bounds"""
         raise NotImplementedError("No estimation for bounds")
 
@@ -36,7 +37,7 @@ class Bounds(Model):
             value=np.ones(self.assets),
         )
 
-    def update(self, **kwargs) -> None:
+    def update(self, **kwargs: UpdateData) -> None:
         self.data[self._f("lower")].value = fill_vector(
             num=self.assets, x=kwargs[self._f("lower")]
         )

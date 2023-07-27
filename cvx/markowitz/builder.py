@@ -17,7 +17,7 @@ from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
 from cvx.markowitz.risk.factor.factor import FactorModel
 from cvx.markowitz.risk.sample.sample import SampleCovariance
-from cvx.markowitz.types import Types, UpdateData
+from cvx.markowitz.types import File, Matrix, Parameter, Variables
 
 
 def deserialize(
@@ -32,7 +32,7 @@ class _Problem:
     problem: cp.Problem
     model: Dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs: UpdateData) -> _Problem:
+    def update(self, **kwargs: Matrix) -> _Problem:
         """
         Update the problem
         """
@@ -68,28 +68,28 @@ class _Problem:
         return bool(self.problem.is_dpp())
 
     @property
-    def data(self) -> Generator[Tuple[Tuple[str, str], Types.Matrix], None, None]:
+    def data(self) -> Generator[Tuple[Tuple[str, str], Matrix], None, None]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
 
     @property
-    def parameter(self) -> Types.Parameter:
+    def parameter(self) -> Parameter:
         return dict(self.problem.param_dict.items())
 
     @property
-    def variables(self) -> Types.Variables:
+    def variables(self) -> Variables:
         return dict(self.problem.var_dict.items())
 
     @property
-    def weights(self) -> Types.Matrix:
+    def weights(self) -> Matrix:
         return np.array(self.variables[D.WEIGHTS].value)
 
     @property
-    def factor_weights(self) -> Types.Matrix:
+    def factor_weights(self) -> Matrix:
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
-    def serialize(self, problem_file: Types.File) -> None:
+    def serialize(self, problem_file: File) -> None:
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 
@@ -100,8 +100,8 @@ class Builder:
     factors: Optional[int] = None
     model: Dict[str, Model] = field(default_factory=dict)
     constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
-    variables: Dict[str, cp.Variable] = field(default_factory=dict)
-    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
+    variables: Variables = field(default_factory=dict)
+    parameter: Parameter = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         # pick the correct risk model

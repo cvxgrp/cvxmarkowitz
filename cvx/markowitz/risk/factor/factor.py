@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
 
 import cvxpy as cp
 import numpy as np
@@ -12,7 +11,7 @@ import numpy as np
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Types, UpdateData
+from cvx.markowitz.types import Expressions, Matrix, Variables
 from cvx.markowitz.utils.aux import fill_matrix, fill_vector
 
 
@@ -55,7 +54,7 @@ class FactorModel(Model):
             nonneg=True,
         )
 
-    def estimate(self, variables: Types.Variables) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         """
         Compute the total variance
         """
@@ -64,7 +63,7 @@ class FactorModel(Model):
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-    def _residual_risk(self, variables: Types.Variables) -> cp.Expression:
+    def _residual_risk(self, variables: Variables) -> cp.Expression:
         return cp.norm2(
             cp.hstack(
                 [
@@ -77,7 +76,7 @@ class FactorModel(Model):
             )
         )
 
-    def _systematic_risk(self, variables: Types.Variables) -> cp.Expression:
+    def _systematic_risk(self, variables: Variables) -> cp.Expression:
         return cp.norm2(
             cp.hstack(
                 [
@@ -87,7 +86,7 @@ class FactorModel(Model):
             )
         )
 
-    def update(self, **kwargs: UpdateData) -> None:
+    def update(self, **kwargs: Matrix) -> None:
         # check the keywords
         for key in self.data.keys():
             if key not in kwargs.keys():
@@ -133,10 +132,7 @@ class FactorModel(Model):
             num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY]
         )
 
-    def constraints(
-        self, variables: Dict[str, cp.Variable]
-    ) -> Dict[str, cp.Expression]:
-        # factor_weights = kwargs.get("factor_weights", self.data["exposure"] @ weights)
+    def constraints(self, variables: Variables) -> Expressions:
         return {
             "factors": variables[D.FACTOR_WEIGHTS]
             == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],

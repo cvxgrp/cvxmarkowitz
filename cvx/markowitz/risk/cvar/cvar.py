@@ -8,7 +8,7 @@ import numpy as np
 
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Types, UpdateData
+from cvx.markowitz.types import Matrix, Variables
 from cvx.markowitz.utils.aux import fill_matrix
 
 
@@ -27,7 +27,7 @@ class CVar(Model):
             value=np.zeros((self.rows, self.assets)),
         )
 
-    def estimate(self, variables: Types.Variables) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
@@ -37,7 +37,7 @@ class CVar(Model):
         k = int(self.rows * (1 - self.alpha))
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
-    def update(self, **kwargs: UpdateData) -> None:
+    def update(self, **kwargs: Matrix) -> None:
         self.data[D.RETURNS].value = fill_matrix(
             rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
         )

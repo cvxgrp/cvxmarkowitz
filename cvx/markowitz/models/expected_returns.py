@@ -10,7 +10,7 @@ import numpy as np
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Types, UpdateData
+from cvx.markowitz.types import Matrix, Variables
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -33,12 +33,12 @@ class ExpectedReturns(Model):
             nonneg=True,
         )
 
-    def estimate(self, variables: Types.Variables) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[
             "mu_uncertainty"
         ] @ cp.abs(variables[D.WEIGHTS])
 
-    def update(self, **kwargs: UpdateData) -> None:
+    def update(self, **kwargs: Matrix) -> None:
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)
 

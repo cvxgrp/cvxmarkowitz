@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Model for trading costs"""
 from __future__ import annotations
 

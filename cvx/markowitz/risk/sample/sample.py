@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Risk models based on the sample covariance matrix
 """
 from __future__ import annotations

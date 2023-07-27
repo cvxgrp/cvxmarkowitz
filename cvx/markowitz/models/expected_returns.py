@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Model for expected returns"""
 from __future__ import annotations
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Factor risk model
 """
 from __future__ import annotations

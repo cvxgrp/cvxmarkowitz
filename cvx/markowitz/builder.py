@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 import pickle
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Any, Dict, Generator, Optional, Tuple
+from typing import Any, Generator
 
 import cvxpy as cp
 import numpy as np
@@ -30,7 +29,7 @@ def deserialize(
 @dataclass(frozen=True)
 class _Problem:
     problem: cp.Problem
-    model: Dict[str, Model] = field(default_factory=dict)
+    model: dict[str, Model] = field(default_factory=dict)
 
     def update(self, **kwargs: Matrix) -> _Problem:
         """
@@ -68,7 +67,7 @@ class _Problem:
         return bool(self.problem.is_dpp())
 
     @property
-    def data(self) -> Generator[Tuple[Tuple[str, str], Matrix], None, None]:
+    def data(self) -> Generator[tuple[tuple[str, str], Matrix], None, None]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
@@ -97,9 +96,9 @@ class _Problem:
 @dataclass(frozen=True)
 class Builder:
     assets: int = 0
-    factors: Optional[int] = None
-    model: Dict[str, Model] = field(default_factory=dict)
-    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
+    factors: int | None = None
+    model: dict[str, Model] = field(default_factory=dict)
+    constraints: dict[str, cp.Constraint] = field(default_factory=dict)
     variables: Variables = field(default_factory=dict)
     parameter: Parameter = field(default_factory=dict)
 

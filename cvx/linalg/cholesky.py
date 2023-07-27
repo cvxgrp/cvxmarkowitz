@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Cholesky decomposition with numpy"""
 from __future__ import annotations
 

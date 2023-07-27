@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from typing import Any, Generator, Tuple
 
 import cvxpy as cp

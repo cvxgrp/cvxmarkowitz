@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Abstract cp model
 """
 from __future__ import annotations

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Extract valid submatrix of a matrix"""
 from __future__ import annotations
 

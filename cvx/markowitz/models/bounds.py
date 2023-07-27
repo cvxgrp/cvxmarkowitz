@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Bounds"""
 from __future__ import annotations
 

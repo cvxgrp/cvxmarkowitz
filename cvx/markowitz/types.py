@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from os import PathLike
 from typing import Dict, Union
 

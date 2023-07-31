@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 """Cholesky decomposition with numpy"""
 from __future__ import annotations
 
 import numpy as np
 
+from cvx.linalg.types import Matrix
 
-def cholesky(cov: np.ndarray) -> np.ndarray:
+
+def cholesky(cov: Matrix) -> Matrix:
     """Compute the cholesky decomposition of a covariance matrix"""
     # upper triangular part of the cholesky decomposition
     # np.linalg.cholesky(cov) is the lower triangular part

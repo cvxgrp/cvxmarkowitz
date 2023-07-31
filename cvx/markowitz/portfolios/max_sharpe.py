@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -22,10 +21,10 @@ class MaxSharpe(Builder):
     """
 
     @property
-    def objective(self):
+    def objective(self) -> cp.Objective:
         return cp.Maximize(self.model[M.RETURN].estimate(self.variables))
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         super().__post_init__()
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)

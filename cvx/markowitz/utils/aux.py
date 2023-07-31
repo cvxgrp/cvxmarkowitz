@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 import numpy as np
 
+from cvx.markowitz.types import Matrix
 
-def fill_vector(x, num):
+
+def fill_vector(x: Matrix, num: int) -> Matrix:
     """
     Fill a vector of length num with x
     """
@@ -11,7 +12,7 @@ def fill_vector(x, num):
     return z
 
 
-def fill_matrix(x, rows, cols):
+def fill_matrix(x: Matrix, rows: int, cols: int) -> Matrix:
     """
     Fill a matrix of size (rows, cols) with x
     """

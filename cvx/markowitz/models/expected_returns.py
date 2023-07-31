@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 """Model for expected returns"""
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
 
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.builder import CvxError
+from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.types import Matrix, Variables
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -18,7 +17,7 @@ from cvx.markowitz.utils.aux import fill_vector
 class ExpectedReturns(Model):
     """Model for expected returns"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.data[D.MU] = cp.Parameter(
             shape=self.assets,
             name=D.MU,
@@ -33,12 +32,12 @@ class ExpectedReturns(Model):
             nonneg=True,
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[
             "mu_uncertainty"
         ] @ cp.abs(variables[D.WEIGHTS])
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Matrix) -> None:
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)
 

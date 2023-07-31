@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
 
 import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.types import Matrix, Variables
 from cvx.markowitz.utils.aux import fill_matrix
 
 
@@ -19,7 +18,7 @@ class CVar(Model):
     alpha: float = 0.95
     rows: int = 0
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # self.k = int(self.n * (1 - self.alpha))
         self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),
@@ -27,7 +26,7 @@ class CVar(Model):
             value=np.zeros((self.rows, self.assets)),
         )
 
-    def estimate(self, variables: Dict[str, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov"""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
@@ -37,7 +36,7 @@ class CVar(Model):
         k = int(self.rows * (1 - self.alpha))
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Matrix) -> None:
         self.data[D.RETURNS].value = fill_matrix(
             rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
         )

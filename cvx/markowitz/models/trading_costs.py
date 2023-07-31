@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 """Model for trading costs"""
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
 
 import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
+from cvx.markowitz.types import Matrix, Variables
 from cvx.markowitz.utils.aux import fill_vector
 
 
@@ -17,7 +16,7 @@ from cvx.markowitz.utils.aux import fill_vector
 class TradingCosts(Model):
     """Model for trading costs"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.parameter["power"] = cp.Parameter(shape=1, name="power", value=np.ones(1))
 
         # intial weights before rebalancing
@@ -25,7 +24,7 @@ class TradingCosts(Model):
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )
 
-    def estimate(self, variables: Dict[str | D, cp.Variable]) -> cp.Expression:
+    def estimate(self, variables: Variables) -> cp.Expression:
         return cp.sum(
             cp.power(
                 cp.abs(variables[D.WEIGHTS] - self.data["weights"]),
@@ -33,5 +32,5 @@ class TradingCosts(Model):
             )
         )
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Matrix) -> None:
         self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])

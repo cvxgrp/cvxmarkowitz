@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 """Extract valid submatrix of a matrix"""
 from __future__ import annotations
 
 import numpy as np
 
+from cvx.linalg.types import Matrix
 
-def valid(matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+
+def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:
     """
     Construct the valid subset of matrix (correlation) matrix
     :param matrix: n x n matrix

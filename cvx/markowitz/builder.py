@@ -1,22 +1,27 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 import pickle
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict
+from os import PathLike
+from typing import Any, Generator
 
 import cvxpy as cp
+import numpy as np
 
 from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.models.bounds import Bounds
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.risk import FactorModel, SampleCovariance
+from cvx.markowitz.risk.factor.factor import FactorModel
+from cvx.markowitz.risk.sample.sample import SampleCovariance
+from cvx.markowitz.types import File, Matrix, Parameter, Variables
 
 
-def deserialize(problem_file):
+def deserialize(
+    problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
+) -> Any:
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)
 
@@ -24,9 +29,9 @@ def deserialize(problem_file):
 @dataclass(frozen=True)
 class _Problem:
     problem: cp.Problem
-    model: Dict[str, Model] = field(default_factory=dict)
+    model: dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Matrix) -> _Problem:
         """
         Update the problem
         """
@@ -43,7 +48,7 @@ class _Problem:
 
         return self
 
-    def solve(self, solver=cp.ECOS, **kwargs):
+    def solve(self, solver: str = cp.ECOS, **kwargs: Any) -> float:
         """
         Solve the problem
         """
@@ -52,38 +57,38 @@ class _Problem:
         if self.problem.status is not cp.OPTIMAL:
             raise CvxError(f"Problem status is {self.problem.status}")
 
-        return value
+        return float(value)
 
     @property
-    def value(self):
-        return self.problem.value
+    def value(self) -> float:
+        return float(self.problem.value)
 
-    def is_dpp(self):
-        return self.problem.is_dpp()
+    def is_dpp(self) -> bool:
+        return bool(self.problem.is_dpp())
 
     @property
-    def data(self):
+    def data(self) -> Generator[tuple[tuple[str, str], Matrix], None, None]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
 
     @property
-    def parameter(self):
-        return self.problem.param_dict
+    def parameter(self) -> Parameter:
+        return dict(self.problem.param_dict.items())
 
     @property
-    def variables(self):
-        return self.problem.var_dict
+    def variables(self) -> Variables:
+        return dict(self.problem.var_dict.items())
 
     @property
-    def weights(self):
-        return self.variables[D.WEIGHTS].value
+    def weights(self) -> Matrix:
+        return np.array(self.variables[D.WEIGHTS].value)
 
     @property
-    def factor_weights(self):
-        return self.variables[D.FACTOR_WEIGHTS].value
+    def factor_weights(self) -> Matrix:
+        return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
-    def serialize(self, problem_file):
+    def serialize(self, problem_file: File) -> None:
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 
@@ -91,13 +96,13 @@ class _Problem:
 @dataclass(frozen=True)
 class Builder:
     assets: int = 0
-    factors: int = None
-    model: Dict[str, Model] = field(default_factory=dict)
-    constraints: Dict[str, cp.Constraint] = field(default_factory=dict)
-    variables: Dict[str, cp.Variable] = field(default_factory=dict)
-    parameter: Dict[str, cp.Parameter] = field(default_factory=dict)
+    factors: int | None = None
+    model: dict[str, Model] = field(default_factory=dict)
+    constraints: dict[str, cp.Constraint] = field(default_factory=dict)
+    variables: Variables = field(default_factory=dict)
+    parameter: Parameter = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # pick the correct risk model
         if self.factors is not None:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
@@ -129,12 +134,12 @@ class Builder:
 
     @property
     @abstractmethod
-    def objective(self):
+    def objective(self) -> cp.Expression:
         """
         Return the objective function
         """
 
-    def build(self):
+    def build(self) -> _Problem:
         """
         Build the cvxpy problem
         """
@@ -150,13 +155,13 @@ class Builder:
         return _Problem(problem=problem, model=self.model)
 
     @property
-    def weights(self):
+    def weights(self) -> cp.Variable:
         return self.variables[D.WEIGHTS]
 
     @property
-    def risk(self):
+    def risk(self) -> Model:
         return self.model[M.RISK]
 
     @property
-    def factor_weights(self):
+    def factor_weights(self) -> cp.Variable:
         return self.variables[D.FACTOR_WEIGHTS]

@@ -22,13 +22,8 @@ jupyterlab = "*"
 jupyter-book = "0.15.1"
 pyyaml = "6.0.0"
 
-[tool.poetry.group.linting.dependencies]
-ruff = "0.0.277"
-pre-commit = "*"
-
 [tool.poetry.group.dev.dependencies]
 pandas = "*"
-yfinance = "*"
 plotly = "*"
 loguru = "*"
 scikit-learn = "*"
@@ -48,7 +43,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 select = ["E", "F", "I"]
 line-length = 100
-target-version = "py38"
+target-version = "py310"
 exclude = [
     "*__init__.py"
 ]

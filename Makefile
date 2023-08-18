@@ -17,6 +17,7 @@ kernel: install ## Create a kernel for jupyter lab
 
 .PHONY: fmt
 fmt:  ## Run autoformatting and linting
+	@poetry run pip install pre-commit
 	@poetry run pre-commit run --all-files
 
 .PHONY: test
@@ -49,6 +50,6 @@ help:  ## Display this help screen
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' | sort
 
 .PHONY: jupyter
-jupyter: ## Start jupyter lab
+jupyter: kernel ## Start jupyter lab
 	@poetry run pip install jupyterlab
 	@poetry run jupyter lab

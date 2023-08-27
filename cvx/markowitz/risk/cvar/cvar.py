@@ -8,7 +8,7 @@ import numpy as np
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.types import Matrix, Variables
-from cvx.markowitz.utils.aux import fill_matrix
+from cvx.markowitz.utils.fill import fill_matrix
 
 
 @dataclass(frozen=True)

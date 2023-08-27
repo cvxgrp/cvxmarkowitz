@@ -10,7 +10,7 @@ from cvx.markowitz.cvxerror import CvxError
 from cvx.markowitz.model import Model
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.types import Matrix, Variables
-from cvx.markowitz.utils.aux import fill_vector
+from cvx.markowitz.utils.fill import fill_vector
 
 
 @dataclass(frozen=True)

@@ -15,3 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: cvxgrp/.github/actions/test@main
+
+    # Uncomment once the package is public
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v2

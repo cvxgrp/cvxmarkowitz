@@ -22,7 +22,7 @@ class SoftRisk(Builder):
 
     _sigma: cp.Variable = cp.Variable(nonneg=True, name="sigma")
     _sigma_target_times_omega: cp.CallbackParam = cp.CallbackParam(
-        nonneg=True, name="sigma_target_times_omega"
+        callback=lambda p, q: 0.0, nonneg=True, name="sigma_target_times_omega"
     )
 
     @property

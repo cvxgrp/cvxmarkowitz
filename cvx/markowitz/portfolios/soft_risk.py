@@ -20,12 +20,16 @@ class SoftRisk(Builder):
     subject to w >= 0, w^T 1 = 1, sigma <= sigma_max
     """
 
+    _sigma: cp.Variable = cp.Variable(nonneg=True, name="sigma")
+    _sigma_target_times_omega: cp.CallbackParam = cp.CallbackParam(
+        nonneg=True, name="sigma_target_times_omega"
+    )
+
     @property
     def objective(self):
         expected_return = self.model[M.RETURN].estimate(self.variables)
-        risk = self.risk.estimate(self.variables)
-        soft_risk = self.parameter[P.OMEGA] * cp.pos(
-            risk - self.parameter[P.SIGMA_TARGET]
+        soft_risk = cp.pos(
+            self.parameter[P.OMEGA] * self._sigma - self._sigma_target_times_omega
         )
         return cp.Maximize(expected_return - soft_risk)
 
@@ -41,9 +45,11 @@ class SoftRisk(Builder):
         )
 
         self.parameter[P.OMEGA] = cp.Parameter(nonneg=True, name="risk priority")
+        self._sigma_target_times_omega._callback = lambda: (
+            self.parameter[P.SIGMA_TARGET].value * self.parameter[P.OMEGA].value
+        )
 
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
-        self.constraints[C.RISK] = (
-            self.risk.estimate(self.variables) <= self.parameter[P.SIGMA_MAX]
-        )
+        self.constraints[C.RISK] = self.risk.estimate(self.variables) <= self._sigma
+        self.constraints["max_risk"] = self._sigma <= self.parameter[P.SIGMA_MAX]

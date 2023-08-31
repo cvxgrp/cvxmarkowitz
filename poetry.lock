@@ -965,16 +965,16 @@ test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "mosek"
-version = "10.1.10"
+version = "10.1.11"
 description = "Python API for Mosek"
 optional = false
 python-versions = "<3.12,>=3.7"
 files = [
-    {file = "Mosek-10.1.10-cp37-abi3-macosx_10_15_x86_64.whl", hash = "sha256:d2e38d54c38e90fafe3a148d0c6d4a973365d06fbd07fabbfa12e8475287c333"},
-    {file = "Mosek-10.1.10-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:cceaf7754bc1991b4f92ce08b52ee3b0bba4d0b351e9c3e8f80e2a5466a92b8f"},
-    {file = "Mosek-10.1.10-cp37-abi3-manylinux_2_29_aarch64.whl", hash = "sha256:95d6f46b9b8efe027c6a9082c51915d4e63b2e0164d1d4273b9c087c0a51e2e4"},
-    {file = "Mosek-10.1.10-cp37-abi3-win_amd64.whl", hash = "sha256:f7fae0eef73cb071a5cbc9e026b1a0d8f9adcf20be169860b754d3d6f26e56a6"},
-    {file = "Mosek-10.1.10-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:8a7fae8e125c951bc47b545b8f26041bc19fe6a9ef9e564795b855d88285fd82"},
+    {file = "Mosek-10.1.11-cp37-abi3-macosx_10_15_x86_64.whl", hash = "sha256:d283af2fddf789cc27ce1f78b67b4cf1782acc1883f85a7abb4a9acc26545931"},
+    {file = "Mosek-10.1.11-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:8d21f99de2fac5bc6878c26a318c65309c0e80e4f4f7232f3ed061f70e67dd7f"},
+    {file = "Mosek-10.1.11-cp37-abi3-manylinux_2_29_aarch64.whl", hash = "sha256:80bc1c4ff86904f316acf6957ebbbcf6837dfa9c4d26b5921a5d041f7f150913"},
+    {file = "Mosek-10.1.11-cp37-abi3-win_amd64.whl", hash = "sha256:70d018c9386be84577239c559ec657253600a080db1b6ca90b439a2dbf30ff9c"},
+    {file = "Mosek-10.1.11-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:b4ce5c533eac78dc15563a5d681a4165e650acca93ea8d1e1061290700d8f325"},
 ]
 
 [package.dependencies]
@@ -1129,8 +1129,8 @@ files = [
 [package.dependencies]
 numpy = [
     {version = ">=1.20.3", markers = "python_version < \"3.10\""},
-    {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
     {version = ">=1.21.0", markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
+    {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"

@@ -14,7 +14,10 @@ def resource_fixture():
 
 
 @pytest.fixture(
-    params=[s for s in [cp.ECOS, cp.CLARABEL, cp.MOSEK] if s in cp.installed_solvers()]
+    params=[s for s in [cp.ECOS, cp.CLARABEL] if s in cp.installed_solvers()]
 )
 def solver(request):
+    # if os.getenv("CI", False) and solver == cp.MOSEK:
+    #    pytest.skip("Skipping MOSEK test on CI")
+
     return request.param

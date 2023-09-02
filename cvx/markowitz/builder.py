@@ -145,7 +145,7 @@ class Builder:
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
-        # assert problem.is_dpp(), "Problem is not DPP"
+        assert problem.is_dpp(), "Problem is not DPP"
 
         return _Problem(problem=problem, model=self.model)
 

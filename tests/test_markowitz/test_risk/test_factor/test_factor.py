@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 import cvxpy as cp
 import numpy as np
 import pandas as pd
@@ -59,11 +57,8 @@ def test_minvar(returns):
     assert problem.is_dpp()
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_estimate_risk(solver):
     """Test the estimate() method"""
-    if os.getenv("CI", False) and solver == cp.MOSEK:
-        pytest.skip("Skipping MOSEK test on CI")
 
     np.random.seed(42)
 

@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import os
-
-import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -61,11 +58,7 @@ def test_variables(problem):
     assert problem.variables.keys() == {D.WEIGHTS, D._ABS}
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_var(solver):
-    if os.getenv("CI", False) and solver == cp.MOSEK:
-        pytest.skip("Skipping MOSEK test on CI")
-
     problem = MinVar(assets=4).build()
 
     problem.update(
@@ -88,11 +81,7 @@ def test_min_var(solver):
     assert objective == pytest.approx(0.9354143, abs=1e-5)
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_min_var_robust(solver):
-    if os.getenv("CI", False) and solver == cp.MOSEK:
-        pytest.skip("Skipping MOSEK test on CI")
-
     # define the problem
     problem = MinVar(assets=4).build()
 

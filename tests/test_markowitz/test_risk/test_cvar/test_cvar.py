@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import os
-
-import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -12,11 +9,8 @@ from cvx.markowitz.portfolios.min_var import MinVar
 from cvx.markowitz.risk import CVar
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.MOSEK, cp.CLARABEL])
 def test_estimate_risk(solver):
     """Test the estimate() method"""
-    if os.getenv("CI", False) and solver == cp.MOSEK:
-        pytest.skip("Skipping MOSEK test on CI")
 
     model = CVar(alpha=0.95, rows=50, assets=14)
 

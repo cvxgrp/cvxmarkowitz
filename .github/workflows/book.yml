@@ -9,22 +9,17 @@ jobs:
   sphinx:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v3
       - uses: cvxgrp/.github/actions/sphinx@main
 
   test:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v3
       - uses: cvxgrp/.github/actions/test@main
 
   jupyter:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v3
       - uses: cvxgrp/.github/actions/jupyter@main
-        with:
-          kernel: "markowitz"
 
   book:
     runs-on: "ubuntu-latest"
@@ -34,28 +29,4 @@ jobs:
       contents: write
 
     steps:
-
-      - name: Check out repository
-        uses: actions/checkout@v3
-
-      - name: Download Book
-        uses: actions/download-artifact@v3
-        with:
-          name: book
-          path: .book
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: sphinx
-          path: .book/artifacts/sphinx
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: tests
-          path: .book/artifacts/tests
-
-      - name: GitHub Pages action
-        uses: JamesIves/github-pages-deploy-action@v4.4.3
-        with:
-          branch: gh-pages          # The branch the action should deploy to.
-          folder: .book              # The folder the action should deploy.
+      - uses: cvxgrp/.github/actions/book@main

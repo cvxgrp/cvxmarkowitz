@@ -8,36 +8,25 @@ repository = "https://github.com/cvxgrp/cvxmarkowitz"
 packages = [{include = "cvx"}]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.8,<3.12"
 cvxpy = "*"
 fire = "*"
 
 [tool.poetry.group.test.dependencies]
-pytest = "7.2.0"
-pytest-cov = "4.0.0"
+pytest = "7.4.0"
+pytest-cov = "4.1.0"
 mock = "*"
-
-[tool.poetry.group.jupyter.dependencies]
-jupyterlab = "*"
-jupyter-book = "0.15.1"
-pyyaml = "6.0.0"
-
-[tool.poetry.group.linting.dependencies]
-pylint = "*"
-ruff = "0.0.277"
-pre-commit = "*"
-black = "23.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pandas = "*"
-yfinance = "*"
 plotly = "*"
 loguru = "*"
 scikit-learn = "*"
 cvxpyanalyzer = "*"
 clarabel = "^0.5.1"
 mosek = "*"
-cvxsimulator = { git = "https://github.com/cvxgrp/simulator", branch = "main"}
+cvxsimulator = ">=0.7.3"
+cvxbson= "*"
 
 [build-system]
 requires = ["poetry-core"]
@@ -49,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 select = ["E", "F", "I"]
 line-length = 100
-target-version = "py38"
+target-version = "py310"
 exclude = [
     "*__init__.py"
 ]

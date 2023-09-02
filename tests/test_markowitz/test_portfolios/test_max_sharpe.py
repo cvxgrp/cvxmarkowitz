@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import os
-
-import cvxpy as cp
 import numpy as np
 import pytest
 
@@ -49,11 +46,7 @@ def test_models_problem(problem):
     assert problem.model.keys() == {M.BOUND_ASSETS, M.RETURN, M.RISK}
 
 
-@pytest.mark.parametrize("solver", [cp.ECOS, cp.CLARABEL, cp.MOSEK])
 def test_max_sharpe(solver, problem):
-    if os.getenv("CI", False) and solver == cp.MOSEK:
-        pytest.skip("Skipping MOSEK test on CI")
-
     problem.update(
         **{
             D.CHOLESKY: cholesky(np.array([[1.0, 0.6], [0.6, 2.0]])),

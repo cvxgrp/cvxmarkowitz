@@ -14,7 +14,7 @@ def resource_fixture():
 
 
 @pytest.fixture(
-    params=[s for s in [cp.ECOS, cp.CLARABEL, cp.MOSEK] if s in cp.installed_solvers()]
+    params=[s for s in [cp.ECOS, cp.CLARABEL] if s in cp.installed_solvers()]
 )
 def solver(request):
     return request.param

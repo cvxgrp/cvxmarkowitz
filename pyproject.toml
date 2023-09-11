@@ -24,7 +24,6 @@ loguru = "*"
 scikit-learn = "*"
 cvxpyanalyzer = "*"
 clarabel = "^0.5.1"
-mosek = "*"
 cvxsimulator = ">=0.7.3"
 cvxbson= "*"
 

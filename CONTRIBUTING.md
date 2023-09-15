@@ -1,4 +1,8 @@
-# Contributing to CVXMARKOWITZ
+---
+PACKAGE_NAME = "CVXMARKOWITZ"
+---
+
+# Contributing to {{ PACKAGE_NAME }}
 
 This document is a guide to contributing to CVXMARKOWITZ.
 
@@ -41,8 +45,7 @@ pull request will trigger continuous integration tests for many different
 Python versions and different platforms. If these tests start failing, please
 fix your code and send another commit, which will re-trigger the tests.
 
-If you'd like to add a new feature to CVXMARKOWITZ, or a new example to our
-XXX[library](https://www.cvxpy.org/examples/index.html)XXX, please do propose your
+If you'd like to add a new feature to CVXMARKOWITZ, please do propose your
 change on a Github issue, to make sure that your priorities align with ours.
 
 If you'd like to contribute code but don't know where to start, try one of the
@@ -51,8 +54,6 @@ following:
 - Read the CVXPY source and enhance the documentation, or address TODOs
 - Browse the [issue tracker](https://github.com/cvxpy/cvxpy/issues), and
   look for the issues tagged "help wanted".
-- Polish the [example library](https://www.cvxpy.org/examples/index.html) or
-  add new examples
 
 ## License
 
@@ -85,8 +86,8 @@ tests.
 
 ## Running unit tests
 
-We use `pytest` to run our unit tests, which you can install with `pip install pytest`.
-To run all unit tests, `cd` into `cvxpy/tests` and run the following command:
+We use `pytest` to run our unit tests.
+To run all unit tests run the following command:
 
 ```bash
 make test

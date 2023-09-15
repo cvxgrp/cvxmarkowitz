@@ -10,15 +10,15 @@ to help out.
 Contributions are made through
 [pull requests](https://help.github.com/articles/using-pull-requests/).
 Before sending a pull request, make sure you do the following:
+
 - Run 'make fmt' to make sure your code adheres to our [coding style](#code-style).
   This step also includes our license on top of your new files.
 - [Write unit tests](#writing-unit-tests)
 - Run the [unit tests](#running-unit-tests) and check that they're passing
 
-
 ## Building CVXMARKOWITZ from source
 
-You'll need to build CVXMARKOWITZ locally in order to start editing code. 
+You'll need to build CVXMARKOWITZ locally in order to start editing code.
 To install CVXMARKOWITZ from source, clone the Github repository, navigate to the
 repository root, and run the following command:
 
@@ -47,11 +47,12 @@ change on a Github issue, to make sure that your priorities align with ours.
 
 If you'd like to contribute code but don't know where to start, try one of the
 following:
-* Read the CVXPY source and enhance the documentation, or address TODOs
-* Browse the [issue tracker](https://github.com/cvxpy/cvxpy/issues), and
+
+- Read the CVXPY source and enhance the documentation, or address TODOs
+- Browse the [issue tracker](https://github.com/cvxpy/cvxpy/issues), and
   look for the issues tagged "help wanted".
-* Polish the [example library](https://www.cvxpy.org/examples/index.html) or add new examples
-* Add a [benchmark](https://github.com/cvxpy/cvxpy/tree/master/cvxpy/tests/test_benchmarks.py)
+- Polish the [example library](https://www.cvxpy.org/examples/index.html) or
+  add new examples
 
 ## License
 
@@ -63,7 +64,7 @@ We use black and ruff to enforce our Python coding style.
 Before sending us a pull request, navigate to the project root
 and run
 
-```
+```bash
 make fmt
 ```
 
@@ -79,7 +80,8 @@ contains many unit tests. When adding tests, try to find a file in which your
 tests should belong; if you're testing a new feature, you might want to create
 a new test file.
 
-We use the popular Python [pytest](https://docs.pytest.org/en/) framework for our tests. 
+We use the popular Python [pytest](https://docs.pytest.org/en/) framework for our
+tests.
 
 ## Running unit tests
 

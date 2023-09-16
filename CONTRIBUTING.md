@@ -2,7 +2,7 @@
 
 This document is a guide to contributing to cvxmarkowitz
 
-We welcome all contributions. You don't need to be an expert (in optimization) 
+We welcome all contributions. You don't need to be an expert (in optimization)
 to help out.
 
 ## Checklist

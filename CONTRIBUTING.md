@@ -1,12 +1,8 @@
----
-PACKAGE_NAME = "CVXMARKOWITZ"
----
+# Contributing to cvxmarkowitz
 
-# Contributing to {{ PACKAGE_NAME }}
+This document is a guide to contributing to cvxmarkowitz
 
-This document is a guide to contributing to CVXMARKOWITZ.
-
-We welcome all contributions. You don't need to be an expert in optimization
+We welcome all contributions. You don't need to be an expert (in optimization) 
 to help out.
 
 ## Checklist
@@ -20,10 +16,10 @@ Before sending a pull request, make sure you do the following:
 - [Write unit tests](#writing-unit-tests)
 - Run the [unit tests](#running-unit-tests) and check that they're passing
 
-## Building CVXMARKOWITZ from source
+## Building cvxmarkowitz from source
 
-You'll need to build CVXMARKOWITZ locally in order to start editing code.
-To install CVXMARKOWITZ from source, clone the Github repository, navigate to the
+You'll need to build cvxmarkowitz locally in order to start editing code.
+To install cvxmarkowitz from source, clone the Github repository, navigate to the
 repository root, and run the following command:
 
 ```bash
@@ -34,25 +30,25 @@ We assume you have [poetry](https://python-poetry.org) installed.
 
 ## Contributing code
 
-To contribute to CVXMARKOWITZ, send us pull requests. For those new to contributing,
+To contribute to cvxmarkowitz, send us pull requests. For those new to contributing,
 check out Github's
 [guide](https://help.github.com/articles/using-pull-requests/).
 
-Once you've made your pull request, a member of the CVXMARKOWITZ development team
+Once you've made your pull request, a member of the cvxmarkowitz development team
 will assign themselves to review it. You might have a few back-and-forths
 with your reviewer before it is accepted, which is completely normal. Your
 pull request will trigger continuous integration tests for many different
 Python versions and different platforms. If these tests start failing, please
 fix your code and send another commit, which will re-trigger the tests.
 
-If you'd like to add a new feature to CVXMARKOWITZ, please do propose your
+If you'd like to add a new feature to cvxmarkowitz, please do propose your
 change on a Github issue, to make sure that your priorities align with ours.
 
 If you'd like to contribute code but don't know where to start, try one of the
 following:
 
-- Read the CVXPY source and enhance the documentation, or address TODOs
-- Browse the [issue tracker](https://github.com/cvxpy/cvxpy/issues), and
+- Read the cvxmarkowitz source and enhance the documentation, or address TODOs
+- Browse the [issue tracker](https://github.com/cvxgrp/cvxmarkowitz/issues), and
   look for the issues tagged "help wanted".
 
 ## License
@@ -74,8 +70,8 @@ errors that are reported before sending the pull request.
 
 ## Writing unit tests
 
-Most code changes will require new unit tests. (Even bug fixes require unit tests,
-since the presence of bugs usually indicates insufficient tests.) CVXMARKOWITZ tests
+Most code changes will require new unit tests. Even bug fixes require unit tests,
+since the presence of bugs usually indicates insufficient tests. cvxmarkowitz tests
 live in the directory `tests`, which contains many files, each of which
 contains many unit tests. When adding tests, try to find a file in which your
 tests should belong; if you're testing a new feature, you might want to create

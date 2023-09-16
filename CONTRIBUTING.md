@@ -96,5 +96,3 @@ make coverage
 ```
 
 Please make sure that your change doesn't cause any of the unit tests to fail.
-
-the above command (with and without your change) in your pull request.

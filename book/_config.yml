@@ -15,7 +15,7 @@ parse:
     - linkify
     - dollarmath
   myst_substitutions:
-    book_url: https://www.cvxgrp.org/cvxmarkowitz
+    book_url:
 
 # needed for plotly
 sphinx:

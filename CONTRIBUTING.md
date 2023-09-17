@@ -19,8 +19,8 @@ Before sending a pull request, make sure you do the following:
 ## Building cvxmarkowitz from source
 
 You'll need to build cvxmarkowitz locally in order to start editing code.
-To install cvxmarkowitz from source, clone the Github repository, navigate to the
-repository root, and run the following command:
+To install cvxmarkowitz from source, clone the Github
+repository, navigate to its root, and run the following command:
 
 ```bash
 make install
@@ -30,14 +30,14 @@ We assume you have [poetry](https://python-poetry.org) installed.
 
 ## Contributing code
 
-To contribute to cvxmarkowitz, send us pull requests. For those new to contributing,
-check out Github's
+To contribute to cvxmarkowitz, send us pull requests.
+For those new to contributing, check out Github's
 [guide](https://help.github.com/articles/using-pull-requests/).
 
-Once you've made your pull request, a member of the cvxmarkowitz development team
-will assign themselves to review it. You might have a few back-and-forths
-with your reviewer before it is accepted, which is completely normal. Your
-pull request will trigger continuous integration tests for many different
+Once you've made your pull request, a member of the cvxmarkowitz
+development team will assign themselves to review it. You might have a few
+back-and-forths with your reviewer before it is accepted, which is completely normal.
+Your pull request will trigger continuous integration tests for many different
 Python versions and different platforms. If these tests start failing, please
 fix your code and send another commit, which will re-trigger the tests.
 
@@ -47,9 +47,10 @@ change on a Github issue, to make sure that your priorities align with ours.
 If you'd like to contribute code but don't know where to start, try one of the
 following:
 
-- Read the cvxmarkowitz source and enhance the documentation, or address TODOs
-- Browse the [issue tracker](https://github.com/cvxgrp/cvxmarkowitz/issues), and
-  look for the issues tagged "help wanted".
+- Read the cvxmarkowitz source and enhance the documentation,
+  or address TODOs
+- Browse the [issue tracker](https://github.com/cvxgrp/cvxmarkowitz/issues),
+  and look for the issues tagged "help wanted".
 
 ## License
 
@@ -71,11 +72,11 @@ errors that are reported before sending the pull request.
 ## Writing unit tests
 
 Most code changes will require new unit tests. Even bug fixes require unit tests,
-since the presence of bugs usually indicates insufficient tests. cvxmarkowitz tests
-live in the directory `tests`, which contains many files, each of which
-contains many unit tests. When adding tests, try to find a file in which your
-tests should belong; if you're testing a new feature, you might want to create
-a new test file.
+since the presence of bugs usually indicates insufficient tests.
+cvxmarkowitz tests live in the directory `tests`,
+which contains many files, each of which contains many unit tests.
+When adding tests, try to find a file in which your tests should belong;
+if you're testing a new feature, you might want to create a new test file.
 
 We use the popular Python [pytest](https://docs.pytest.org/en/) framework for our
 tests.

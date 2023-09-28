@@ -6,6 +6,7 @@ authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen B
 readme = "README.md"
 repository = "https://github.com/cvxgrp/cvxmarkowitz"
 packages = [{include = "cvx"}]
+homepage = "https://www.cvxgrp.org/cvxmarkowitz"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"

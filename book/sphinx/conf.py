@@ -16,6 +16,7 @@ extensions = [
     "autoapi.extension",
 ]
 
+
 source_dir = "cvx"
 autoapi_type = "python"
 autoapi_dirs = [f"../../{source_dir}"]

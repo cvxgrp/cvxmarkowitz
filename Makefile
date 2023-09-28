@@ -47,3 +47,8 @@ help:  ## Display this help screen
 jupyter: install ## Start jupyter lab
 	@poetry run pip install jupyterlab
 	@poetry run jupyter lab
+
+.PHONY: boil
+boil: ## Update the boilerplate code
+	@poetry run pip install cvxcooker
+	@poetry run cook pyproject.toml

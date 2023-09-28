@@ -179,18 +179,19 @@ files = [
 
 [[package]]
 name = "clarabel"
-version = "0.5.1"
+version = "0.6.0"
 description = "Clarabel Conic Interior Point Solver for Rust / Python"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "clarabel-0.5.1-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:53780c68971e832f48b45cd96855a409546b0e98a0722f45cac9377ee46929df"},
-    {file = "clarabel-0.5.1-cp37-abi3-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:007b605d6eab2a3ab11abc7da12f2be21a2a5d8bc082d1179591ecd6726e8f8f"},
-    {file = "clarabel-0.5.1-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:dff343c52e1f09505b9e07789b1fd84f655d64b04e76bb7f7a0c5e9c1698a163"},
-    {file = "clarabel-0.5.1-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e2567e112806af313ba339be8fc21ff019c64af2c11d4418e9caadbb6ba127e1"},
-    {file = "clarabel-0.5.1-cp37-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:587017935ceb4f90ec8e1b6d745c910226c7325d7155c8faec87869bbb8b00a7"},
-    {file = "clarabel-0.5.1-cp37-abi3-win32.whl", hash = "sha256:c4d682b092cbb19d39dcc7dd25f9e233270b16a1b2581911b60ea8a572bea37c"},
-    {file = "clarabel-0.5.1-cp37-abi3-win_amd64.whl", hash = "sha256:7ccda87e4044d7706ce39bb0d451a24f14379636ff1773c3ca1c2164f6d66fa7"},
+    {file = "clarabel-0.6.0-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:4f366de79b8bc66bef8dc170987840b672ccab9222e710c09536d78ef47f606d"},
+    {file = "clarabel-0.6.0-cp37-abi3-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:edcebbfc14073cd32bfb664317fd2555716c96be8b2a54efdb2b728453582bea"},
+    {file = "clarabel-0.6.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e737d2818b9ca10e92ccd3fa9ad1a805b039976016415a0c45adef3427d70792"},
+    {file = "clarabel-0.6.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2e0b1891d8e507eb0bfc7e0b981584c388b2ab28658056e600997dbbc23f1ab4"},
+    {file = "clarabel-0.6.0-cp37-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:9946d3b5db346421b6d839d868e7b1151b590f871344fe95113bfd55b5be2433"},
+    {file = "clarabel-0.6.0-cp37-abi3-win32.whl", hash = "sha256:73ed408c975a8ea021c3d8262d5d023a18e1ac3f6bb59a37cd69a11dba8f86ed"},
+    {file = "clarabel-0.6.0-cp37-abi3-win_amd64.whl", hash = "sha256:5a6be4df9fed98b6f73f034836def913a1ecd52e8b79ca230ddf7cd66ebcdee7"},
+    {file = "clarabel-0.6.0.tar.gz", hash = "sha256:ef909a393e72981ca10b1d866d9cc7fb6295ece20ae035def764338894961184"},
 ]
 
 [package.dependencies]
@@ -2053,4 +2054,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "c3d9e6dfefc32e31a4772c8706d9b53673c68a04c13c4fa03074b8e202ed152b"
+content-hash = "383fe28dbf123338aca2cb6605fb0bb463787692a290ddcd218532fb528d1c4f"

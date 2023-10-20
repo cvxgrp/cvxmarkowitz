@@ -1181,6 +1181,23 @@ docs = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "mosek"
+version = "10.1.15"
+description = "Python API for Mosek"
+optional = false
+python-versions = "<3.13,>=3.7"
+files = [
+    {file = "Mosek-10.1.15-cp37-abi3-macosx_10_15_x86_64.whl", hash = "sha256:bc31a38b23dc3d26034014433e85cf1ff07d99d37b5f84bbce39a98c71c0c371"},
+    {file = "Mosek-10.1.15-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:cbbc2b20743767c80c5d635ea1ffd51e00ae267773eec1156dca9a06c38d57a9"},
+    {file = "Mosek-10.1.15-cp37-abi3-manylinux_2_29_aarch64.whl", hash = "sha256:fe83782554999f44bc8c5a704a640a1b60a2c9eeed53c1dbe01486a27d3ee685"},
+    {file = "Mosek-10.1.15-cp37-abi3-win_amd64.whl", hash = "sha256:3da122ad9b282da15c856fb6a73df19f1cbdbb6fe0589d67569e184d797dce32"},
+    {file = "Mosek-10.1.15-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:7a8b44b1e13624d9fb38d0b92eb03973cc5a98577be6c3aee21d69cf8bb04f57"},
+]
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "multitasking"
 version = "0.0.11"
 description = "Non-blocking Python methods using decorators"
@@ -2301,4 +2318,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "37bfa49fb7651ba435c0aebcf9a51e2a6d3b2e46dc00f25d90f2b658e40bfae7"
+content-hash = "327397161b88f738d5f244aba3ea3c3d28b9ccc554510eb596ea3e1d92b225a7"

@@ -28,6 +28,7 @@ cvxpyanalyzer = "*"
 clarabel = "^0.6.0"
 cvxsimulator = ">=0.7.3"
 cvxbson= "*"
+mosek = "*"
 
 [build-system]
 requires = ["poetry>=1.3.0"]

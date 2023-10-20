@@ -1,12 +1,12 @@
-import numpy as np
 import cvxpy as cp
+import numpy as np
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     n = 200
-    C = np.random.rand(n,n)
+    C = np.random.rand(n, n)
     A = C @ C.T
 
-    #print(A)
+    # print(A)
     result = np.linalg.eigh(A)
     assert np.all(result.eigenvalues > 0)
 

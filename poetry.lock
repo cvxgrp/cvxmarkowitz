@@ -432,13 +432,13 @@ setuptools = "*"
 
 [[package]]
 name = "cvxsimulator"
-version = "0.8.17"
+version = "0.9.1"
 description = "Simple simulator for investors"
 optional = false
 python-versions = ">=3.9,<3.13"
 files = [
-    {file = "cvxsimulator-0.8.17-py3-none-any.whl", hash = "sha256:36d6a671ff40fbb5fb9d988f0fb58b8778d415fffef861f6262770c7cc35e4f4"},
-    {file = "cvxsimulator-0.8.17.tar.gz", hash = "sha256:0da690da2cb49de5f5635b358125bca402f0334579a320361d97bdf8ad66cedb"},
+    {file = "cvxsimulator-0.9.1-py3-none-any.whl", hash = "sha256:a6e264dd4b00c5e7a2995e32c87b53496b3a149cd53243d9b42788aff80b2809"},
+    {file = "cvxsimulator-0.9.1.tar.gz", hash = "sha256:934088aedd0ee96c2dcb4359fd9a9753e6c44a586805c0816961f0d54c656496"},
 ]
 
 [package.dependencies]

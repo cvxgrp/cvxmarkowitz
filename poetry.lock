@@ -340,13 +340,13 @@ toml = ["tomli"]
 
 [[package]]
 name = "cvxbson"
-version = "0.0.6"
+version = "0.0.7"
 description = "Dealing with json and bson files"
 optional = false
-python-versions = ">=3.9,<3.13"
+python-versions = ">=3.9"
 files = [
-    {file = "cvxbson-0.0.6-py3-none-any.whl", hash = "sha256:4fd485a465a04ffd3ab8d84383b9da1882abfb5ebd82f49ba6ba963948781c1a"},
-    {file = "cvxbson-0.0.6.tar.gz", hash = "sha256:7d1df6e2c5cca424dc82bb2d195b4528652cb47cf6ebadf3d06bdba8aa4f082d"},
+    {file = "cvxbson-0.0.7-py3-none-any.whl", hash = "sha256:8c42d63c71afeed99169b239534881d590b8a47b38df61bdc2acaf4d58fd791d"},
+    {file = "cvxbson-0.0.7.tar.gz", hash = "sha256:f7ba206c608d2eb959c702d59dbd5eb0f4667113fd8ae640bca3169b6cf53155"},
 ]
 
 [package.dependencies]

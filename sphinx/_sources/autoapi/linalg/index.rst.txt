@@ -1,0 +1,98 @@
+:py:mod:`linalg`
+================
+
+.. py:module:: linalg
+
+.. autoapi-nested-parse::
+
+   Linalg module
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   cholesky/index.rst
+   pca/index.rst
+   random/index.rst
+   types/index.rst
+   valid/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   linalg.PCA
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   linalg.cholesky
+   linalg.valid
+
+
+
+.. py:function:: cholesky(cov: cvx.linalg.types.Matrix) -> cvx.linalg.types.Matrix
+
+   Compute the cholesky decomposition of a covariance matrix
+
+
+.. py:class:: PCA
+
+
+   .. py:property:: explained_variance
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: cov
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: systematic_returns
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: idiosyncratic_returns
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: idiosyncratic_vola
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:attribute:: returns
+      :type: cvx.linalg.types.Matrix
+
+      
+
+   .. py:attribute:: n_components
+      :type: int
+      :value: 0
+
+      
+
+   .. py:method:: __post_init__() -> None
+
+
+
+.. py:function:: valid(matrix: cvx.linalg.types.Matrix) -> tuple[cvx.linalg.types.Matrix, cvx.linalg.types.Matrix]
+
+   Construct the valid subset of matrix (correlation) matrix
+   :param matrix: n x n matrix
+
+   :return: Tuple of matrix boolean vector indicating if row/column
+   is valid and the valid subset of the matrix
+
+

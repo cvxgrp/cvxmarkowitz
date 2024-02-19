@@ -1,0 +1,22 @@
+:py:mod:`markowitz.portfolios.utils`
+====================================
+
+.. py:module:: markowitz.portfolios.utils
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   markowitz.portfolios.utils.approx
+
+
+
+.. py:function:: approx(name: str, x: cvxpy.Variable, target: Any, pm: cvxpy.Expression) -> Generator[Tuple[str, cvxpy.Expression], None, None]
+
+

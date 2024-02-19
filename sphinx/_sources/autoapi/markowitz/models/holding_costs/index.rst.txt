@@ -1,0 +1,45 @@
+:py:mod:`markowitz.models.holding_costs`
+========================================
+
+.. py:module:: markowitz.models.holding_costs
+
+.. autoapi-nested-parse::
+
+   Model for holding costs
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   markowitz.models.holding_costs.HoldingCosts
+
+
+
+
+.. py:class:: HoldingCosts
+
+
+   Bases: :py:obj:`cvx.markowitz.model.Model`
+
+   Model for holding costs
+
+   .. py:method:: __post_init__() -> None
+
+
+   .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
+
+      Estimate the variance given the portfolio weights
+
+
+   .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None
+
+      Update the data in the risk model
+
+
+

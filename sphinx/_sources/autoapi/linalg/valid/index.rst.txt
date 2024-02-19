@@ -1,0 +1,33 @@
+:py:mod:`linalg.valid`
+======================
+
+.. py:module:: linalg.valid
+
+.. autoapi-nested-parse::
+
+   Extract valid submatrix of a matrix
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   linalg.valid.valid
+
+
+
+.. py:function:: valid(matrix: cvx.linalg.types.Matrix) -> tuple[cvx.linalg.types.Matrix, cvx.linalg.types.Matrix]
+
+   Construct the valid subset of matrix (correlation) matrix
+   :param matrix: n x n matrix
+
+   :return: Tuple of matrix boolean vector indicating if row/column
+   is valid and the valid subset of the matrix
+
+

@@ -1,0 +1,18 @@
+:py:mod:`markowitz.models`
+==========================
+
+.. py:module:: markowitz.models
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   bounds/index.rst
+   expected_returns/index.rst
+   holding_costs/index.rst
+   trading_costs/index.rst
+
+

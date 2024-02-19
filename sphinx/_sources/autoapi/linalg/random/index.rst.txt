@@ -1,0 +1,22 @@
+:py:mod:`linalg.random`
+=======================
+
+.. py:module:: linalg.random
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   linalg.random.rand_cov
+
+
+
+.. py:function:: rand_cov(n: int) -> cvx.linalg.types.Matrix
+
+

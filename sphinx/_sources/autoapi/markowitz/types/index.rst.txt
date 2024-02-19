@@ -1,0 +1,34 @@
+:py:mod:`markowitz.types`
+=========================
+
+.. py:module:: markowitz.types
+
+
+Module Contents
+---------------
+
+.. py:data:: File
+
+   
+
+.. py:data:: Parameter
+
+   
+
+.. py:data:: Variables
+
+   
+
+.. py:data:: Expressions
+
+   
+
+.. py:data:: Constraints
+
+   
+
+.. py:data:: Matrix
+   :type: typing_extensions.TypeAlias
+
+   
+

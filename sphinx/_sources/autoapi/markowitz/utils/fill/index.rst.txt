@@ -1,0 +1,30 @@
+:py:mod:`markowitz.utils.fill`
+==============================
+
+.. py:module:: markowitz.utils.fill
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   markowitz.utils.fill.fill_vector
+   markowitz.utils.fill.fill_matrix
+
+
+
+.. py:function:: fill_vector(x: cvx.markowitz.types.Matrix, num: int) -> cvx.markowitz.types.Matrix
+
+   Fill a vector of length num with x
+
+
+.. py:function:: fill_matrix(x: cvx.markowitz.types.Matrix, rows: int, cols: int) -> cvx.markowitz.types.Matrix
+
+   Fill a matrix of size (rows, cols) with x
+
+

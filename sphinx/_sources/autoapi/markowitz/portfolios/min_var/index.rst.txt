@@ -1,0 +1,37 @@
+:py:mod:`markowitz.portfolios.min_var`
+======================================
+
+.. py:module:: markowitz.portfolios.min_var
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   markowitz.portfolios.min_var.MinVar
+
+
+
+
+.. py:class:: MinVar
+
+
+   Bases: :py:obj:`cvx.markowitz.builder.Builder`
+
+   Minimize the standard deviation of the portfolio returns subject to a set of constraints
+   min StdDev(r_p)
+   s.t. w_p >= 0 and sum(w_p) = 1
+
+   .. py:property:: objective
+      :type: cvxpy.Objective
+
+      Return the objective function
+
+   .. py:method:: __post_init__() -> None
+
+
+

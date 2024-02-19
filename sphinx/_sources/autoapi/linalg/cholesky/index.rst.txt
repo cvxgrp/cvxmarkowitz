@@ -1,0 +1,29 @@
+:py:mod:`linalg.cholesky`
+=========================
+
+.. py:module:: linalg.cholesky
+
+.. autoapi-nested-parse::
+
+   Cholesky decomposition with numpy
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   linalg.cholesky.cholesky
+
+
+
+.. py:function:: cholesky(cov: cvx.linalg.types.Matrix) -> cvx.linalg.types.Matrix
+
+   Compute the cholesky decomposition of a covariance matrix
+
+

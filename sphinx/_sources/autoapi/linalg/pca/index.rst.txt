@@ -1,0 +1,62 @@
+:py:mod:`linalg.pca`
+====================
+
+.. py:module:: linalg.pca
+
+.. autoapi-nested-parse::
+
+   PCA analysis with numpy
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   linalg.pca.PCA
+
+
+
+
+.. py:class:: PCA
+
+
+   .. py:property:: explained_variance
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: cov
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: systematic_returns
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: idiosyncratic_returns
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:property:: idiosyncratic_vola
+      :type: cvx.linalg.types.Matrix
+
+
+   .. py:attribute:: returns
+      :type: cvx.linalg.types.Matrix
+
+      
+
+   .. py:attribute:: n_components
+      :type: int
+      :value: 0
+
+      
+
+   .. py:method:: __post_init__() -> None
+
+
+

@@ -1,0 +1,51 @@
+:py:mod:`markowitz.risk.sample.sample`
+======================================
+
+.. py:module:: markowitz.risk.sample.sample
+
+.. autoapi-nested-parse::
+
+   Risk models based on the sample covariance matrix
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   markowitz.risk.sample.sample.SampleCovariance
+
+
+
+
+.. py:class:: SampleCovariance
+
+
+   Bases: :py:obj:`cvx.markowitz.model.Model`
+
+   Risk model based on the Cholesky decomposition of the sample cov matrix
+
+   .. py:method:: __post_init__() -> None
+
+
+   .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
+
+      Estimate the risk by computing the Cholesky decomposition of
+      self.cov
+
+
+   .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None
+
+      Update the data in the risk model
+
+
+   .. py:method:: constraints(variables: cvx.markowitz.types.Variables) -> cvx.markowitz.types.Expressions
+
+      Return the constraints for the risk model
+
+
+

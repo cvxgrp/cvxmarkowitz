@@ -305,19 +305,20 @@ setuptools = "*"
 
 [[package]]
 name = "cvxsimulator"
-version = "0.9.13"
+version = "0.9.14"
 description = "Simple simulator for investors"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "cvxsimulator-0.9.13-py3-none-any.whl", hash = "sha256:438b1421a8aeae01497cfa19bf5f2d17978b6a2c9847470c139e4555333d4b9d"},
-    {file = "cvxsimulator-0.9.13.tar.gz", hash = "sha256:141bdf15966ea8085457b932c193e399abd84cafe9e47c846cc65392e93410d1"},
+    {file = "cvxsimulator-0.9.14-py3-none-any.whl", hash = "sha256:2c3e6efdf96d5d1decf524ea6e8e339ec2ca2ac54fcfb3c5b045ffe3029e1348"},
+    {file = "cvxsimulator-0.9.14.tar.gz", hash = "sha256:7ada62fe0644c83ae324e55666f38a201e41461fefdfc43534429fd07b8f8ab2"},
 ]
 
 [package.dependencies]
 numpy = "*"
 pandas = ">=2.2.0"
 plotly = "*"
+pyarrow = "*"
 
 [package.extras]
 quantstats = ["ipython", "quantstats"]

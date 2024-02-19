@@ -63,14 +63,13 @@ make install
 to replicate the virtual environment we have defined in
 [pyproject.toml](pyproject.toml) and fixed in [poetry.lock](poetry.lock).
 
-## Kernel
+## Support for Jupyter
 
-We install [JupyterLab](https://jupyter.org) within your new
+you could install [JupyterLab](https://jupyter.org) within your new
 virtual environment. Executing
 
 ```bash
-make kernel
+make jupyter
 ```
 
-constructs a dedicated [Kernel](https://docs.jupyter.org/en/latest/projects/kernels.html)
-for the project.
+installs JupyterLab in your virtual environment for the project.

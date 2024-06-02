@@ -40,7 +40,7 @@ def test_dummy():
             D.UPPER_BOUND_ASSETS: np.array([1.0]),
             D.VOLA_UNCERTAINTY: np.zeros(1),
         }
-    ).solve(solver=cp.ECOS)
+    ).solve(solver=cp.CLARABEL)
 
     assert np.allclose(dict(problem.data)[(M.RISK, "chol")].value, np.eye(1))
 
@@ -68,7 +68,7 @@ def test_infeasible_problem():
     )
 
     with pytest.raises(CvxError):
-        problem.solve(solver=cp.ECOS)
+        problem.solve(solver=cp.CLARABEL)
 
 
 def test_builder_risk():

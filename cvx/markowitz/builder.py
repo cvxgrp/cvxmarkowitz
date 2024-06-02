@@ -61,7 +61,7 @@ class _Problem:
 
         return self
 
-    def solve(self, solver: str = cp.ECOS, **kwargs: Any) -> float:
+    def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
         """
         Solve the problem
         """

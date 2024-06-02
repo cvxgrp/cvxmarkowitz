@@ -9,12 +9,14 @@ packages = [{include = "cvx"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-cvxpy = "*"
+cvxpy-base = "*"
+clarabel = "*"
 fire = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "8.2.1"
 pytest-cov = "5.0.0"
+pre-commit = "3.7.1"
 mock = "*"
 
 [tool.poetry.group.dev.dependencies]

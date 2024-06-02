@@ -1,15 +1,15 @@
-:py:mod:`markowitz.utils`
-=========================
+markowitz.utils
+===============
 
 .. py:module:: markowitz.utils
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   fill/index.rst
+   /autoapi/markowitz/utils/fill/index
 
 

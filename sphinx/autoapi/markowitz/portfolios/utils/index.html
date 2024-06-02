@@ -53,18 +53,18 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../linalg/index.html">linalg</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">markowitz</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../../models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.models</span></code></a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.portfolios</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../risk/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.risk</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.utils</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../models/index.html">markowitz.models</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">markowitz.portfolios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../risk/index.html">markowitz.risk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/index.html">markowitz.utils</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../linalg/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">linalg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -84,9 +84,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
-          <li class="breadcrumb-item"><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz</span></code></a></li>
-          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.portfolios</span></code></a></li>
-      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.portfolios.utils</span></code></li>
+          <li class="breadcrumb-item"><a href="../../index.html">markowitz</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">markowitz.portfolios</a></li>
+      <li class="breadcrumb-item active">markowitz.portfolios.utils</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../../_sources/autoapi/markowitz/portfolios/utils/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -97,11 +97,9 @@
            <div itemprop="articleBody">
              
   <section id="module-markowitz.portfolios.utils">
-<span id="markowitz-portfolios-utils"></span><h1><a class="reference internal" href="#module-markowitz.portfolios.utils" title="markowitz.portfolios.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.portfolios.utils</span></code></a><a class="headerlink" href="#module-markowitz.portfolios.utils" title="Link to this heading"></a></h1>
-<section id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<span id="markowitz-portfolios-utils"></span><h1>markowitz.portfolios.utils<a class="headerlink" href="#module-markowitz.portfolios.utils" title="Link to this heading"></a></h1>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#markowitz.portfolios.utils.approx" title="markowitz.portfolios.utils.approx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">approx</span></code></a>(→ Generator[Tuple[str, cvxpy.Expression], None, ...)</p></td>
@@ -109,12 +107,14 @@
 </tr>
 </tbody>
 </table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="markowitz.portfolios.utils.approx">
 <span class="sig-prename descclassname"><span class="pre">markowitz.portfolios.utils.</span></span><span class="sig-name descname"><span class="pre">approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">cvxpy.Variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">cvxpy.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">cvxpy.Expression</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/markowitz/portfolios/utils.html#approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#markowitz.portfolios.utils.approx" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-</section>
 </section>
 </section>
 

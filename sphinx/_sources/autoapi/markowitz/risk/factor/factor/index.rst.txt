@@ -1,5 +1,5 @@
-:py:mod:`markowitz.risk.factor.factor`
-======================================
+markowitz.risk.factor.factor
+============================
 
 .. py:module:: markowitz.risk.factor.factor
 
@@ -9,31 +9,30 @@
 
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.risk.factor.factor.FactorModel
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FactorModel
 
-
    Bases: :py:obj:`cvx.markowitz.model.Model`
+
 
    Factor risk model
 
+
    .. py:attribute:: factors
-      :type: int
+      :type:  int
       :value: 0
 
-      
+
 
    .. py:method:: __post_init__() -> None
 
@@ -41,6 +40,7 @@ Classes
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
 
       Compute the total variance
+
 
 
    .. py:method:: _residual_risk(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
@@ -52,6 +52,7 @@ Classes
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None
 
       Update the data in the risk model
+
 
 
    .. py:method:: constraints(variables: cvx.markowitz.types.Variables) -> cvx.markowitz.types.Expressions

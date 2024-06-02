@@ -1,40 +1,39 @@
-:py:mod:`markowitz.risk.cvar.cvar`
-==================================
+markowitz.risk.cvar.cvar
+========================
 
 .. py:module:: markowitz.risk.cvar.cvar
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.risk.cvar.cvar.CVar
 
 
-
+Module Contents
+---------------
 
 .. py:class:: CVar
 
-
    Bases: :py:obj:`cvx.markowitz.model.Model`
+
 
    Conditional value at risk model
 
+
    .. py:attribute:: alpha
-      :type: float
+      :type:  float
       :value: 0.95
 
-      
+
 
    .. py:attribute:: rows
-      :type: int
+      :type:  int
       :value: 0
 
-      
+
 
    .. py:method:: __post_init__() -> None
 
@@ -42,6 +41,7 @@ Classes
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
 
       Estimate the risk by computing the Cholesky decomposition of self.cov
+
 
 
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None

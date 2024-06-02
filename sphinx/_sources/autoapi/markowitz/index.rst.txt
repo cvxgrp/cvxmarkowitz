@@ -1,31 +1,31 @@
-:py:mod:`markowitz`
-===================
+markowitz
+=========
 
 .. py:module:: markowitz
 
 
 Subpackages
 -----------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 3
 
-   models/index.rst
-   portfolios/index.rst
-   risk/index.rst
-   utils/index.rst
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/markowitz/models/index
+   /autoapi/markowitz/portfolios/index
+   /autoapi/markowitz/risk/index
+   /autoapi/markowitz/utils/index
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   builder/index.rst
-   cvxerror/index.rst
-   model/index.rst
-   names/index.rst
-   types/index.rst
+   /autoapi/markowitz/builder/index
+   /autoapi/markowitz/cvxerror/index
+   /autoapi/markowitz/model/index
+   /autoapi/markowitz/names/index
+   /autoapi/markowitz/types/index
 
 

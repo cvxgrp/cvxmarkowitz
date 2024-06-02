@@ -1,18 +1,18 @@
-:py:mod:`markowitz.portfolios`
-==============================
+markowitz.portfolios
+====================
 
 .. py:module:: markowitz.portfolios
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   max_sharpe/index.rst
-   min_var/index.rst
-   soft_risk/index.rst
-   utils/index.rst
+   /autoapi/markowitz/portfolios/max_sharpe/index
+   /autoapi/markowitz/portfolios/min_var/index
+   /autoapi/markowitz/portfolios/soft_risk/index
+   /autoapi/markowitz/portfolios/utils/index
 
 

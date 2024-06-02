@@ -1,5 +1,5 @@
-:py:mod:`linalg.cholesky`
-=========================
+linalg.cholesky
+===============
 
 .. py:module:: linalg.cholesky
 
@@ -9,18 +9,16 @@
 
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    linalg.cholesky.cholesky
 
 
+Module Contents
+---------------
 
 .. py:function:: cholesky(cov: cvx.linalg.types.Matrix) -> cvx.linalg.types.Matrix
 

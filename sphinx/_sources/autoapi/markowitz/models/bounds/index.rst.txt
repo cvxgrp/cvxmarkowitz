@@ -1,5 +1,5 @@
-:py:mod:`markowitz.models.bounds`
-=================================
+markowitz.models.bounds
+=======================
 
 .. py:module:: markowitz.models.bounds
 
@@ -9,42 +9,43 @@
 
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.models.bounds.Bounds
 
 
-
+Module Contents
+---------------
 
 .. py:class:: Bounds
 
-
    Bases: :py:obj:`cvx.markowitz.model.Model`
+
 
    Abstract risk model
 
+
    .. py:attribute:: name
-      :type: str
+      :type:  str
       :value: ''
 
-      
+
 
    .. py:attribute:: acting_on
-      :type: str
+      :type:  str
       :value: 'weights'
 
-      
+
 
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
       :abstractmethod:
 
+
       No estimation for bounds
+
 
 
    .. py:method:: _f(string: str) -> str
@@ -56,6 +57,7 @@ Classes
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None
 
       Update the data in the risk model
+
 
 
    .. py:method:: constraints(variables: cvx.markowitz.types.Variables) -> cvx.markowitz.types.Expressions

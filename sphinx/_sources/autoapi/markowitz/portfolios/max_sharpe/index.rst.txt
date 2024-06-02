@@ -1,37 +1,36 @@
-:py:mod:`markowitz.portfolios.max_sharpe`
-=========================================
+markowitz.portfolios.max_sharpe
+===============================
 
 .. py:module:: markowitz.portfolios.max_sharpe
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.portfolios.max_sharpe.MaxSharpe
 
 
-
+Module Contents
+---------------
 
 .. py:class:: MaxSharpe
 
-
    Bases: :py:obj:`cvx.markowitz.builder.Builder`
+
 
    Minimize the standard deviation of the portfolio returns subject to a set of constraints
    min StdDev(r_p)
    s.t. w_p >= 0 and sum(w_p) = 1
+
 
    .. py:property:: objective
       :type: cvxpy.Objective
 
       Return the objective function
 
-   .. py:method:: __post_init__() -> None
 
+   .. py:method:: __post_init__() -> None
 
 

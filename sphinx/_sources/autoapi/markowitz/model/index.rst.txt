@@ -1,5 +1,5 @@
-:py:mod:`markowitz.model`
-=========================
+markowitz.model
+===============
 
 .. py:module:: markowitz.model
 
@@ -9,51 +9,51 @@
 
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.model.Model
 
 
-
+Module Contents
+---------------
 
 .. py:class:: Model
 
-
    Bases: :py:obj:`abc.ABC`
+
 
    Abstract risk model
 
-   .. py:attribute:: assets
-      :type: int
 
-      
+   .. py:attribute:: assets
+      :type:  int
+
 
    .. py:attribute:: parameter
-      :type: cvx.markowitz.types.Parameter
+      :type:  cvx.markowitz.types.Parameter
 
-      
 
    .. py:attribute:: data
-      :type: cvx.markowitz.types.Parameter
+      :type:  cvx.markowitz.types.Parameter
 
-      
 
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
       :abstractmethod:
 
+
       Estimate the variance given the portfolio weights
+
 
 
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None
       :abstractmethod:
 
+
       Update the data in the risk model
+
 
 
    .. py:method:: constraints(variables: cvx.markowitz.types.Variables) -> cvx.markowitz.types.Expressions

@@ -1,5 +1,5 @@
-:py:mod:`linalg`
-================
+linalg
+======
 
 .. py:module:: linalg
 
@@ -11,31 +11,27 @@
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   cholesky/index.rst
-   pca/index.rst
-   random/index.rst
-   types/index.rst
-   valid/index.rst
+   /autoapi/linalg/cholesky/index
+   /autoapi/linalg/pca/index
+   /autoapi/linalg/random/index
+   /autoapi/linalg/types/index
+   /autoapi/linalg/valid/index
 
-
-Package Contents
-----------------
 
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    linalg.PCA
 
 
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -43,6 +39,8 @@ Functions
    linalg.valid
 
 
+Package Contents
+----------------
 
 .. py:function:: cholesky(cov: cvx.linalg.types.Matrix) -> cvx.linalg.types.Matrix
 
@@ -51,39 +49,41 @@ Functions
 
 .. py:class:: PCA
 
+   .. py:attribute:: returns
+      :type:  cvx.linalg.types.Matrix
+
+
+   .. py:attribute:: n_components
+      :type:  int
+      :value: 0
+
+
+
+   .. py:method:: __post_init__() -> None
+
 
    .. py:property:: explained_variance
       :type: cvx.linalg.types.Matrix
+
 
 
    .. py:property:: cov
       :type: cvx.linalg.types.Matrix
 
 
+
    .. py:property:: systematic_returns
       :type: cvx.linalg.types.Matrix
+
 
 
    .. py:property:: idiosyncratic_returns
       :type: cvx.linalg.types.Matrix
 
 
+
    .. py:property:: idiosyncratic_vola
       :type: cvx.linalg.types.Matrix
-
-
-   .. py:attribute:: returns
-      :type: cvx.linalg.types.Matrix
-
-      
-
-   .. py:attribute:: n_components
-      :type: int
-      :value: 0
-
-      
-
-   .. py:method:: __post_init__() -> None
 
 
 

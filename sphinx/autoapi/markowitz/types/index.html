@@ -24,7 +24,6 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="linalg" href="../../linalg/index.html" />
     <link rel="prev" title="markowitz.names" href="../names/index.html" /> 
 </head>
 
@@ -53,19 +52,19 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../linalg/index.html">linalg</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">markowitz</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../index.html#subpackages">Subpackages</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../builder/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.builder</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cvxerror/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.cvxerror</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../names/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.names</span></code></a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../builder/index.html">markowitz.builder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cvxerror/index.html">markowitz.cvxerror</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model/index.html">markowitz.model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../names/index.html">markowitz.names</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">markowitz.types</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../linalg/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">linalg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -85,8 +84,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
-          <li class="breadcrumb-item"><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz</span></code></a></li>
-      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.types</span></code></li>
+          <li class="breadcrumb-item"><a href="../index.html">markowitz</a></li>
+      <li class="breadcrumb-item active">markowitz.types</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/markowitz/types/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -97,7 +96,32 @@
            <div itemprop="articleBody">
              
   <section id="module-markowitz.types">
-<span id="markowitz-types"></span><h1><a class="reference internal" href="#module-markowitz.types" title="markowitz.types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">markowitz.types</span></code></a><a class="headerlink" href="#module-markowitz.types" title="Link to this heading"></a></h1>
+<span id="markowitz-types"></span><h1>markowitz.types<a class="headerlink" href="#module-markowitz.types" title="Link to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#markowitz.types.File" title="markowitz.types.File"><code class="xref py py-obj docutils literal notranslate"><span class="pre">File</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#markowitz.types.Parameter" title="markowitz.types.Parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Parameter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#markowitz.types.Variables" title="markowitz.types.Variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Variables</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#markowitz.types.Expressions" title="markowitz.types.Expressions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expressions</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#markowitz.types.Constraints" title="markowitz.types.Constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraints</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#markowitz.types.Matrix" title="markowitz.types.Matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Matrix</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py data">
@@ -138,7 +162,6 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../names/index.html" class="btn btn-neutral float-left" title="markowitz.names" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../../linalg/index.html" class="btn btn-neutral float-right" title="linalg" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

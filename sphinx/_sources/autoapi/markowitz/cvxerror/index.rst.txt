@@ -1,7 +1,15 @@
-:py:mod:`markowitz.cvxerror`
-============================
+markowitz.cvxerror
+==================
 
 .. py:module:: markowitz.cvxerror
+
+
+Exceptions
+----------
+
+.. autoapisummary::
+
+   markowitz.cvxerror.CvxError
 
 
 Module Contents
@@ -9,8 +17,8 @@ Module Contents
 
 .. py:exception:: CvxError
 
-
    Bases: :py:obj:`Exception`
+
 
    Common base class for all non-exit exceptions.
 

@@ -1,5 +1,5 @@
-:py:mod:`markowitz.models.expected_returns`
-===========================================
+markowitz.models.expected_returns
+=================================
 
 .. py:module:: markowitz.models.expected_returns
 
@@ -9,25 +9,24 @@
 
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.models.expected_returns.ExpectedReturns
 
 
-
+Module Contents
+---------------
 
 .. py:class:: ExpectedReturns
 
-
    Bases: :py:obj:`cvx.markowitz.model.Model`
 
+
    Model for expected returns
+
 
    .. py:method:: __post_init__() -> None
 
@@ -35,6 +34,7 @@ Classes
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
 
       Estimate the variance given the portfolio weights
+
 
 
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None

@@ -1,5 +1,5 @@
-:py:mod:`markowitz.models.trading_costs`
-========================================
+markowitz.models.trading_costs
+==============================
 
 .. py:module:: markowitz.models.trading_costs
 
@@ -9,25 +9,24 @@
 
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    markowitz.models.trading_costs.TradingCosts
 
 
-
+Module Contents
+---------------
 
 .. py:class:: TradingCosts
 
-
    Bases: :py:obj:`cvx.markowitz.model.Model`
 
+
    Model for trading costs
+
 
    .. py:method:: __post_init__() -> None
 
@@ -35,6 +34,7 @@ Classes
    .. py:method:: estimate(variables: cvx.markowitz.types.Variables) -> cvxpy.Expression
 
       Estimate the variance given the portfolio weights
+
 
 
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> None

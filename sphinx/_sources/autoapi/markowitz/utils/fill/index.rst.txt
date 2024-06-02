@@ -1,15 +1,11 @@
-:py:mod:`markowitz.utils.fill`
-==============================
+markowitz.utils.fill
+====================
 
 .. py:module:: markowitz.utils.fill
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -17,6 +13,8 @@ Functions
    markowitz.utils.fill.fill_matrix
 
 
+Module Contents
+---------------
 
 .. py:function:: fill_vector(x: cvx.markowitz.types.Matrix, num: int) -> cvx.markowitz.types.Matrix
 

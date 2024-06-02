@@ -1,14 +1,11 @@
-:py:mod:`markowitz.builder`
-===========================
+markowitz.builder
+=================
 
 .. py:module:: markowitz.builder
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -16,59 +13,33 @@ Classes
    markowitz.builder.Builder
 
 
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    markowitz.builder.deserialize
 
 
+Module Contents
+---------------
 
 .. py:function:: deserialize(problem_file: str | bytes | os.PathLike[str] | os.PathLike[bytes] | int) -> Any
 
-
 .. py:class:: _Problem
 
-
-   .. py:property:: value
-      :type: float
-
-
-   .. py:property:: data
-      :type: Generator[tuple[tuple[str, str], cvx.markowitz.types.Matrix], None, None]
-
-
-   .. py:property:: parameter
-      :type: cvx.markowitz.types.Parameter
-
-
-   .. py:property:: variables
-      :type: cvx.markowitz.types.Variables
-
-
-   .. py:property:: weights
-      :type: cvx.markowitz.types.Matrix
-
-
-   .. py:property:: factor_weights
-      :type: cvx.markowitz.types.Matrix
-
-
    .. py:attribute:: problem
-      :type: cvxpy.Problem
+      :type:  cvxpy.Problem
 
-      
 
    .. py:attribute:: model
-      :type: dict[str, cvx.markowitz.model.Model]
+      :type:  dict[str, cvx.markowitz.model.Model]
 
-      
 
    .. py:method:: update(**kwargs: cvx.markowitz.types.Matrix) -> _Problem
 
       Update the problem
+
 
 
    .. py:method:: solve(solver: str = cp.ECOS, **kwargs: Any) -> float
@@ -76,71 +47,102 @@ Functions
       Solve the problem
 
 
+
+   .. py:property:: value
+      :type: float
+
+
+
    .. py:method:: is_dpp() -> bool
+
+
+   .. py:property:: data
+      :type: Generator[tuple[tuple[str, str], cvx.markowitz.types.Matrix], None, None]
+
+
+
+   .. py:property:: parameter
+      :type: cvx.markowitz.types.Parameter
+
+
+
+   .. py:property:: variables
+      :type: cvx.markowitz.types.Variables
+
+
+
+   .. py:property:: weights
+      :type: cvx.markowitz.types.Matrix
+
+
+
+   .. py:property:: factor_weights
+      :type: cvx.markowitz.types.Matrix
+
 
 
    .. py:method:: serialize(problem_file: cvx.markowitz.types.File) -> None
 
 
-
 .. py:class:: Builder
+
+   .. py:attribute:: assets
+      :type:  int
+      :value: 0
+
+
+
+   .. py:attribute:: factors
+      :type:  int | None
+      :value: None
+
+
+
+   .. py:attribute:: model
+      :type:  dict[str, cvx.markowitz.model.Model]
+
+
+   .. py:attribute:: constraints
+      :type:  dict[str, cvxpy.Constraint]
+
+
+   .. py:attribute:: variables
+      :type:  cvx.markowitz.types.Variables
+
+
+   .. py:attribute:: parameter
+      :type:  cvx.markowitz.types.Parameter
+
+
+   .. py:method:: __post_init__() -> None
 
 
    .. py:property:: objective
       :type: cvxpy.Expression
+
       :abstractmethod:
 
       Return the objective function
 
+
+   .. py:method:: build() -> _Problem
+
+      Build the cvxpy problem
+
+
+
    .. py:property:: weights
       :type: cvxpy.Variable
+
 
 
    .. py:property:: risk
       :type: cvx.markowitz.model.Model
 
 
+
    .. py:property:: factor_weights
       :type: cvxpy.Variable
-
-
-   .. py:attribute:: assets
-      :type: int
-      :value: 0
-
-      
-
-   .. py:attribute:: factors
-      :type: int | None
-
-      
-
-   .. py:attribute:: model
-      :type: dict[str, cvx.markowitz.model.Model]
-
-      
-
-   .. py:attribute:: constraints
-      :type: dict[str, cvxpy.Constraint]
-
-      
-
-   .. py:attribute:: variables
-      :type: cvx.markowitz.types.Variables
-
-      
-
-   .. py:attribute:: parameter
-      :type: cvx.markowitz.types.Parameter
-
-      
-
-   .. py:method:: __post_init__() -> None
-
-
-   .. py:method:: build() -> _Problem
-
-      Build the cvxpy problem
 
 
 

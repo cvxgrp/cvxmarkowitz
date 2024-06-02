@@ -1,5 +1,5 @@
-:py:mod:`linalg.valid`
-======================
+linalg.valid
+============
 
 .. py:module:: linalg.valid
 
@@ -9,18 +9,16 @@
 
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    linalg.valid.valid
 
 
+Module Contents
+---------------
 
 .. py:function:: valid(matrix: cvx.linalg.types.Matrix) -> tuple[cvx.linalg.types.Matrix, cvx.linalg.types.Matrix]
 

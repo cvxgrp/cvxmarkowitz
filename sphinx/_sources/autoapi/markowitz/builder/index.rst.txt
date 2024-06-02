@@ -42,7 +42,7 @@ Module Contents
 
 
 
-   .. py:method:: solve(solver: str = cp.ECOS, **kwargs: Any) -> float
+   .. py:method:: solve(solver: str = cp.CLARABEL, **kwargs: Any) -> float
 
       Solve the problem
 

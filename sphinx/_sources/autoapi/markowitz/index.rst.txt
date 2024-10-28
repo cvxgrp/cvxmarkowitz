@@ -4,18 +4,6 @@ markowitz
 .. py:module:: markowitz
 
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 1
-
-   /autoapi/markowitz/models/index
-   /autoapi/markowitz/portfolios/index
-   /autoapi/markowitz/risk/index
-   /autoapi/markowitz/utils/index
-
-
 Submodules
 ----------
 
@@ -25,7 +13,11 @@ Submodules
    /autoapi/markowitz/builder/index
    /autoapi/markowitz/cvxerror/index
    /autoapi/markowitz/model/index
+   /autoapi/markowitz/models/index
    /autoapi/markowitz/names/index
+   /autoapi/markowitz/portfolios/index
+   /autoapi/markowitz/risk/index
    /autoapi/markowitz/types/index
+   /autoapi/markowitz/utils/index
 
 

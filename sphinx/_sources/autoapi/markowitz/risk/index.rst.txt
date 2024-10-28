@@ -4,8 +4,8 @@ markowitz.risk
 .. py:module:: markowitz.risk
 
 
-Subpackages
------------
+Submodules
+----------
 
 .. toctree::
    :maxdepth: 1

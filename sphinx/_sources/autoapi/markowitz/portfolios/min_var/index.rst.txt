@@ -28,6 +28,7 @@ Module Contents
    .. py:property:: objective
       :type: cvxpy.Objective
 
+
       Return the objective function
 
 

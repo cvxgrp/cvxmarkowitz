@@ -7,7 +7,7 @@ from cvx.linalg import valid
 
 
 def test_valid():
-    a = np.array([[np.NaN, np.NaN], [np.NaN, 4]])
+    a = np.array([[np.nan, np.nan], [np.nan, 4]])
     v, mat = valid(a)
 
     assert np.allclose(mat, np.array([[4]]))

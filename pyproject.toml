@@ -8,7 +8,7 @@ repository = "https://github.com/cvxgrp/cvxmarkowitz"
 packages = [{include = "cvx"}]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">=3.10"
 cvxpy-base = "*"
 clarabel = "*"
 fire = "*"

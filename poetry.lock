@@ -343,19 +343,20 @@ xpress = ["xpress"]
 
 [[package]]
 name = "cvxsimulator"
-version = "1.2.1"
+version = "1.3.0"
 description = "Simple simulator for investors"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "cvxsimulator-1.2.1-py3-none-any.whl", hash = "sha256:8943a54bb74bbed004fd98ecb2a65dc92d5214a043b590110445e950b0b7f582"},
-    {file = "cvxsimulator-1.2.1.tar.gz", hash = "sha256:5cc067c5bb40ff8800ae0e698a218d9830196a011e6c5dda081e74e98ae5c715"},
+    {file = "cvxsimulator-1.3.0-py3-none-any.whl", hash = "sha256:15a952633a42a64852d55abe5987e56efb21dbe70bd4838086f0042a983805c7"},
+    {file = "cvxsimulator-1.3.0.tar.gz", hash = "sha256:9b9b089a312a1c6bc88532b13308867f5e0008631a2796ddcb0964e62ef48a92"},
 ]
 
 [package.dependencies]
-numpy = "*"
-pandas = ">=2.2.0"
-plotly = "*"
+cvxpy-base = ">=1.6.0"
+numpy = ">=2.1.3"
+pandas = ">=2.2.3"
+plotly = ">=5.0.0"
 
 [package.extras]
 quantstats = ["ipython", "quantstats"]

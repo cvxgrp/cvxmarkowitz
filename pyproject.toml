@@ -16,24 +16,6 @@ dependencies = [
     "typing-extensions"
 ]
 
-
-
-#[tool.poetry.dependencies]
-#python = ">=3.10"
-#cvxpy-base = "*"
-#clarabel = "*"
-#fire = "*"
-
-#[tool.poetry.group.dev.dependencies]
-#pandas = "*"
-#plotly = "*"
-#loguru = "*"
-#scikit-learn = "*"
-#cvxpyanalyzer = "*"
-#cvxsimulator = ">=0.7.3"
-#cvxbson= "*"
-#ipykernel = "*"
-
 [dependency-groups]
 dev = [
     "pytest-cov>=6.0.0",

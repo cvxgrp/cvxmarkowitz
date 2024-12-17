@@ -7,7 +7,6 @@ readme = "README.md"
 
 #authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
 #readme = "README.md"
-repository = "https://github.com/cvxgrp/cvxmarkowitz"
 requires-python = ">=3.10"
 dependencies = [
     "cvxpy-base>=1.6.0",
@@ -15,6 +14,9 @@ dependencies = [
     "clarabel",
     "typing-extensions"
 ]
+
+[project.urls]
+repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
 dev = [

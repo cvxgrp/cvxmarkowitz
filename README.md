@@ -51,25 +51,26 @@ You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):
 pip install cvxmarkowitz
 ```
 
-## Poetry
+## uv
 
-We assume you share already the love for [Poetry](https://python-poetry.org).
-Once you have installed poetry you can perform
+You need to install [task](https://taskfile.dev).
+Starting with
 
 ```bash
-make install
+task simulator:install
 ```
 
-to replicate the virtual environment we have defined in
-[pyproject.toml](pyproject.toml) and fixed in [poetry.lock](poetry.lock).
+will install [uv](https://github.com/astral-sh/uv) and create
+the virtual environment defined in
+pyproject.toml and locked in uv.lock.
 
-## Support for Jupyter
+## marimo
 
-you could install [JupyterLab](https://jupyter.org) within your new
+We install [marimo](https://marimo.io) on the fly within the aforementioned
 virtual environment. Executing
 
 ```bash
-make jupyter
+task simulator:marimo
 ```
 
-installs JupyterLab in your virtual environment for the project.
+will install and start marimo.

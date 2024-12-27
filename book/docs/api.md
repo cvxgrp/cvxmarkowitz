@@ -1,5 +1,3 @@
 # API
 
-## Sphinx
-
-[API](https://www.cvxgrp.org/cvxmarkowitz/sphinx/)
+[API](https://www.cvxgrp.org/cvxmarkowitz/pdoc/)

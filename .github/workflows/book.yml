@@ -4,15 +4,15 @@ on:
 - push
 
 jobs:
-  marimo:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: cvxgrp/.github/actions/uv/marimo@main
+  #marimo:
+  #  runs-on: "ubuntu-latest"
+  #  steps:
+  #    - uses: cvxgrp/.github/actions/uv/marimo@main
 
-  sphinx:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: cvxgrp/.github/actions/uv/sphinx@main
+  #sphinx:
+  #  runs-on: "ubuntu-latest"
+  #  steps:
+  #    - uses: cvxgrp/.github/actions/uv/sphinx@main
 
   pdoc:
     runs-on: "ubuntu-latest"
@@ -31,7 +31,7 @@ jobs:
 
   book:
     runs-on: "ubuntu-latest"
-    needs: [test, sphinx, pdoc, jupyter, marimo]
+    needs: [test, pdoc, jupyter]
 
     permissions:
       contents: write

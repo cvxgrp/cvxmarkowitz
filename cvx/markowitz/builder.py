@@ -80,7 +80,7 @@ class _Problem:
         return bool(self.problem.is_dpp())
 
     @property
-    def data(self) -> Generator[tuple[tuple[str, str], Matrix], None, None]:
+    def data(self) -> Generator[tuple[tuple[str, str], Matrix]]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value

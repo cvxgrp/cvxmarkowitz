@@ -19,7 +19,7 @@ import numpy as np
 import numpy.typing as npt
 from typing_extensions import TypeAlias
 
-File = Union[str, bytes, PathLike]
+File = Union[str, bytes, PathLike[str]]
 Parameter = Dict[str, cp.Parameter]
 Variables = Dict[str, cp.Variable]
 Expressions = Dict[str, cp.Expression]

@@ -32,7 +32,7 @@ class TradingCosts(Model):
     def __post_init__(self) -> None:
         self.parameter["power"] = cp.Parameter(shape=1, name="power", value=np.ones(1))
 
-        # intial weights before rebalancing
+        # initial weights before rebalancing
         self.data["weights"] = cp.Parameter(
             shape=self.assets, name="weights", value=np.zeros(self.assets)
         )

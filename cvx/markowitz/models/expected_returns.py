@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 """Model for expected returns"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -46,9 +47,7 @@ class ExpectedReturns(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[
-            "mu_uncertainty"
-        ] @ cp.abs(variables[D.WEIGHTS])
+        return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter["mu_uncertainty"] @ cp.abs(variables[D.WEIGHTS])
 
     def update(self, **kwargs: Matrix) -> None:
         exp_returns = kwargs[D.MU]
@@ -59,6 +58,4 @@ class ExpectedReturns(Model):
         if not uncertainty.shape[0] == exp_returns.shape[0]:
             raise CvxError("Mismatch in length for mu and mu_uncertainty")
 
-        self.parameter["mu_uncertainty"].value = fill_vector(
-            num=self.assets, x=uncertainty
-        )
+        self.parameter["mu_uncertainty"].value = fill_vector(num=self.assets, x=uncertainty)

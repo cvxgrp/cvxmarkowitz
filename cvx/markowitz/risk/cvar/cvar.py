@@ -50,6 +50,4 @@ class CVar(Model):
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
     def update(self, **kwargs: Matrix) -> None:
-        self.data[D.RETURNS].value = fill_matrix(
-            rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS]
-        )
+        self.data[D.RETURNS].value = fill_matrix(rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS])

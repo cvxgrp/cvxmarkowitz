@@ -20,9 +20,7 @@ def test_sample():
         }
     )
 
-    vola = riskmodel.estimate(
-        {D.WEIGHTS: np.array([1.0, 1.0]), D._ABS: np.array([1.0, 1.0])}
-    ).value
+    vola = riskmodel.estimate({D.WEIGHTS: np.array([1.0, 1.0]), D._ABS: np.array([1.0, 1.0])}).value
     np.testing.assert_almost_equal(vola, 2.0)
 
 
@@ -58,9 +56,7 @@ def test_robust_sample():
     )
 
     # Note: dummy should be abs(weights)
-    vola = riskmodel.estimate(
-        {D.WEIGHTS: np.array([1.0, -1.0]), D._ABS: np.array([1.0, 1.0])}
-    ).value
+    vola = riskmodel.estimate({D.WEIGHTS: np.array([1.0, -1.0]), D._ABS: np.array([1.0, 1.0])}).value
     np.testing.assert_almost_equal(vola, np.sqrt(2.09))
 
 

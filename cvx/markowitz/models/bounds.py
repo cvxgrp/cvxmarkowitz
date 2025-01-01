@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 """Bounds"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -49,17 +50,11 @@ class Bounds(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
-        self.data[self._f("lower")].value = fill_vector(
-            num=self.assets, x=kwargs[self._f("lower")]
-        )
-        self.data[self._f("upper")].value = fill_vector(
-            num=self.assets, x=kwargs[self._f("upper")]
-        )
+        self.data[self._f("lower")].value = fill_vector(num=self.assets, x=kwargs[self._f("lower")])
+        self.data[self._f("upper")].value = fill_vector(num=self.assets, x=kwargs[self._f("upper")])
 
     def constraints(self, variables: Variables) -> Expressions:
         return {
-            f"lower bound {self.name}": variables[self.acting_on]
-            >= self.data[self._f("lower")],
-            f"upper bound {self.name}": variables[self.acting_on]
-            <= self.data[self._f("upper")],
+            f"lower bound {self.name}": variables[self.acting_on] >= self.data[self._f("lower")],
+            f"upper bound {self.name}": variables[self.acting_on] <= self.data[self._f("upper")],
         }

@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 """Extract valid submatrix of a matrix"""
+
 from __future__ import annotations
 
 import numpy as np

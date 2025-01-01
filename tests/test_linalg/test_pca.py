@@ -9,9 +9,7 @@ from cvx.linalg import PCA
 
 @pytest.fixture()
 def returns(resource_dir):
-    prices = pd.read_csv(
-        resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
-    )
+    prices = pd.read_csv(resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True)
     return prices.pct_change().fillna(0.0).values
 
 

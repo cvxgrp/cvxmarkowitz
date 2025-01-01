@@ -23,7 +23,6 @@ from cvx.markowitz.names import ConstraintName as C
 
 @dataclass(frozen=True)
 class MinVar(Builder):
-
     """
     Minimize the standard deviation of the portfolio returns subject to a set of constraints
     min StdDev(r_p)

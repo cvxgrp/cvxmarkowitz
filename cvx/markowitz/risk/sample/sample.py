@@ -11,8 +11,8 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Risk models based on the sample covariance matrix
-"""
+"""Risk models based on the sample covariance matrix"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -63,15 +63,10 @@ class SampleCovariance(Model):
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 
-        self.data[D.CHOLESKY].value = fill_matrix(
-            rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY]
-        )
-        self.data[D.VOLA_UNCERTAINTY].value = fill_vector(
-            num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY]
-        )
+        self.data[D.CHOLESKY].value = fill_matrix(rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY])
+        self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])
 
     def constraints(self, variables: Variables) -> Expressions:
         return {
-            "dummy": variables[D._ABS]
-            >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
+            "dummy": variables[D._ABS] >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
         }

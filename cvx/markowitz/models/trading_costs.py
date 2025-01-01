@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 """Model for trading costs"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -33,9 +34,7 @@ class TradingCosts(Model):
         self.parameter["power"] = cp.Parameter(shape=1, name="power", value=np.ones(1))
 
         # initial weights before rebalancing
-        self.data["weights"] = cp.Parameter(
-            shape=self.assets, name="weights", value=np.zeros(self.assets)
-        )
+        self.data["weights"] = cp.Parameter(shape=self.assets, name="weights", value=np.zeros(self.assets))
 
     def estimate(self, variables: Variables) -> cp.Expression:
         return cp.sum(

@@ -26,7 +26,6 @@ from cvx.markowitz.names import ParameterName as P
 
 @dataclass(frozen=True)
 class SoftRisk(Builder):
-
     """
     maximize w^T mu - omega * (sigma - sigma_target)_+
     subject to w >= 0, w^T 1 = 1, sigma <= sigma_max
@@ -40,9 +39,7 @@ class SoftRisk(Builder):
     @property
     def objective(self) -> cp.Maximize:
         expected_return = self.model[M.RETURN].estimate(self.variables)
-        soft_risk = cp.pos(
-            self.parameter[P.OMEGA] * self._sigma - self._sigma_target_times_omega
-        )
+        soft_risk = cp.pos(self.parameter[P.OMEGA] * self._sigma - self._sigma_target_times_omega)
         return cp.Maximize(expected_return - soft_risk)
 
     def __post_init__(self) -> None:
@@ -52,9 +49,7 @@ class SoftRisk(Builder):
 
         self.parameter[P.SIGMA_MAX] = cp.Parameter(nonneg=True, name="limit volatility")
 
-        self.parameter[P.SIGMA_TARGET] = cp.Parameter(
-            nonneg=True, name="target volatility"
-        )
+        self.parameter[P.SIGMA_TARGET] = cp.Parameter(nonneg=True, name="target volatility")
 
         self.parameter[P.OMEGA] = cp.Parameter(nonneg=True, name="risk priority")
         self._sigma_target_times_omega._callback = lambda: (

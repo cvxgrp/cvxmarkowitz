@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 """Model for holding costs"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -30,16 +31,10 @@ class HoldingCosts(Model):
     """Model for holding costs"""
 
     def __post_init__(self) -> None:
-        self.data[D.HOLDING_COSTS] = cp.Parameter(
-            shape=self.assets, name=D.HOLDING_COSTS, value=np.zeros(self.assets)
-        )
+        self.data[D.HOLDING_COSTS] = cp.Parameter(shape=self.assets, name=D.HOLDING_COSTS, value=np.zeros(self.assets))
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        return cp.sum(
-            cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS]))
-        )
+        return cp.sum(cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS])))
 
     def update(self, **kwargs: Matrix) -> None:
-        self.data[D.HOLDING_COSTS].value = fill_vector(
-            num=self.assets, x=kwargs[D.HOLDING_COSTS]
-        )
+        self.data[D.HOLDING_COSTS].value = fill_vector(num=self.assets, x=kwargs[D.HOLDING_COSTS])

@@ -26,7 +26,6 @@ from cvx.markowitz.names import ParameterName as P
 
 @dataclass(frozen=True)
 class MaxSharpe(Builder):
-
     """
     Minimize the standard deviation of the portfolio returns subject to a set of constraints
     min StdDev(r_p)
@@ -42,12 +41,8 @@ class MaxSharpe(Builder):
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)
 
-        self.parameter[P.SIGMA_MAX] = cp.Parameter(
-            nonneg=True, name="maximal volatility"
-        )
+        self.parameter[P.SIGMA_MAX] = cp.Parameter(nonneg=True, name="maximal volatility")
 
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
-        self.constraints[C.RISK] = (
-            self.risk.estimate(self.variables) <= self.parameter[P.SIGMA_MAX]
-        )
+        self.constraints[C.RISK] = self.risk.estimate(self.variables) <= self.parameter[P.SIGMA_MAX]

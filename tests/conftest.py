@@ -1,4 +1,5 @@
 """global fixtures"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,8 +14,6 @@ def resource_fixture():
     return Path(__file__).parent / "resources"
 
 
-@pytest.fixture(
-    params=[s for s in [cp.ECOS, cp.CLARABEL] if s in cp.installed_solvers()]
-)
+@pytest.fixture(params=[s for s in [cp.ECOS, cp.CLARABEL] if s in cp.installed_solvers()])
 def solver(request):
     return request.param

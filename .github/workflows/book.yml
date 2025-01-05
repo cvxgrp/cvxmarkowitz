@@ -17,16 +17,25 @@ jobs:
   pdoc:
     runs-on: "ubuntu-latest"
     steps:
+      - name: Checkout [${{ github.repository }}]
+        uses: actions/checkout@v4
+
       - uses: cvxgrp/.github/actions/uv/pdoc@main
 
   test:
     runs-on: "ubuntu-latest"
     steps:
+      - name: Checkout [${{ github.repository }}]
+        uses: actions/checkout@v4
+
       - uses: cvxgrp/.github/actions/uv/coverage@main
 
   jupyter:
     runs-on: "ubuntu-latest"
     steps:
+      - name: Checkout [${{ github.repository }}]
+        uses: actions/checkout@v4
+
       - uses: cvxgrp/.github/actions/uv/jupyter@main
 
   book:
@@ -37,4 +46,7 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout [${{ github.repository }}]
+        uses: actions/checkout@v4
+
       - uses: cvxgrp/.github/actions/book@main

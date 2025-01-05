@@ -82,27 +82,27 @@
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="c1">#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="c1">#    See the License for the specific language governing permissions and</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="c1">#    limitations under the License.</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span> <span class="nn">cvx.bson.file</span> <span class="kn">import</span> <span class="n">FILE</span><span class="p">,</span> <span class="n">read_bson</span><span class="p">,</span> <span class="n">write_bson</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">cvx.bson.file</span><span class="w"> </span><span class="kn">import</span> <span class="n">FILE</span><span class="p">,</span> <span class="n">read_bson</span><span class="p">,</span> <span class="n">write_bson</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span> <span class="nc">Data</span><span class="p">:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span> <span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">:</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="k">return</span> <span class="n">write_bson</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
 </span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="k">def</span> <span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 </span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">read_bson</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">x</span><span class="p">)</span>
 </span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
 </span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="k">yield from</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;__annotations__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 </span></pre></div>
 
@@ -121,20 +121,20 @@
     </div>
     <a class="headerlink" href="#Data"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Data-21"><a href="#Data-21"><span class="linenos">21</span></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="Data-22"><a href="#Data-22"><span class="linenos">22</span></a><span class="k">class</span> <span class="nc">Data</span><span class="p">:</span>
-</span><span id="Data-23"><a href="#Data-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Data-22"><a href="#Data-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">:</span>
+</span><span id="Data-23"><a href="#Data-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span id="Data-24"><a href="#Data-24"><span class="linenos">24</span></a>        <span class="k">return</span> <span class="n">write_bson</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 </span><span id="Data-25"><a href="#Data-25"><span class="linenos">25</span></a>
 </span><span id="Data-26"><a href="#Data-26"><span class="linenos">26</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Data-27"><a href="#Data-27"><span class="linenos">27</span></a>    <span class="k">def</span> <span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="Data-27"><a href="#Data-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 </span><span id="Data-28"><a href="#Data-28"><span class="linenos">28</span></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">read_bson</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </span><span id="Data-29"><a href="#Data-29"><span class="linenos">29</span></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">x</span><span class="p">)</span>
 </span><span id="Data-30"><a href="#Data-30"><span class="linenos">30</span></a>
 </span><span id="Data-31"><a href="#Data-31"><span class="linenos">31</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Data-32"><a href="#Data-32"><span class="linenos">32</span></a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+</span><span id="Data-32"><a href="#Data-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 </span><span id="Data-33"><a href="#Data-33"><span class="linenos">33</span></a>        <span class="k">yield from</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;__annotations__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span><span id="Data-34"><a href="#Data-34"><span class="linenos">34</span></a>
-</span><span id="Data-35"><a href="#Data-35"><span class="linenos">35</span></a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Data-35"><a href="#Data-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="Data-36"><a href="#Data-36"><span class="linenos">36</span></a>        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 </span></pre></div>
 
@@ -152,7 +152,7 @@
 
     </div>
     <a class="headerlink" href="#Data.to_bson"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Data.to_bson-23"><a href="#Data.to_bson-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Data.to_bson-23"><a href="#Data.to_bson-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_bson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span id="Data.to_bson-24"><a href="#Data.to_bson-24"><span class="linenos">24</span></a>        <span class="k">return</span> <span class="n">write_bson</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
 </span></pre></div>
 
@@ -173,7 +173,7 @@
     </div>
     <a class="headerlink" href="#Data.from_bson"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Data.from_bson-26"><a href="#Data.from_bson-26"><span class="linenos">26</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Data.from_bson-27"><a href="#Data.from_bson-27"><span class="linenos">27</span></a>    <span class="k">def</span> <span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="Data.from_bson-27"><a href="#Data.from_bson-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_bson</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="n">FILE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 </span><span id="Data.from_bson-28"><a href="#Data.from_bson-28"><span class="linenos">28</span></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">read_bson</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 </span><span id="Data.from_bson-29"><a href="#Data.from_bson-29"><span class="linenos">29</span></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">x</span><span class="p">)</span>
 </span></pre></div>
@@ -195,7 +195,7 @@
     </div>
     <a class="headerlink" href="#Data.keys"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Data.keys-31"><a href="#Data.keys-31"><span class="linenos">31</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Data.keys-32"><a href="#Data.keys-32"><span class="linenos">32</span></a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+</span><span id="Data.keys-32"><a href="#Data.keys-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 </span><span id="Data.keys-33"><a href="#Data.keys-33"><span class="linenos">33</span></a>        <span class="k">yield from</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;__annotations__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span></pre></div>
 
@@ -214,7 +214,7 @@
 
     </div>
     <a class="headerlink" href="#Data.items"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Data.items-35"><a href="#Data.items-35"><span class="linenos">35</span></a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Data.items-35"><a href="#Data.items-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="Data.items-36"><a href="#Data.items-36"><span class="linenos">36</span></a>        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 </span></pre></div>
 

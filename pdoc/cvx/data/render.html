@@ -70,12 +70,12 @@
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="c1">#    See the License for the specific language governing permissions and</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="c1">#    limitations under the License.</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">&quot;&quot;&quot;Create a dataclass from a template&quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Template</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="c1"># gain this dictionary through reflection</span>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="c1"># every table has a shortname, e.g. prices and a longer descriptive name</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="c1"># we use the shortname to name the variable refering to the code</span>
@@ -102,7 +102,7 @@
 
     </div>
     <a class="headerlink" href="#render"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="render-21"><a href="#render-21"><span class="linenos">21</span></a><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="render-21"><a href="#render-21"><span class="linenos">21</span></a><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">strategy</span><span class="p">):</span>
 </span><span id="render-22"><a href="#render-22"><span class="linenos">22</span></a>    <span class="c1"># gain this dictionary through reflection</span>
 </span><span id="render-23"><a href="#render-23"><span class="linenos">23</span></a>    <span class="c1"># every table has a shortname, e.g. prices and a longer descriptive name</span>
 </span><span id="render-24"><a href="#render-24"><span class="linenos">24</span></a>    <span class="c1"># we use the shortname to name the variable refering to the code</span>

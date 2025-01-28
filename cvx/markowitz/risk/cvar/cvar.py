@@ -18,10 +18,10 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.model import Model
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Matrix, Variables
-from cvx.markowitz.utils.fill import fill_matrix
+from ...model import Model
+from ...names import DataNames as D
+from ...types import Matrix, Variables
+from ...utils.fill import fill_matrix
 
 
 @dataclass(frozen=True)

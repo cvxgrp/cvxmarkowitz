@@ -17,11 +17,11 @@ from dataclasses import dataclass
 
 import cvxpy as cp
 
-from cvx.markowitz.builder import Builder
-from cvx.markowitz.models.expected_returns import ExpectedReturns
-from cvx.markowitz.names import ConstraintName as C
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.names import ParameterName as P
+from ..builder import Builder
+from ..models.expected_returns import ExpectedReturns
+from ..names import ConstraintName as C
+from ..names import ModelName as M
+from ..names import ParameterName as P
 
 
 @dataclass(frozen=True)

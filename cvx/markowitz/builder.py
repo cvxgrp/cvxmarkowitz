@@ -22,14 +22,14 @@ from typing import Any, Generator
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import Model
-from cvx.markowitz.models.bounds import Bounds
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.risk.factor.factor import FactorModel
-from cvx.markowitz.risk.sample.sample import SampleCovariance
-from cvx.markowitz.types import File, Matrix, Parameter, Variables
+from .cvxerror import CvxError
+from .model import Model
+from .models.bounds import Bounds
+from .names import DataNames as D
+from .names import ModelName as M
+from .risk.factor.factor import FactorModel
+from .risk.sample.sample import SampleCovariance
+from .types import File, Matrix, Parameter, Variables
 
 
 def deserialize(

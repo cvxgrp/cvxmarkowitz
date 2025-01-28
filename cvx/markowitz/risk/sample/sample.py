@@ -20,11 +20,11 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import Model
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Expressions, Matrix, Variables
-from cvx.markowitz.utils.fill import fill_matrix, fill_vector
+from ...cvxerror import CvxError
+from ...model import Model
+from ...names import DataNames as D
+from ...types import Expressions, Matrix, Variables
+from ...utils.fill import fill_matrix, fill_vector
 
 
 @dataclass(frozen=True)

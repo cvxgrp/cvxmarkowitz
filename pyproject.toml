@@ -2,7 +2,11 @@
 name = "cvxmarkowitz"
 version = "0.0.0"
 description = "Markowitz"
-authors = [{name = "Thomas Schmelzer", email = "thomas.schmelzer@gmail.com"}]
+authors = [{name = "Thomas Schmelzer", email = "thomas.schmelzer@gmail.com"},
+    {name = "Kasper Johansson"},
+    {name = "Philipp Schiele"},
+    {name = "Stephen Boyd"}]
+
 readme = "README.md"
 
 #authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
@@ -54,3 +58,4 @@ packages = ["cvx"]
 
 [tool.deptry.per_rule_ignores]
 DEP002 = ["cvxpy-base", "clarabel"]
+DEP004 = ["cvx"]

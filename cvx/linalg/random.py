@@ -13,7 +13,7 @@
 #    limitations under the License.
 import numpy as np
 
-from cvx.linalg.types import Matrix
+from .types import Matrix
 
 
 def rand_cov(n: int) -> Matrix:

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from cvx.linalg.types import Matrix
+from .types import Matrix
 
 
 def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:

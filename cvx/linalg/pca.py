@@ -19,7 +19,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from cvx.linalg.types import Matrix
+from .types import Matrix
 
 
 @dataclass

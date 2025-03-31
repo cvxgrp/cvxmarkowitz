@@ -105,6 +105,26 @@ class _Problem:
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 
+    def get_problem_data(
+        self,
+        solver: str,
+        gp: bool = False,
+        enforce_dpp: bool = False,
+        ignore_dpp: bool = False,
+        verbose: bool = False,
+        canon_backend: str | None = None,
+        solver_opts: dict[str, Any] | None = None,
+    ) -> Any:
+        return self.problem.get_problem_data(
+            solver,
+            gp=gp,
+            enforce_dpp=enforce_dpp,
+            ignore_dpp=ignore_dpp,
+            verbose=verbose,
+            canon_backend=canon_backend,
+            solver_opts=solver_opts,
+        )
+
 
 @dataclass(frozen=True)
 class Builder:
@@ -158,6 +178,19 @@ class Builder:
         assert problem.is_dpp(), "Problem is not DPP"
 
         return _Problem(problem=problem, model=self.model)
+
+    # def compile(self, solver,
+    #            gp: bool = False,
+    #            enforce_dpp: bool = False,
+    #            ignore_dpp: bool = False,
+    #            verbose: bool = False,
+    #            canon_backend: str | None = None,
+    #            solver_opts: Optional[dict] = None):
+    #
+    #    problem = self.build()
+    #    return problem.get_problem_data(solver=solver, gp=gp,
+    #        enforce_dpp=enforce_dpp, ignore_dpp=ignore_dpp, verbose=verbose,
+    #        canon_backend=canon_backend, solver_opts=solver_opts)
 
     @property
     def weights(self) -> cp.Variable:

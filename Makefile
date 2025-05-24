@@ -9,10 +9,10 @@ RESET := \033[0m
 
 ##@ Development Setup
 
-venv:
+venv: ## Create a Python virtual environment using uv
 	@printf "$(BLUE)Creating virtual environment...$(RESET)\n"
-	@curl -LsSf https://astral.sh/uv/install.sh | sh
-	@uv venv --python 3.12
+	@curl -LsSf https://astral.sh/uv/install.sh | sh  # Install uv package manager
+	@uv venv --python 3.12  # Create a virtual environment with Python 3.12
 
 install: venv ## Install all dependencies using uv
 	@printf "$(BLUE)Installing dependencies...$(RESET)\n"

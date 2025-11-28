@@ -38,17 +38,6 @@ dev = [
 ]
 
 
-[tool.ruff]
-line-length = 120
-target-version = "py310"
-exclude = [
-    "*__init__.py"
-]
-
-[tool.ruff.lint]
-select = ["E", "F", "I"]
-
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

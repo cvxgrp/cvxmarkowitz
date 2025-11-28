@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Bounds"""
+"""Bounds."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ class Bounds(Model):
     acting_on: str = "weights"
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """No estimation for bounds"""
+        """No estimation for bounds."""
         raise NotImplementedError("No estimation for bounds")
 
     def _f(self, string: str) -> str:

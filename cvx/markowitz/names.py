@@ -13,8 +13,16 @@
 #    limitations under the License.
 # see https://stackoverflow.com/a/54950492/1695486
 
+"""Centralized string constants used across the Markowitz package.
+
+These names index data dictionaries, model maps, constraints, and parameters.
+Keeping them in one place avoids typos and improves discoverability.
+"""
+
 
 class DataNames:
+    """Keys for data items passed into models and builders."""
+
     RETURNS = "returns"
     MU = "mu"
     MU_UNCERTAINTY = "mu_uncertainty"
@@ -35,6 +43,8 @@ class DataNames:
 
 
 class ModelName:
+    """Keys for model components bundled inside a builder/problem."""
+
     RISK = "risk"
     RETURN = "return"
     BOUND_ASSETS = "bound_assets"
@@ -42,6 +52,8 @@ class ModelName:
 
 
 class ConstraintName:
+    """Canonical names for constraints used in builders/problems."""
+
     BUDGET = "budget"
     CONCENTRATION = "concentration"
     LONG_ONLY = "long_only"
@@ -50,6 +62,8 @@ class ConstraintName:
 
 
 class ParameterName:
+    """Keys for tunable problem parameters."""
+
     SIGMA_MAX = "sigma_max"
     OMEGA = "omega"
     SIGMA_TARGET = "sigma_target"

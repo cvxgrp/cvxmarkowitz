@@ -1,3 +1,5 @@
+"""Example backtest using a simple minimum-variance engine."""
+
 from __future__ import annotations
 
 import fire as fire
@@ -12,8 +14,7 @@ from cvx.markowitz.portfolios.min_var import MinVar
 
 
 def run(path: str, halflife: int = 10, min_periods: int = 30) -> None:
-    """
-    Run the backtest for the given data file using a simple minimum variance engine.
+    """Run the backtest for the given data file using a simple minimum variance engine.
 
     Parameters
     ----------
@@ -24,7 +25,6 @@ def run(path: str, halflife: int = 10, min_periods: int = 30) -> None:
     min_periods : int, optional
         Minimum number of periods to compute the covariance matrix, by default 30
     """
-
     prices = pd.read_csv(path, index_col=0, header=0, parse_dates=True)
     n_assets = prices.shape[1]
 

@@ -11,24 +11,22 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Helpers to pad vectors/matrices to target shapes."""
+
 import numpy as np
 
 from cvx.markowitz.types import Matrix
 
 
 def fill_vector(x: Matrix, num: int) -> Matrix:
-    """
-    Fill a vector of length num with x
-    """
+    """Fill a vector of length num with x."""
     z = np.zeros(num)
     z[: len(x)] = x
     return z
 
 
 def fill_matrix(x: Matrix, rows: int, cols: int) -> Matrix:
-    """
-    Fill a matrix of size (rows, cols) with x
-    """
+    """Fill a matrix of size (rows, cols) with x."""
     # I had no luck with ndarray.resize()
     z = np.zeros((rows, cols))
     (n, m) = np.shape(x)

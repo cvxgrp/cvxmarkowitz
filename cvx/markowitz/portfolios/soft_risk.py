@@ -11,6 +11,8 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Portfolio builder with soft risk penalty allowing target risk relaxation."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,9 +28,10 @@ from cvx.markowitz.names import ParameterName as P
 
 @dataclass(frozen=True)
 class SoftRisk(Builder):
-    """
-    maximize w^T mu - omega * (sigma - sigma_target)_+
-    subject to w >= 0, w^T 1 = 1, sigma <= sigma_max
+    """Maximize w^T mu minus a soft penalty on excess risk.
+
+    The objective is maximize w^T mu - omega * (sigma - sigma_target)_+
+    subject to long-only, budget, and max-risk constraints.
     """
 
     _sigma: cp.Variable = cp.Variable(nonneg=True, name="sigma")
@@ -38,11 +41,13 @@ class SoftRisk(Builder):
 
     @property
     def objective(self) -> cp.Maximize:
+        """Return the CVXPY objective for soft-risk maximization."""
         expected_return = self.model[M.RETURN].estimate(self.variables)
         soft_risk = cp.pos(self.parameter[P.OMEGA] * self._sigma - self._sigma_target_times_omega)
         return cp.Maximize(expected_return - soft_risk)
 
     def __post_init__(self) -> None:
+        """Initialize models, parameters, and constraints for soft-risk portfolio."""
         super().__post_init__()
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)

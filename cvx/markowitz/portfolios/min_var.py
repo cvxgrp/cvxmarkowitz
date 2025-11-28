@@ -11,6 +11,8 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Minimum-variance portfolio builder."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -23,17 +25,15 @@ from cvx.markowitz.names import ConstraintName as C
 
 @dataclass(frozen=True)
 class MinVar(Builder):
-    """
-    Minimize the standard deviation of the portfolio returns subject to a set of constraints
-    min StdDev(r_p)
-    s.t. w_p >= 0 and sum(w_p) = 1
-    """
+    """Construct a long-only, budget-constrained minimum-variance portfolio."""
 
     @property
     def objective(self) -> cp.Objective:
+        """Return the CVXPY objective for minimizing portfolio risk."""
         return cp.Minimize(self.risk.estimate(self.variables))
 
     def __post_init__(self) -> None:
+        """Set up default constraints for the minimum-variance portfolio."""
         super().__post_init__()
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0

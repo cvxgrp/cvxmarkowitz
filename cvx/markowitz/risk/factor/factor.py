@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Factor risk model"""
+"""Factor risk model."""
 
 from __future__ import annotations
 
@@ -29,11 +29,12 @@ from cvx.markowitz.utils.fill import fill_matrix, fill_vector
 
 @dataclass(frozen=True)
 class FactorModel(Model):
-    """Factor risk model"""
+    """Factor risk model."""
 
     factors: int = 0
 
     def __post_init__(self) -> None:
+        """Initialize parameters that define the factor risk model."""
         self.data[D.EXPOSURE] = cp.Parameter(
             shape=(self.factors, self.assets),
             name=D.EXPOSURE,
@@ -67,9 +68,7 @@ class FactorModel(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """
-        Compute the total variance
-        """
+        """Compute the total variance."""
         var_residual = self._residual_risk(variables)
         var_systematic = self._systematic_risk(variables)
 
@@ -99,6 +98,15 @@ class FactorModel(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
+        """Validate and assign all factor-model inputs.
+
+        Expected keyword arguments:
+            exposure: Factor exposure matrix (factors x assets).
+            idiosyncratic_vola: Asset-specific volatility vector.
+            chol: Cholesky factor of factor covariance (factors x factors).
+            systematic_vola_uncertainty: Nonnegative vector for systematic risk uncertainty.
+            idiosyncratic_vola_uncertainty: Nonnegative vector for residual risk uncertainty.
+        """
         # check the keywords
         for key in self.data.keys():
             if key not in kwargs.keys():
@@ -132,6 +140,7 @@ class FactorModel(Model):
         )
 
     def constraints(self, variables: Variables) -> Expressions:
+        """Return factor-model linking and robust-risk constraints."""
         return {
             "factors": variables[D.FACTOR_WEIGHTS] == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],
             "_abs": variables[D._ABS] >= cp.abs(variables[D.FACTOR_WEIGHTS]),  # Robust risk dummy variable

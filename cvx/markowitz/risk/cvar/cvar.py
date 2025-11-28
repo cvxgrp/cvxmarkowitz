@@ -11,6 +11,8 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Conditional Value-at-Risk (CVaR) risk model implementation."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,7 +28,7 @@ from cvx.markowitz.utils.fill import fill_matrix
 
 @dataclass(frozen=True)
 class CVar(Model):
-    """Conditional value at risk model"""
+    """Conditional value at risk model."""
 
     alpha: float = 0.95
     rows: int = 0
@@ -40,7 +42,7 @@ class CVar(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate the risk by computing the Cholesky decomposition of self.cov"""
+        """Estimate the risk by computing the Cholesky decomposition of self.cov."""
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
         # k is the number of returns in the left tail
@@ -50,4 +52,9 @@ class CVar(Model):
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
     def update(self, **kwargs: Matrix) -> None:
+        """Update the returns matrix used by the CVaR model.
+
+        Expected keyword arguments:
+            D.RETURNS: Matrix of historical/scenario returns with shape (rows, assets).
+        """
         self.data[D.RETURNS].value = fill_matrix(rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS])

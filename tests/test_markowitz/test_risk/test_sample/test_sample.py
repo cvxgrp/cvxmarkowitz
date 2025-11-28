@@ -1,3 +1,5 @@
+"""Tests for sample-covariance risk model including robust variants."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -10,6 +12,7 @@ from cvx.markowitz.risk import SampleCovariance
 
 
 def test_sample():
+    """Plain sample risk for 2 assets reproduces expected volatility."""
     riskmodel = SampleCovariance(assets=2)
     riskmodel.update(
         **{
@@ -25,6 +28,11 @@ def test_sample():
 
 
 def test_sample_large():
+    """Estimate risk for a 4-asset setup where only first two assets are active.
+
+    Verifies that padding with zeros (inactive assets) preserves the 2-asset
+    reference result for volatility.
+    """
     riskmodel = SampleCovariance(assets=4)
     riskmodel.update(
         **{
@@ -45,6 +53,11 @@ def test_sample_large():
 
 
 def test_robust_sample():
+    """Compute robust risk for 2 assets with per-asset uncertainty.
+
+    Confirms that the robust term based on absolute weights contributes to
+    the resulting norm as expected.
+    """
     riskmodel = SampleCovariance(assets=2)
     riskmodel.update(
         **{
@@ -61,6 +74,10 @@ def test_robust_sample():
 
 
 def test_robust_sample_large():
+    """Robust risk with 4 assets where only two assets are active.
+
+    Ensures the robust volatility matches the 2-asset benchmark.
+    """
     riskmodel = SampleCovariance(assets=4)
     riskmodel.update(
         **{
@@ -82,6 +99,7 @@ def test_robust_sample_large():
 
 
 def test_mismatch():
+    """Updating with mismatched vector lengths should raise CvxError."""
     riskmodel = SampleCovariance(assets=4)
 
     with pytest.raises(CvxError):

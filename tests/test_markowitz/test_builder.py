@@ -1,3 +1,5 @@
+"""Tests for the Builder base class via a small DummyBuilder implementation."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -14,16 +16,21 @@ from cvx.markowitz.names import ModelName as M
 
 @dataclass(frozen=True)
 class DummyBuilder(Builder):
+    """Minimal concrete Builder used to test base‑class behavior."""
+
     @property
     def objective(self):
+        """Return a trivial objective to exercise the builder wiring in tests."""
         return cp.Maximize(0.0 + 0.0 * self.risk.estimate(self.variables))
 
     def __post_init__(self):
+        """Initialize base components and add a unit budget constraint for tests."""
         super().__post_init__()
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0
 
 
 def test_dummy():
+    """Smoke-test building and solving a 1-asset dummy problem."""
     builder = DummyBuilder(assets=1)
 
     assert M.RISK in builder.model
@@ -46,6 +53,7 @@ def test_dummy():
 
 
 def test_missing_data():
+    """Updating with a wrong keyword should raise CvxError."""
     builder = DummyBuilder(assets=1)
     problem = builder.build()
     with pytest.raises(CvxError):
@@ -53,6 +61,7 @@ def test_missing_data():
 
 
 def test_infeasible_problem():
+    """Infeasible bounds should lead to a solver failure wrapped as CvxError."""
     builder = DummyBuilder(assets=1)
 
     problem = builder.build()
@@ -72,5 +81,6 @@ def test_infeasible_problem():
 
 
 def test_builder_risk():
+    """The builder.risk property should reference the risk model in model dict."""
     builder = DummyBuilder(assets=1)
     assert builder.risk == builder.model[M.RISK]

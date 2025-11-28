@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Model for expected returns"""
+"""Model for expected returns."""
 
 from __future__ import annotations
 
@@ -29,9 +29,10 @@ from cvx.markowitz.utils.fill import fill_vector
 
 @dataclass(frozen=True)
 class ExpectedReturns(Model):
-    """Model for expected returns"""
+    """Model for expected returns."""
 
     def __post_init__(self) -> None:
+        """Initialize expected-return parameters and uncertainty bounds."""
         self.data[D.MU] = cp.Parameter(
             shape=self.assets,
             name=D.MU,
@@ -47,9 +48,23 @@ class ExpectedReturns(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
+        """Return robust expected return w^T mu - mu_uncertainty^T |w|.
+
+        Args:
+            variables: Optimization variables containing D.WEIGHTS.
+
+        Returns:
+            A CVXPY expression for the robust expected return.
+        """
         return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter["mu_uncertainty"] @ cp.abs(variables[D.WEIGHTS])
 
     def update(self, **kwargs: Matrix) -> None:
+        """Update expected returns and their uncertainty bounds.
+
+        Expected keyword arguments:
+            D.MU: Vector of expected returns.
+            mu_uncertainty: Nonnegative vector with element-wise uncertainty.
+        """
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)
 

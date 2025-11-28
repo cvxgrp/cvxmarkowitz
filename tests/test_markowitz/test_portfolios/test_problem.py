@@ -1,3 +1,5 @@
+"""Tests for serialization/deserialization of Markowitz problems."""
+
 import numpy as np
 
 from cvx.linalg.cholesky import cholesky
@@ -8,6 +10,11 @@ from cvx.markowitz.portfolios.min_var import MinVar
 
 
 def test_serialize(tmp_path):
+    """Serialize a problem, deserialize it, and compare resulting weights.
+
+    Args:
+        tmp_path: Pytest temporary directory for storing the pickle file.
+    """
     problem = MinVar(assets=10).build()
     problem.serialize(tmp_path / "problem.pkl")
     problem_recovered = deserialize(tmp_path / "problem.pkl")

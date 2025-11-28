@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""PCA analysis with numpy"""
+"""PCA analysis with numpy."""
 
 from __future__ import annotations
 
@@ -24,10 +24,13 @@ from .types import Matrix
 
 @dataclass
 class PCA:
+    """Principal component analysis computed with NumPy only."""
+
     returns: Matrix
     n_components: int = 0
 
     def __post_init__(self) -> None:
+        """Validate inputs and compute factors, exposures, and eigenvalues."""
         if self.n_components > self.returns.shape[1]:
             raise ValueError("The number of components cannot exceed the number of assets")
 
@@ -50,20 +53,25 @@ class PCA:
 
     @property
     def explained_variance(self) -> Matrix:
+        """Proportion of total variance explained by the retained components."""
         return np.array(self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues))
 
     @property
     def cov(self) -> Matrix:
+        """Covariance matrix of retained factors."""
         return np.atleast_2d(np.cov(self.factors.T))
 
     @property
     def systematic_returns(self) -> Matrix:
+        """Portion of returns explained by the PCA factors (F E^T)."""
         return np.array(self.factors @ self.exposure)
 
     @property
     def idiosyncratic_returns(self) -> Matrix:
+        """Residual returns after removing the systematic (factor) component."""
         return self.returns - self.systematic_returns
 
     @property
     def idiosyncratic_vola(self) -> Matrix:
+        """Per-asset standard deviation of idiosyncratic (residual) returns."""
         return np.array(np.std(self.idiosyncratic_returns, axis=0))

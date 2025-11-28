@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Extract valid submatrix of a matrix"""
+"""Extract valid submatrix of a matrix."""
 
 from __future__ import annotations
 
@@ -21,12 +21,14 @@ from .types import Matrix
 
 
 def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:
-    """
-    Construct the valid subset of matrix (correlation) matrix
-    :param matrix: n x n matrix
+    """Construct the valid subset of a (correlation) matrix.
 
-    :return: Tuple of matrix boolean vector indicating if row/column
-    is valid and the valid subset of the matrix
+    Args:
+        matrix: n x n matrix.
+
+    Returns:
+        A tuple of (mask, submatrix) where mask is a boolean vector indicating
+        valid rows/columns and submatrix is the valid subset of the input.
     """
     # make sure matrix  is quadratic
     if matrix.shape[0] != matrix.shape[1]:

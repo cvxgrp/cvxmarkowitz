@@ -11,18 +11,19 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Common type aliases used across the Markowitz package."""
+
 from os import PathLike
-from typing import Dict, Union
+from typing import TypeAlias
 
 import cvxpy as cp
 import numpy as np
 import numpy.typing as npt
-from typing_extensions import TypeAlias
 
-File = Union[str, bytes, PathLike[str]]
-Parameter = Dict[str, cp.Parameter]
-Variables = Dict[str, cp.Variable]
-Expressions = Dict[str, cp.Expression]
-Constraints = Dict[str, cp.Constraint]
+File = str | bytes | PathLike[str]
+Parameter = dict[str, cp.Parameter]
+Variables = dict[str, cp.Variable]
+Expressions = dict[str, cp.Expression]
+Constraints = dict[str, cp.Constraint]
 
 Matrix: TypeAlias = npt.NDArray[np.float64]

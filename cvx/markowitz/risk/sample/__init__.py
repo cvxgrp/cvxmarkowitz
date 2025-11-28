@@ -11,6 +11,10 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Sample covariance risk model package."""
+
 from __future__ import annotations
 
-from .sample import SampleCovariance
+from .sample import SampleCovariance as SampleCovariance
+
+__all__ = ["SampleCovariance"]

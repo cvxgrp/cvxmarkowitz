@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Cholesky decomposition with numpy"""
+"""Cholesky decomposition with numpy."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from .types import Matrix
 
 
 def cholesky(cov: Matrix) -> Matrix:
-    """Compute the cholesky decomposition of a covariance matrix"""
+    """Compute the cholesky decomposition of a covariance matrix."""
     # upper triangular part of the cholesky decomposition
     # np.linalg.cholesky(cov) is the lower triangular part
     return np.transpose(np.linalg.cholesky(cov))

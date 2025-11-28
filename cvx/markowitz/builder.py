@@ -11,13 +11,16 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Core builder classes to assemble and solve Markowitz problems."""
+
 from __future__ import annotations
 
 import pickle
 from abc import abstractmethod
+from collections.abc import Generator
 from dataclasses import dataclass, field
 from os import PathLike
-from typing import Any, Generator
+from typing import Any
 
 import cvxpy as cp
 import numpy as np
@@ -35,6 +38,14 @@ from cvx.markowitz.types import File, Matrix, Parameter, Variables
 def deserialize(
     problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
 ) -> Any:
+    """Load a previously serialized Markowitz problem from disk.
+
+    Args:
+        problem_file: Path to the pickle file created by `_Problem.serialize`.
+
+    Returns:
+        The deserialized `_Problem` instance.
+    """
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)
 
@@ -45,9 +56,7 @@ class _Problem:
     model: dict[str, Model] = field(default_factory=dict)
 
     def update(self, **kwargs: Matrix) -> _Problem:
-        """
-        Update the problem
-        """
+        """Update the problem."""
         for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
@@ -62,9 +71,7 @@ class _Problem:
         return self
 
     def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
-        """
-        Solve the problem
-        """
+        """Solve the problem."""
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:
@@ -142,14 +149,10 @@ class Builder:
     @property
     @abstractmethod
     def objective(self) -> cp.Expression:
-        """
-        Return the objective function
-        """
+        """Return the objective function."""
 
     def build(self) -> _Problem:
-        """
-        Build the cvxpy problem
-        """
+        """Build the cvxpy problem."""
         for name_model, model in self.model.items():
             for name_constraint, constraint in model.constraints(self.variables).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint

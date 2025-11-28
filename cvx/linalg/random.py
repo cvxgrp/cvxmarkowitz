@@ -11,11 +11,14 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Random linear-algebra utilities."""
+
 import numpy as np
 
 from .types import Matrix
 
 
 def rand_cov(n: int) -> Matrix:
+    """Return a random positive semidefinite covariance matrix of size n x n."""
     a = np.random.randn(n, n)
     return np.array(np.transpose(a) @ (a))

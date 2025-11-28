@@ -11,6 +11,8 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Portfolio builder maximizing expected return subject to risk and basic constraints."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,17 +28,15 @@ from cvx.markowitz.names import ParameterName as P
 
 @dataclass(frozen=True)
 class MaxSharpe(Builder):
-    """
-    Minimize the standard deviation of the portfolio returns subject to a set of constraints
-    min StdDev(r_p)
-    s.t. w_p >= 0 and sum(w_p) = 1
-    """
+    """Maximize expected return under long-only, budget, and risk constraints."""
 
     @property
     def objective(self) -> cp.Objective:
+        """Return the CVXPY objective for maximizing expected return."""
         return cp.Maximize(self.model[M.RETURN].estimate(self.variables))
 
     def __post_init__(self) -> None:
+        """Initialize models, parameters, and constraints for the builder."""
         super().__post_init__()
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)

@@ -11,7 +11,7 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Risk models based on the sample covariance matrix"""
+"""Risk models based on the sample covariance matrix."""
 
 from __future__ import annotations
 
@@ -29,9 +29,10 @@ from cvx.markowitz.utils.fill import fill_matrix, fill_vector
 
 @dataclass(frozen=True)
 class SampleCovariance(Model):
-    """Risk model based on the Cholesky decomposition of the sample cov matrix"""
+    """Risk model based on the Cholesky decomposition of the sample cov matrix."""
 
     def __post_init__(self) -> None:
+        """Initialize parameters for the sample-covariance risk model."""
         self.data[D.CHOLESKY] = cp.Parameter(
             shape=(self.assets, self.assets),
             name=D.CHOLESKY,
@@ -47,9 +48,7 @@ class SampleCovariance(Model):
 
     # x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate the risk by computing the Cholesky decomposition of
-        self.cov"""
-
+        """Estimate risk via Cholesky-based norm of exposures and uncertainties."""
         return cp.norm2(
             cp.hstack(
                 [
@@ -60,6 +59,12 @@ class SampleCovariance(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
+        """Assign Cholesky factor and volatility-uncertainty vector.
+
+        Expected keyword arguments:
+            D.CHOLESKY: Cholesky factor of the covariance matrix (assets x assets).
+            D.VOLA_UNCERTAINTY: Nonnegative vector of per-asset uncertainty.
+        """
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 
@@ -67,6 +72,7 @@ class SampleCovariance(Model):
         self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])
 
     def constraints(self, variables: Variables) -> Expressions:
+        """Return auxiliary constraints used for robust risk modeling."""
         return {
             "dummy": variables[D._ABS] >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
         }

@@ -1,3 +1,5 @@
+"""Example script: factor-aware minimum-variance optimization demo."""
+
 from __future__ import annotations
 
 import cvxpy as cp

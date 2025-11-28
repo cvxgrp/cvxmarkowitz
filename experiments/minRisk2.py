@@ -1,3 +1,5 @@
+"""Example script: constrained minimum-variance demo with utilities."""
+
 from __future__ import annotations
 
 import cvxpy as cp

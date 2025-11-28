@@ -1,3 +1,9 @@
+"""Unit tests for Cholesky helper ensuring SPD reconstruction and errors.
+
+Covers basic correctness on symmetric positive-definite matrices and verifies
+that non-symmetric or non-square inputs raise linear-algebra errors.
+"""
+
 from __future__ import annotations
 
 import numpy as np
@@ -28,6 +34,11 @@ def test_cholesky_not_square():
 
 @pytest.mark.parametrize("size", [1, 2, 4, 8, 16, 32, 64, 128, 256, 512])
 def test_cholesky_speed(size):
+    """Generate random SPD matrices and verify Cholesky reconstructs covariance.
+
+    Args:
+        size: Dimension of the random covariance matrix to test.
+    """
     a = rand_cov(size)
     u = cholesky(a)
     assert np.allclose(a, np.transpose(u) @ u)

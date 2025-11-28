@@ -1,3 +1,5 @@
+"""Unit tests for the TradingCosts model."""
+
 from __future__ import annotations
 
 import cvxpy as cp
@@ -9,6 +11,7 @@ from cvx.markowitz.names import DataNames as D
 
 
 def test_trading_costs():
+    """Trading costs should aggregate powered absolute position changes."""
     assets = 3
     model = TradingCosts(assets=assets)
 

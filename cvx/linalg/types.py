@@ -11,8 +11,14 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
+"""Type aliases for linear algebra utilities.
+
+Defines a NumPy ndarray alias used across the linalg subpackage.
+"""
+
+from typing import TypeAlias
+
 import numpy as np
 import numpy.typing as npt
-from typing_extensions import TypeAlias
 
 Matrix: TypeAlias = npt.NDArray[np.float64]

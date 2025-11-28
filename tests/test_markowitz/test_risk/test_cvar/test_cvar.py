@@ -1,3 +1,9 @@
+"""Tests for the CVaR risk model used within portfolio builders.
+
+Validates integration with the MinVar builder and checks solve values for
+randomized input data.
+"""
+
 from __future__ import annotations
 
 import numpy as np
@@ -10,8 +16,7 @@ from cvx.markowitz.risk import CVar
 
 
 def test_estimate_risk(solver):
-    """Test the estimate() method"""
-
+    """Smoke-test CVaR integration and objective values across updates."""
     model = CVar(alpha=0.95, rows=50, assets=14)
 
     np.random.seed(42)

@@ -11,9 +11,12 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""Linalg module"""
+"""Linear algebra helpers exposed as public API."""
+
 from __future__ import annotations
 
-from .cholesky import cholesky
-from .pca import PCA
-from .valid import valid
+from .cholesky import cholesky as cholesky
+from .pca import PCA as PCA
+from .valid import valid as valid
+
+__all__ = ["cholesky", "PCA", "valid"]

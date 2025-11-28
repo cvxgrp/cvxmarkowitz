@@ -33,7 +33,6 @@ dev = [
     "tinycta",
     "plotly",
     "cvxsimulator",
-    "cvxbson",
     "scikit-learn",
     "marimo"
 ]

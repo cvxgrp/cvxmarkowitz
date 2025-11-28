@@ -63,6 +63,6 @@ class CVar(Model):
         """Update the returns matrix used by the CVaR model.
 
         Args:
-            **kwargs: Must contain 'returns' key with matrix of shape (rows, assets).
+            **kwargs: Must contain D.RETURNS key with matrix of shape (rows, assets).
         """
         self.data[D.RETURNS].value = fill_matrix(rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS])

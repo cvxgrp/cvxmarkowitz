@@ -49,6 +49,6 @@ class HoldingCosts(Model):
         """Update the holding-cost vector.
 
         Args:
-            **kwargs: Must contain 'holding_costs' key with cost vector.
+            **kwargs: Must contain D.HOLDING_COSTS key with cost vector.
         """
         self.data[D.HOLDING_COSTS].value = fill_vector(num=self.assets, x=kwargs[D.HOLDING_COSTS])

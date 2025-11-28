@@ -62,7 +62,7 @@ class ExpectedReturns(Model):
         """Update expected returns and their uncertainty bounds.
 
         Args:
-            **kwargs: Must contain 'mu' (expected returns) and 'mu_uncertainty'.
+            **kwargs: Must contain D.MU (expected returns) and 'mu_uncertainty'.
 
         Raises:
             CvxError: If mu and mu_uncertainty have different lengths.

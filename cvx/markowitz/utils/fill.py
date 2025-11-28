@@ -19,14 +19,14 @@ from cvx.markowitz.types import Matrix
 
 
 def fill_vector(x: Matrix, num: int) -> Matrix:
-    """Pad a vector with zeros to reach target length.
+    """Create a zero-padded vector with input values at the start.
 
     Args:
-        x: Input vector to pad.
-        num: Target length for the output vector.
+        x: Input vector whose values are placed at the beginning.
+        num: Total length of the output vector.
 
     Returns:
-        Zero-padded vector of length num with x values at the start.
+        Vector of length num with x values at the start, zeros elsewhere.
     """
     z = np.zeros(num)
     z[: len(x)] = x
@@ -34,15 +34,15 @@ def fill_vector(x: Matrix, num: int) -> Matrix:
 
 
 def fill_matrix(x: Matrix, rows: int, cols: int) -> Matrix:
-    """Pad a matrix with zeros to reach target dimensions.
+    """Create a zero-padded matrix with input values in the top-left.
 
     Args:
-        x: Input matrix to pad.
-        rows: Target number of rows.
-        cols: Target number of columns.
+        x: Input matrix placed in the top-left corner.
+        rows: Total number of rows in the output matrix.
+        cols: Total number of columns in the output matrix.
 
     Returns:
-        Zero-padded matrix of shape (rows, cols) with x in the top-left.
+        Matrix of shape (rows, cols) with x in top-left, zeros elsewhere.
     """
     # I had no luck with ndarray.resize()
     z = np.zeros((rows, cols))

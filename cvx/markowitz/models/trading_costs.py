@@ -58,6 +58,6 @@ class TradingCosts(Model):
         """Update previous weights used as the trading baseline.
 
         Args:
-            **kwargs: Must contain 'weights' key with previous weight vector.
+            **kwargs: Must contain D.WEIGHTS key with previous weight vector.
         """
         self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])

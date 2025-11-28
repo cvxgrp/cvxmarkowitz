@@ -69,7 +69,7 @@ class SampleCovariance(Model):
         """Assign Cholesky factor and volatility-uncertainty vector.
 
         Args:
-            **kwargs: Must contain 'chol' and 'vola_uncertainty' keys.
+            **kwargs: Must contain D.CHOLESKY and D.VOLA_UNCERTAINTY keys.
 
         Raises:
             CvxError: If chol and vola_uncertainty have mismatched dimensions.

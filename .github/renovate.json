@@ -1,33 +1,22 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "automerge": true,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": [
-      "on friday before 3pm"
-    ]
-  },
-  "pre-commit": {
-    "enabled": true,
-    "schedule": [
-      "on the first day of the month before 6am"
+    "extends": [
+        "config:recommended",
+        ":enablePreCommit",
+        ":automergeMinor",
+        ":dependencyDashboard",
+        ":maintainLockFilesWeekly",
+        ":semanticCommits",
+        ":pinDevDependencies"
     ],
-    "packageRules": [
-      {
-        "groupName": "pre-commit hooks",
-        "groupSlug": "pre-commit",
-        "labels": [
-          "pre-commit",
-          "dependencies"
-        ],
-        "matchDepTypes": ["repository"]
-      }
+    "enabledManagers": [
+        "pep621",
+        "pre-commit",
+        "github-actions",
+        "devcontainer",
+        "dockerfile"
+    ],
+    "timezone": "Asia/Dubai",
+    "schedule": [
+        "before 10am on tuesday"
     ]
-  },
-  "labels": [
-    "renovate"
-  ]
 }

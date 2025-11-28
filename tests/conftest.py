@@ -16,4 +16,9 @@ def resource_fixture():
 
 @pytest.fixture(params=[s for s in [cp.ECOS, cp.CLARABEL] if s in cp.installed_solvers()])
 def solver(request):
+    """Yield installed cvxpy solvers for parametrized tests.
+
+    Selects from a small set of preferred solvers and filters to those
+    available in the current environment.
+    """
     return request.param

@@ -27,17 +27,32 @@ from cvx.markowitz.utils.fill import fill_vector
 
 @dataclass(frozen=True)
 class Bounds(Model):
+    """Lower/upper bound model applied to a variable vector.
+
+    Attributes:
+        name: Suffix used to distinguish multiple bounds (e.g., "assets").
+        acting_on: Key in the variables dict this bound constrains (e.g., D.WEIGHTS).
+    """
+
     name: str = ""
     acting_on: str = "weights"
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """No estimation for bounds."""
+        """No estimation for bounds.
+
+        Bounds only contribute constraints; they do not produce an objective term.
+        """
         raise NotImplementedError("No estimation for bounds")
 
     def _f(self, string: str) -> str:
         return f"{string}_{self.name}"
 
     def __post_init__(self) -> None:
+        """Create lower/upper bound parameters with default values.
+
+        Initializes two parameters named with the bound type and `name` suffix,
+        both sized to `assets`. Defaults are zeros for lower and ones for upper.
+        """
         self.data[self._f("lower")] = cp.Parameter(
             shape=self.assets,
             name=self._f("lower"),
@@ -50,10 +65,15 @@ class Bounds(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
+        """Assign lower/upper vectors, padding or trimming to asset length."""
         self.data[self._f("lower")].value = fill_vector(num=self.assets, x=kwargs[self._f("lower")])
         self.data[self._f("upper")].value = fill_vector(num=self.assets, x=kwargs[self._f("upper")])
 
     def constraints(self, variables: Variables) -> Expressions:
+        """Return lower/upper inequality constraints for `acting_on` variable.
+
+        Raises KeyError if `acting_on` is not present in `variables`.
+        """
         return {
             f"lower bound {self.name}": variables[self.acting_on] >= self.data[self._f("lower")],
             f"upper bound {self.name}": variables[self.acting_on] <= self.data[self._f("upper")],

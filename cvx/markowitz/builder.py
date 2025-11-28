@@ -115,6 +115,18 @@ class _Problem:
 
 @dataclass(frozen=True)
 class Builder:
+    """Assemble variables, models, and constraints for Markowitz problems.
+
+    Attributes:
+        assets: Number of asset weights to optimize.
+        factors: Optional number of factors; if provided, a FactorModel is used,
+            otherwise a SampleCovariance risk model is configured.
+        model: Mapping of model components (e.g., bounds, risk) by name.
+        constraints: Mapping of named cvxpy constraints added during build.
+        variables: Mapping of problem variables (weights, factor weights, etc.).
+        parameter: Mapping of cvxpy Parameters used by the builder/models.
+    """
+
     assets: int = 0
     factors: int | None = None
     model: dict[str, Model] = field(default_factory=dict)
@@ -123,6 +135,13 @@ class Builder:
     parameter: Parameter = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Initialize default risk model, variables, and bounds.
+
+        Selects a factor-based or sample-covariance risk model depending on
+        `factors`, creates the corresponding variables (weights and, if
+        applicable, factor weights and their absolute values), and registers
+        per-asset and/or per-factor bound models.
+        """
         # pick the correct risk model
         if self.factors is not None:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
@@ -164,12 +183,19 @@ class Builder:
 
     @property
     def weights(self) -> cp.Variable:
+        """Return the asset-weight decision variable (`weights`)."""
         return self.variables[D.WEIGHTS]
 
     @property
     def risk(self) -> Model:
+        """Return the configured risk model held under `model[M.RISK]`."""
         return self.model[M.RISK]
 
     @property
     def factor_weights(self) -> cp.Variable:
+        """Return the factor-weight variable.
+
+        Note: Only present when a factor risk model is used; accessing this
+        property without factors configured will raise a KeyError.
+        """
         return self.variables[D.FACTOR_WEIGHTS]

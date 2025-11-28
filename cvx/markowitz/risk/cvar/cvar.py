@@ -34,6 +34,12 @@ class CVar(Model):
     rows: int = 0
 
     def __post_init__(self) -> None:
+        """Initialize CVaR model parameters.
+
+        Creates the returns matrix parameter with shape `(rows, assets)` and
+        zeros as default value. The `alpha` quantile controls tail size during
+        estimation in `estimate`.
+        """
         # self.k = int(self.n * (1 - self.alpha))
         self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),

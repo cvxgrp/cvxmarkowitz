@@ -21,7 +21,6 @@ def __():
     pd.options.plotting.backend = "plotly"
 
     import yfinance as yf
-
     from cvx.simulator.builder import builder
     from cvx.simulator.grid import resample_index
 

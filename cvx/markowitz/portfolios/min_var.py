@@ -29,11 +29,18 @@ class MinVar(Builder):
 
     @property
     def objective(self) -> cp.Objective:
-        """Return the CVXPY objective for minimizing portfolio risk."""
+        """Return the CVXPY objective for minimizing portfolio risk.
+
+        Returns:
+            CVXPY Minimize objective expression.
+        """
         return cp.Minimize(self.risk.estimate(self.variables))
 
     def __post_init__(self) -> None:
-        """Set up default constraints for the minimum-variance portfolio."""
+        """Set up default constraints for the minimum-variance portfolio.
+
+        Adds long-only and budget constraints to the base builder.
+        """
         super().__post_init__()
         self.constraints[C.LONG_ONLY] = self.weights >= 0
         self.constraints[C.BUDGET] = cp.sum(self.weights) == 1.0

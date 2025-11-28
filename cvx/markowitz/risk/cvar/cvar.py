@@ -28,12 +28,13 @@ from cvx.markowitz.utils.fill import fill_matrix
 
 @dataclass(frozen=True)
 class CVar(Model):
-    """Conditional value at risk model."""
+    """Conditional Value-at-Risk (CVaR) model for tail risk estimation."""
 
     alpha: float = 0.95
     rows: int = 0
 
     def __post_init__(self) -> None:
+        """Initialize the returns parameter matrix."""
         # self.k = int(self.n * (1 - self.alpha))
         self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),
@@ -42,7 +43,14 @@ class CVar(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate the risk by computing the Cholesky decomposition of self.cov."""
+        """Estimate CVaR risk as the average of the worst (1-alpha) losses.
+
+        Args:
+            variables: Dictionary containing optimization variables with weights.
+
+        Returns:
+            CVXPY expression for the CVaR risk estimate.
+        """
         # R is a matrix of returns, n is the number of rows in R
         # n = self.R.shape[0]
         # k is the number of returns in the left tail
@@ -54,7 +62,7 @@ class CVar(Model):
     def update(self, **kwargs: Matrix) -> None:
         """Update the returns matrix used by the CVaR model.
 
-        Expected keyword arguments:
-            D.RETURNS: Matrix of historical/scenario returns with shape (rows, assets).
+        Args:
+            **kwargs: Must contain 'returns' key with matrix of shape (rows, assets).
         """
         self.data[D.RETURNS].value = fill_matrix(rows=self.rows, cols=self.assets, x=kwargs[D.RETURNS])

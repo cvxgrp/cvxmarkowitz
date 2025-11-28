@@ -32,11 +32,19 @@ class MaxSharpe(Builder):
 
     @property
     def objective(self) -> cp.Objective:
-        """Return the CVXPY objective for maximizing expected return."""
+        """Return the CVXPY objective for maximizing expected return.
+
+        Returns:
+            CVXPY Maximize objective expression.
+        """
         return cp.Maximize(self.model[M.RETURN].estimate(self.variables))
 
     def __post_init__(self) -> None:
-        """Initialize models, parameters, and constraints for the builder."""
+        """Initialize models, parameters, and constraints for the builder.
+
+        Sets up expected return model, sigma_max parameter, and standard
+        constraints (long-only, budget, risk cap).
+        """
         super().__post_init__()
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)

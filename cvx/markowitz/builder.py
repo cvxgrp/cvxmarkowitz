@@ -56,7 +56,17 @@ class _Problem:
     model: dict[str, Model] = field(default_factory=dict)
 
     def update(self, **kwargs: Matrix) -> _Problem:
-        """Update the problem."""
+        """Update model parameters with new data.
+
+        Args:
+            **kwargs: Keyword arguments containing data for each model.
+
+        Returns:
+            Self for method chaining.
+
+        Raises:
+            CvxError: If required data keys are missing for any model.
+        """
         for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
@@ -71,7 +81,18 @@ class _Problem:
         return self
 
     def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
-        """Solve the problem."""
+        """Solve the optimization problem.
+
+        Args:
+            solver: CVXPY solver to use.
+            **kwargs: Additional solver options passed to cvxpy.
+
+        Returns:
+            Optimal objective value.
+
+        Raises:
+            CvxError: If the problem does not reach optimal status.
+        """
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:
@@ -81,40 +102,86 @@ class _Problem:
 
     @property
     def value(self) -> float:
+        """Return the optimal objective value.
+
+        Returns:
+            The objective value from the last solve.
+        """
         return float(self.problem.value)
 
     def is_dpp(self) -> bool:
+        """Check if the problem satisfies DPP (disciplined parametrized programming).
+
+        Returns:
+            True if the problem is DPP compliant.
+        """
         return bool(self.problem.is_dpp())
 
     @property
     def data(self) -> Generator[tuple[tuple[str, str], Matrix]]:
+        """Iterate over all model data parameters.
+
+        Yields:
+            Tuples of ((model_name, key), parameter_value).
+        """
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
 
     @property
     def parameter(self) -> Parameter:
+        """Return the CVXPY parameter dictionary.
+
+        Returns:
+            Dictionary mapping parameter names to CVXPY Parameter objects.
+        """
         return dict(self.problem.param_dict.items())
 
     @property
     def variables(self) -> Variables:
+        """Return the CVXPY variable dictionary.
+
+        Returns:
+            Dictionary mapping variable names to CVXPY Variable objects.
+        """
         return dict(self.problem.var_dict.items())
 
     @property
     def weights(self) -> Matrix:
+        """Return the optimal portfolio weights.
+
+        Returns:
+            Array of asset weights from the last solve.
+        """
         return np.array(self.variables[D.WEIGHTS].value)
 
     @property
     def factor_weights(self) -> Matrix:
+        """Return the optimal factor weights.
+
+        Returns:
+            Array of factor weights from the last solve.
+        """
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
     def serialize(self, problem_file: File) -> None:
+        """Serialize the problem to a pickle file.
+
+        Args:
+            problem_file: Path to the output file.
+        """
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 
 
 @dataclass(frozen=True)
 class Builder:
+    """Abstract base class for Markowitz portfolio optimization builders.
+
+    Subclasses must implement the `objective` property to define the
+    optimization goal (minimize risk, maximize return, etc.).
+    """
+
     assets: int = 0
     factors: int | None = None
     model: dict[str, Model] = field(default_factory=dict)
@@ -123,6 +190,11 @@ class Builder:
     parameter: Parameter = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Initialize models, variables, and constraints based on configuration.
+
+        Sets up the risk model (factor or sample covariance), weight variables,
+        and bound models depending on whether factors are specified.
+        """
         # pick the correct risk model
         if self.factors is not None:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
@@ -152,7 +224,14 @@ class Builder:
         """Return the objective function."""
 
     def build(self) -> _Problem:
-        """Build the cvxpy problem."""
+        """Build the CVXPY problem from models and constraints.
+
+        Returns:
+            A _Problem instance ready for solving.
+
+        Raises:
+            AssertionError: If the problem is not DPP compliant.
+        """
         for name_model, model in self.model.items():
             for name_constraint, constraint in model.constraints(self.variables).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
@@ -164,12 +243,27 @@ class Builder:
 
     @property
     def weights(self) -> cp.Variable:
+        """Return the weights optimization variable.
+
+        Returns:
+            CVXPY Variable for portfolio weights.
+        """
         return self.variables[D.WEIGHTS]
 
     @property
     def risk(self) -> Model:
+        """Return the risk model.
+
+        Returns:
+            The risk Model instance (FactorModel or SampleCovariance).
+        """
         return self.model[M.RISK]
 
     @property
     def factor_weights(self) -> cp.Variable:
+        """Return the factor weights optimization variable.
+
+        Returns:
+            CVXPY Variable for factor weights.
+        """
         return self.variables[D.FACTOR_WEIGHTS]

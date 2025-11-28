@@ -41,13 +41,21 @@ class SoftRisk(Builder):
 
     @property
     def objective(self) -> cp.Maximize:
-        """Return the CVXPY objective for soft-risk maximization."""
+        """Return the CVXPY objective for soft-risk maximization.
+
+        Returns:
+            CVXPY Maximize objective with expected return minus soft risk penalty.
+        """
         expected_return = self.model[M.RETURN].estimate(self.variables)
         soft_risk = cp.pos(self.parameter[P.OMEGA] * self._sigma - self._sigma_target_times_omega)
         return cp.Maximize(expected_return - soft_risk)
 
     def __post_init__(self) -> None:
-        """Initialize models, parameters, and constraints for soft-risk portfolio."""
+        """Initialize models, parameters, and constraints for soft-risk portfolio.
+
+        Sets up expected return model, risk parameters (sigma_max, sigma_target,
+        omega), and constraints (long-only, budget, risk bounds).
+        """
         super().__post_init__()
 
         self.model[M.RETURN] = ExpectedReturns(assets=self.assets)

@@ -27,17 +27,35 @@ from cvx.markowitz.utils.fill import fill_vector
 
 @dataclass(frozen=True)
 class Bounds(Model):
+    """Model for variable bounds constraints."""
+
     name: str = ""
     acting_on: str = "weights"
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """No estimation for bounds."""
+        """Bounds do not provide risk estimation.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Raises:
+            NotImplementedError: Always raised as bounds have no estimate.
+        """
         raise NotImplementedError("No estimation for bounds")
 
     def _f(self, string: str) -> str:
+        """Format a string with the bounds name suffix.
+
+        Args:
+            string: Base string to format.
+
+        Returns:
+            Formatted string with name suffix appended.
+        """
         return f"{string}_{self.name}"
 
     def __post_init__(self) -> None:
+        """Initialize lower and upper bound parameters."""
         self.data[self._f("lower")] = cp.Parameter(
             shape=self.assets,
             name=self._f("lower"),
@@ -50,10 +68,23 @@ class Bounds(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
+        """Update lower and upper bound values.
+
+        Args:
+            **kwargs: Must contain keys for lower and upper bounds.
+        """
         self.data[self._f("lower")].value = fill_vector(num=self.assets, x=kwargs[self._f("lower")])
         self.data[self._f("upper")].value = fill_vector(num=self.assets, x=kwargs[self._f("upper")])
 
     def constraints(self, variables: Variables) -> Expressions:
+        """Return lower and upper bound constraints.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            Dictionary with lower and upper bound constraint expressions.
+        """
         return {
             f"lower bound {self.name}": variables[self.acting_on] >= self.data[self._f("lower")],
             f"upper bound {self.name}": variables[self.acting_on] <= self.data[self._f("upper")],

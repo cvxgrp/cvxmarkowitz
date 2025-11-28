@@ -29,12 +29,16 @@ from cvx.markowitz.utils.fill import fill_matrix, fill_vector
 
 @dataclass(frozen=True)
 class FactorModel(Model):
-    """Factor risk model."""
+    """Factor-based risk model with systematic and idiosyncratic components."""
 
     factors: int = 0
 
     def __post_init__(self) -> None:
-        """Initialize parameters that define the factor risk model."""
+        """Initialize parameters that define the factor risk model.
+
+        Sets up exposure, idiosyncratic volatility, Cholesky factor,
+        and uncertainty parameters.
+        """
         self.data[D.EXPOSURE] = cp.Parameter(
             shape=(self.factors, self.assets),
             name=D.EXPOSURE,
@@ -68,13 +72,28 @@ class FactorModel(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Compute the total variance."""
+        """Compute total risk as norm of systematic and residual components.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            CVXPY expression for total factor-model risk.
+        """
         var_residual = self._residual_risk(variables)
         var_systematic = self._systematic_risk(variables)
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
     def _residual_risk(self, variables: Variables) -> cp.Expression:
+        """Compute the idiosyncratic (residual) risk component.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            CVXPY expression for residual risk norm.
+        """
         return cp.norm2(
             cp.hstack(
                 [
@@ -88,6 +107,14 @@ class FactorModel(Model):
         )
 
     def _systematic_risk(self, variables: Variables) -> cp.Expression:
+        """Compute the systematic (factor) risk component.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            CVXPY expression for systematic risk norm.
+        """
         return cp.norm2(
             cp.hstack(
                 [
@@ -100,12 +127,12 @@ class FactorModel(Model):
     def update(self, **kwargs: Matrix) -> None:
         """Validate and assign all factor-model inputs.
 
-        Expected keyword arguments:
-            exposure: Factor exposure matrix (factors x assets).
-            idiosyncratic_vola: Asset-specific volatility vector.
-            chol: Cholesky factor of factor covariance (factors x factors).
-            systematic_vola_uncertainty: Nonnegative vector for systematic risk uncertainty.
-            idiosyncratic_vola_uncertainty: Nonnegative vector for residual risk uncertainty.
+        Args:
+            **kwargs: Must contain exposure, idiosyncratic_vola, chol,
+                systematic_vola_uncertainty, and idiosyncratic_vola_uncertainty.
+
+        Raises:
+            CvxError: If required keys are missing or dimensions mismatch.
         """
         # check the keywords
         for key in self.data.keys():
@@ -140,7 +167,14 @@ class FactorModel(Model):
         )
 
     def constraints(self, variables: Variables) -> Expressions:
-        """Return factor-model linking and robust-risk constraints."""
+        """Return factor-model linking and robust-risk constraints.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            Dictionary with factor linking and absolute value constraints.
+        """
         return {
             "factors": variables[D.FACTOR_WEIGHTS] == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],
             "_abs": variables[D._ABS] >= cp.abs(variables[D.FACTOR_WEIGHTS]),  # Robust risk dummy variable

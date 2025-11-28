@@ -61,9 +61,11 @@ class ExpectedReturns(Model):
     def update(self, **kwargs: Matrix) -> None:
         """Update expected returns and their uncertainty bounds.
 
-        Expected keyword arguments:
-            D.MU: Vector of expected returns.
-            mu_uncertainty: Nonnegative vector with element-wise uncertainty.
+        Args:
+            **kwargs: Must contain 'mu' (expected returns) and 'mu_uncertainty'.
+
+        Raises:
+            CvxError: If mu and mu_uncertainty have different lengths.
         """
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)

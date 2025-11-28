@@ -32,7 +32,7 @@ class SampleCovariance(Model):
     """Risk model based on the Cholesky decomposition of the sample cov matrix."""
 
     def __post_init__(self) -> None:
-        """Initialize parameters for the sample-covariance risk model."""
+        """Initialize Cholesky and volatility uncertainty parameters."""
         self.data[D.CHOLESKY] = cp.Parameter(
             shape=(self.assets, self.assets),
             name=D.CHOLESKY,
@@ -48,7 +48,14 @@ class SampleCovariance(Model):
 
     # x: array([ 5.19054e-01,  4.80946e-01, -1.59557e-12, -1.59557e-12])
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate risk via Cholesky-based norm of exposures and uncertainties."""
+        """Estimate risk via Cholesky-based norm of exposures and uncertainties.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            CVXPY expression for the risk estimate.
+        """
         return cp.norm2(
             cp.hstack(
                 [
@@ -61,9 +68,11 @@ class SampleCovariance(Model):
     def update(self, **kwargs: Matrix) -> None:
         """Assign Cholesky factor and volatility-uncertainty vector.
 
-        Expected keyword arguments:
-            D.CHOLESKY: Cholesky factor of the covariance matrix (assets x assets).
-            D.VOLA_UNCERTAINTY: Nonnegative vector of per-asset uncertainty.
+        Args:
+            **kwargs: Must contain 'chol' and 'vola_uncertainty' keys.
+
+        Raises:
+            CvxError: If chol and vola_uncertainty have mismatched dimensions.
         """
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
@@ -72,7 +81,14 @@ class SampleCovariance(Model):
         self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])
 
     def constraints(self, variables: Variables) -> Expressions:
-        """Return auxiliary constraints used for robust risk modeling."""
+        """Return auxiliary constraints used for robust risk modeling.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            Dictionary with absolute value dummy constraint for robust risk.
+        """
         return {
             "dummy": variables[D._ABS] >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
         }

@@ -14,6 +14,7 @@ from cvx.linalg.random import rand_cov
 
 
 def test_cholesky():
+    """Verify Cholesky decomposition reconstructs the original SPD matrix."""
     a = rand_cov(10)
     u = cholesky(a)
     # test numpy arrays are equivalent
@@ -21,12 +22,14 @@ def test_cholesky():
 
 
 def test_cholesky_not_symmetric():
+    """Non-symmetric matrices should raise LinAlgError."""
     a = np.random.randn(10, 10)
     with pytest.raises(np.linalg.LinAlgError):
         cholesky(a)
 
 
 def test_cholesky_not_square():
+    """Non-square matrices should raise LinAlgError."""
     a = np.random.randn(12, 10)
     with pytest.raises(np.linalg.LinAlgError):
         cholesky(a)

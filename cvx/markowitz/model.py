@@ -33,12 +33,30 @@ class Model(ABC):
 
     @abstractmethod
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate the variance given the portfolio weights."""
+        """Estimate the risk metric given the portfolio weights.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            CVXPY expression representing the risk estimate.
+        """
 
     @abstractmethod
     def update(self, **kwargs: Matrix) -> None:
-        """Update the data in the risk model."""
+        """Update the model parameters with new data.
+
+        Args:
+            **kwargs: Keyword arguments containing model data.
+        """
 
     def constraints(self, variables: Variables) -> Expressions:
-        """Return the constraints for the risk model."""
+        """Return constraints for the risk model.
+
+        Args:
+            variables: Dictionary containing optimization variables.
+
+        Returns:
+            Dictionary of constraint name to constraint expression mappings.
+        """
         return {}

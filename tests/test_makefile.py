@@ -19,9 +19,13 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def setup_tmp_makefile(tmp_path: Path):
-    """Copy only the Makefile into a temp directory and chdir there.
+    """Copy Makefile into a temp directory and change to that directory.
 
-    We rely on `make -n` so that no real commands are executed.
+    Args:
+        tmp_path: Pytest temporary path fixture.
+
+    Yields:
+        Control to the test, then restores original working directory.
     """
     project_root = Path(__file__).parent.parent
 
@@ -38,11 +42,17 @@ def setup_tmp_makefile(tmp_path: Path):
 
 
 def run_make(args: list[str] | None = None, check: bool = True) -> subprocess.CompletedProcess:
-    """Run `make` with optional arguments and return the completed process.
+    """Run make with optional arguments and return the completed process.
 
     Args:
-        args: Additional arguments for make
-        check: If True, raise on non-zero return code
+        args: Additional arguments for make.
+        check: If True, raise on non-zero return code.
+
+    Returns:
+        CompletedProcess instance with stdout, stderr, and returncode.
+
+    Raises:
+        AssertionError: If check is True and make returns non-zero.
     """
     cmd = ["make"]
     if args:

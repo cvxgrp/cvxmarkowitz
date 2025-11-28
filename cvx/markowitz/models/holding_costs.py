@@ -35,9 +35,20 @@ class HoldingCosts(Model):
         self.data[D.HOLDING_COSTS] = cp.Parameter(shape=self.assets, name=D.HOLDING_COSTS, value=np.zeros(self.assets))
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Return total holding costs as -sum(w_i * c_i)."""
+        """Compute total holding costs as sum of negative weight-cost products.
+
+        Args:
+            variables: Dictionary containing optimization variables with weights.
+
+        Returns:
+            CVXPY expression for the holding cost penalty.
+        """
         return cp.sum(cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS])))
 
     def update(self, **kwargs: Matrix) -> None:
-        """Update the holding-cost vector from kwargs[D.HOLDING_COSTS]."""
+        """Update the holding-cost vector.
+
+        Args:
+            **kwargs: Must contain 'holding_costs' key with cost vector.
+        """
         self.data[D.HOLDING_COSTS].value = fill_vector(num=self.assets, x=kwargs[D.HOLDING_COSTS])

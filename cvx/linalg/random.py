@@ -19,6 +19,13 @@ from .types import Matrix
 
 
 def rand_cov(n: int) -> Matrix:
-    """Return a random positive semidefinite covariance matrix of size n x n."""
+    """Return a random positive semidefinite covariance matrix of size n x n.
+
+    Args:
+        n: Dimension of the output covariance matrix.
+
+    Returns:
+        Symmetric positive semidefinite matrix of shape (n, n).
+    """
     a = np.random.randn(n, n)
     return np.array(np.transpose(a) @ (a))

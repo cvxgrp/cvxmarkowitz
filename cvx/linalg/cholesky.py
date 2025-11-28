@@ -21,7 +21,14 @@ from .types import Matrix
 
 
 def cholesky(cov: Matrix) -> Matrix:
-    """Compute the cholesky decomposition of a covariance matrix."""
+    """Compute the Cholesky decomposition of a covariance matrix.
+
+    Args:
+        cov: Symmetric positive-definite covariance matrix.
+
+    Returns:
+        Upper triangular Cholesky factor R such that cov = R^T @ R.
+    """
     # upper triangular part of the cholesky decomposition
     # np.linalg.cholesky(cov) is the lower triangular part
     return np.transpose(np.linalg.cholesky(cov))

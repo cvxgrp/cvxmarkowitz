@@ -55,9 +55,9 @@ class TradingCosts(Model):
         )
 
     def update(self, **kwargs: Matrix) -> None:
-        """Update cached data values.
+        """Update previous weights used as the trading baseline.
 
-        Expected keyword arguments:
-            weights: Vector of previous weights used as the trading baseline.
+        Args:
+            **kwargs: Must contain 'weights' key with previous weight vector.
         """
         self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])

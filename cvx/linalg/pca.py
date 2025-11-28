@@ -30,7 +30,11 @@ class PCA:
     n_components: int = 0
 
     def __post_init__(self) -> None:
-        """Validate inputs and compute factors, exposures, and eigenvalues."""
+        """Validate inputs and compute factors, exposures, and eigenvalues.
+
+        Raises:
+            ValueError: If n_components exceeds the number of assets.
+        """
         if self.n_components > self.returns.shape[1]:
             raise ValueError("The number of components cannot exceed the number of assets")
 
@@ -53,25 +57,45 @@ class PCA:
 
     @property
     def explained_variance(self) -> Matrix:
-        """Proportion of total variance explained by the retained components."""
+        """Proportion of total variance explained by the retained components.
+
+        Returns:
+            Array of variance ratios for each retained component.
+        """
         return np.array(self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues))
 
     @property
     def cov(self) -> Matrix:
-        """Covariance matrix of retained factors."""
+        """Covariance matrix of retained factors.
+
+        Returns:
+            Covariance matrix of shape (n_components, n_components).
+        """
         return np.atleast_2d(np.cov(self.factors.T))
 
     @property
     def systematic_returns(self) -> Matrix:
-        """Portion of returns explained by the PCA factors (F E^T)."""
+        """Portion of returns explained by the PCA factors (F E^T).
+
+        Returns:
+            Systematic component of returns with shape (observations, assets).
+        """
         return np.array(self.factors @ self.exposure)
 
     @property
     def idiosyncratic_returns(self) -> Matrix:
-        """Residual returns after removing the systematic (factor) component."""
+        """Residual returns after removing the systematic (factor) component.
+
+        Returns:
+            Idiosyncratic returns with shape (observations, assets).
+        """
         return self.returns - self.systematic_returns
 
     @property
     def idiosyncratic_vola(self) -> Matrix:
-        """Per-asset standard deviation of idiosyncratic (residual) returns."""
+        """Per-asset standard deviation of idiosyncratic (residual) returns.
+
+        Returns:
+            Array of volatilities with length equal to number of assets.
+        """
         return np.array(np.std(self.idiosyncratic_returns, axis=0))

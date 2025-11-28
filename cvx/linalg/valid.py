@@ -24,11 +24,14 @@ def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:
     """Construct the valid subset of a (correlation) matrix.
 
     Args:
-        matrix: n x n matrix.
+        matrix: Square matrix to extract valid subset from.
 
     Returns:
         A tuple of (mask, submatrix) where mask is a boolean vector indicating
         valid rows/columns and submatrix is the valid subset of the input.
+
+    Raises:
+        ValueError: If the input matrix is not square.
     """
     # make sure matrix  is quadratic
     if matrix.shape[0] != matrix.shape[1]:

@@ -1,0 +1,41 @@
+# This file is part of the tschm/.config-templates repository
+# (https://github.com/tschm/.config-templates).
+#
+# Workflow: Sync
+#
+# Purpose: This workflow synchronizes configuration files from the template
+#          repository to other repositories, creating a pull request with the
+#          changes to keep them up to date.
+#
+# Trigger: This workflow runs manually via workflow_dispatch and on a weekly
+#          schedule to ensure regular synchronization.
+#
+# Components:
+#   - 📥 Checkout the target repository
+#   - 🔄 Sync configuration templates
+#   - 📝 Create a pull request with the changes
+
+name: SYNC
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Monday at midnight
+
+jobs:
+  sync:
+    if: ${{ github.repository != 'tschm/.config-templates' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync Template
+        id: sync
+        uses: jebel-quant/sync_template@v0.4.2
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          source: ".github/template.yml"
+          branch: "template-updates"
+          commit-message: "chore: sync template files"
+          automerge: false

@@ -3,12 +3,12 @@ from __future__ import annotations
 import fire as fire
 import numpy as np
 import pandas as pd
+from cvx.simulator.builder import builder
 from loguru import logger
 
 from cvx.linalg.cholesky import cholesky
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
-from cvx.simulator.builder import builder
 
 
 def run(path: str, halflife: int = 10, min_periods: int = 30) -> None:

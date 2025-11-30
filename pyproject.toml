@@ -16,7 +16,7 @@ dependencies = [
     "cvxpy-base>=1.6.0",
     "numpy>=2.1.3",
     "clarabel",
-    "typing-extensions"
+    #"typing-extensions"
 ]
 
 [project.urls]
@@ -42,8 +42,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["cvx"]
+packages = ["src/cvx"]
 
 [tool.deptry.per_rule_ignores]
 DEP002 = ["cvxpy-base", "clarabel"]
-DEP004 = ["cvx"]
+DEP001 = ["cvx", "cvxpy"]

@@ -1,3 +1,5 @@
+"""Unit tests for the HoldingCosts model."""
+
 from __future__ import annotations
 
 import cvxpy as cp
@@ -9,6 +11,7 @@ from cvx.markowitz.names import DataNames as D
 
 
 def test_holding_costs():
+    """Holding costs should penalize negative weight-cost products as expected."""
     assets = 3
     model = HoldingCosts(assets=assets)
     model.update(**{D.HOLDING_COSTS: np.array([0.1, 0.2])})

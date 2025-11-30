@@ -1,3 +1,5 @@
+"""Tests for utility helpers used in portfolio construction."""
+
 import cvxpy as cp
 import numpy as np
 
@@ -5,6 +7,7 @@ from cvx.markowitz.portfolios.utils import approx
 
 
 def test_approx():
+    """Approximate equality helper yields upper/lower bound constraints."""
     row = np.zeros(5)
     row[4] = 1
     row[2] = 1

@@ -1,37 +1,35 @@
-name: pre-commit
+# This file is part of the tschm/.config-templates repository
+# (https://github.com/tschm/.config-templates).
+#
+# Workflow: Pre-commit
+#
+# Purpose: This workflow runs pre-commit checks to ensure code quality
+#          and consistency across the codebase. It helps catch issues
+#          like formatting errors, linting issues, and other code quality
+#          problems before they are merged.
+#
+# Trigger: This workflow runs on every push and on pull requests to main/master
+#          branches (including from forks)
+#
+# Components:
+#   - 🔍 Run pre-commit checks using reusable action
+
+name: "PRE-COMMIT"
+permissions:
+  contents: read
 
 on:
   push:
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout [${{ github.repository }}]
-        uses: actions/checkout@v6
-
-      - uses: cvxgrp/.github/actions/uv/coverage@v2.0.7
-
-      - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@v2
-        with:
-          files: artifacts/tests/coverage/coverage.info
-          format: lcov
-
-  deptry:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout [${{ github.repository }}]
-        uses: actions/checkout@v6
-
-      - uses: cvxgrp/.github/actions/uv/deptry@v2.0.7
-
   pre-commit:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout [${{ github.repository }}]
-        uses: actions/checkout@v6
 
-      - uses: pre-commit/action@v3.0.1
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
-          extra_args: '--verbose --all-files'
+          python-version: '3.14'
+      - uses: pre-commit/action@v3.0.1

@@ -1,3 +1,9 @@
+"""Tests for factor risk model and factor-aware MinVar builder.
+
+Covers parameter validation, constraint wiring, and DPP compliance, as well
+as end-to-end solves with synthetic data.
+"""
+
 from __future__ import annotations
 
 import cvxpy as cp
@@ -16,18 +22,19 @@ from cvx.markowitz.risk import FactorModel
 
 @pytest.fixture()
 def returns(resource_dir):
-    prices = pd.read_csv(
-        resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True
-    )
+    """Load prices CSV and return daily returns as a NumPy array for tests."""
+    prices = pd.read_csv(resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True)
     return prices.pct_change().fillna(0.0).values
 
 
 @pytest.fixture()
 def factor_model():
+    """Provide a small 3-asset/2-factor FactorModel for validation tests."""
     return FactorModel(assets=3, factors=2)
 
 
 def test_timeseries_model(returns):
+    """Compute PCA factors and validate factor-model risk on synthetic data."""
     # Here we compute the factors and regress the returns on them
     factors = PCA(returns=returns, n_components=10)
 
@@ -53,13 +60,13 @@ def test_timeseries_model(returns):
 
 
 def test_minvar(returns):
+    """Build a DPP-compliant MinVar with factor model and verify DPP."""
     problem = MinVar(assets=20, factors=10).build()
     assert problem.is_dpp()
 
 
 def test_estimate_risk(solver):
-    """Test the estimate() method"""
-
+    """Test the estimate() method."""
     np.random.seed(42)
 
     builder = MinVar(assets=25, factors=12)
@@ -107,9 +114,7 @@ def test_estimate_risk(solver):
     data = dict(problem.data)
 
     # test that the exposure is correct, e.g. the factor weights match the exposure * asset weights
-    assert data[(M.RISK, "exposure")].value @ problem.weights == pytest.approx(
-        problem.factor_weights, abs=1e-6
-    )
+    assert data[(M.RISK, "exposure")].value @ problem.weights == pytest.approx(problem.factor_weights, abs=1e-6)
 
     # test all entries of y are smaller than 0.1
     assert np.all([problem.factor_weights <= 0.1 + 1e-4])
@@ -118,6 +123,7 @@ def test_estimate_risk(solver):
 
 
 def test_factor_mini():
+    """Verify residual, systematic, and total risk for a tiny factor setup."""
     model = FactorModel(assets=3, factors=2)
 
     variables = {
@@ -141,17 +147,13 @@ def test_factor_mini():
     # Note: dummy is abs(factor_weights)
     variables[D._ABS] = cp.abs(variables[D.FACTOR_WEIGHTS])
 
-    assert variables[D.FACTOR_WEIGHTS].value == pytest.approx(
-        np.array([0.7, 0.75]), abs=1e-6
-    )
+    assert variables[D.FACTOR_WEIGHTS].value == pytest.approx(np.array([0.7, 0.75]), abs=1e-6)
 
     residual = np.sqrt(0.03)
     systematic = np.sqrt(1.098725)
 
     assert model._residual_risk(variables=variables).value == pytest.approx(residual)
-    assert model._systematic_risk(variables=variables).value == pytest.approx(
-        systematic
-    )
+    assert model._systematic_risk(variables=variables).value == pytest.approx(systematic)
 
     total = np.linalg.norm(np.array([residual, systematic]))
 
@@ -159,6 +161,7 @@ def test_factor_mini():
 
 
 def test_missing_key(factor_model):
+    """Updating without a required key should raise CvxError."""
     with pytest.raises(CvxError):
         factor_model.update(
             **{
@@ -171,6 +174,7 @@ def test_missing_key(factor_model):
 
 
 def test_mismatch_idiosyncratic_vola(factor_model):
+    """Idiosyncratic_vola length mismatch vs. assets should raise CvxError."""
     with pytest.raises(CvxError):
         factor_model.update(
             **{
@@ -184,6 +188,7 @@ def test_mismatch_idiosyncratic_vola(factor_model):
 
 
 def test_mismatch_exposure_idiosyncratic_vola(factor_model):
+    """Exposure shape inconsistent with vectors should raise CvxError."""
     with pytest.raises(CvxError):
         factor_model.update(
             **{
@@ -197,6 +202,7 @@ def test_mismatch_exposure_idiosyncratic_vola(factor_model):
 
 
 def test_mismatch_systematic_vola(factor_model):
+    """Systematic_vola_uncertainty length mismatch vs. factors should error."""
     with pytest.raises(CvxError):
         factor_model.update(
             **{
@@ -210,6 +216,7 @@ def test_mismatch_systematic_vola(factor_model):
 
 
 def test_mismatch_matrix(factor_model):
+    """Cholesky shape inconsistent with exposure matrix should raise CvxError."""
     with pytest.raises(CvxError):
         factor_model.update(
             **{

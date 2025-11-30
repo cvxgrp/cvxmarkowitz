@@ -114,7 +114,9 @@ def __(portfolio):
 
 @app.cell
 def __(pd, portfolio, portfolio_resampled):
-    frame = pd.DataFrame({"original": portfolio.nav, "monthly": portfolio_resampled.nav})
+    frame = pd.DataFrame(
+        {"original": portfolio.nav, "monthly": portfolio_resampled.nav}
+    )
     frame
     return (frame,)
 

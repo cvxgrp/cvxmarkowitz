@@ -13,4 +13,5 @@
 #    limitations under the License.
 from __future__ import annotations
 
-from .sample import SampleCovariance
+# Explicit re-export to satisfy Ruff F401
+from .sample import SampleCovariance as SampleCovariance

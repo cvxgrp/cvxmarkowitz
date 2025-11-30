@@ -13,4 +13,5 @@
 #    limitations under the License.
 from __future__ import annotations
 
-from .factor import FactorModel
+# Explicit re-export to satisfy Ruff F401
+from .factor import FactorModel as FactorModel

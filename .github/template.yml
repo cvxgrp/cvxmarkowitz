@@ -10,3 +10,5 @@ include: |
     CONTRIBUTING.md
     Makefile
     ruff.toml
+exclude: |
+  .github/workflows/docker.yml

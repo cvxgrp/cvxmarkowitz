@@ -1,4 +1,4 @@
-# [cvxmarkowitz](http://www.cvxgrp.org/cvxmarkowitz/book)
+# 📊 [cvxmarkowitz](http://www.cvxgrp.org/cvxmarkowitz/book)
 
 [![PyPI version](https://badge.fury.io/py/cvxmarkowitz.svg)](https://badge.fury.io/py/cvxmarkowitz)
 [![Apache 2.0 License](https://img.shields.io/badge/License-APACHEv2-brightgreen.svg)](https://github.com/cvxgrp/cvxmarkowitz/blob/master/LICENSE)
@@ -7,7 +7,7 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cvxgrp/cvxmarkowitz)
 
-## Motivation
+## 🎯 Motivation
 
 We stand on the shoulders of [CVXPY](https://www.cvxpy.org).
 
@@ -43,7 +43,7 @@ the problem and compile it.
 For injecting values for data and parameter into the problem,
 we use the [update](cvxmarkowitz/markowitz/builder.py#L19) method.
 
-## Installation
+## 🚀 Installation
 
 You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):
 
@@ -51,7 +51,7 @@ You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):
 pip install cvxmarkowitz
 ```
 
-## uv
+## 🛠️ uv
 
 You need to install [task](https://taskfile.dev).
 Starting with
@@ -64,7 +64,7 @@ will install [uv](https://github.com/astral-sh/uv) and create
 the virtual environment defined in
 pyproject.toml and locked in uv.lock.
 
-## marimo
+## 🔬 marimo
 
 We install [marimo](https://marimo.io) on the fly within the aforementioned
 virtual environment. Executing

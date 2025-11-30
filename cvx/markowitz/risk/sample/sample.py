@@ -63,10 +63,15 @@ class SampleCovariance(Model):
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
             raise CvxError("Mismatch in length for chol and vola_uncertainty")
 
-        self.data[D.CHOLESKY].value = fill_matrix(rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY])
-        self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])
+        self.data[D.CHOLESKY].value = fill_matrix(
+            rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY]
+        )
+        self.data[D.VOLA_UNCERTAINTY].value = fill_vector(
+            num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY]
+        )
 
     def constraints(self, variables: Variables) -> Expressions:
         return {
-            "dummy": variables[D._ABS] >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
+            "dummy": variables[D._ABS]
+            >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable
         }

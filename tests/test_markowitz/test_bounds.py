@@ -27,8 +27,12 @@ def test_constraints():
         }
     )
 
-    assert bounds.data[D.LOWER_BOUND_ASSETS].value == pytest.approx(np.array([0.1, 0.2, 0]))
-    assert bounds.data[D.UPPER_BOUND_ASSETS].value == pytest.approx(np.array([0.3, 0.4, 0.5]))
+    assert bounds.data[D.LOWER_BOUND_ASSETS].value == pytest.approx(
+        np.array([0.1, 0.2, 0])
+    )
+    assert bounds.data[D.UPPER_BOUND_ASSETS].value == pytest.approx(
+        np.array([0.3, 0.4, 0.5])
+    )
 
     assert len(bounds.constraints(variables)) == 2
 

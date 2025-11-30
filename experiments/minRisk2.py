@@ -25,10 +25,14 @@ if __name__ == "__main__":
 
     builder = MinVar(assets=20)
 
-    builder.parameter["max_concentration"] = cp.Parameter(1, name="max_concentration", nonneg=True)
+    builder.parameter["max_concentration"] = cp.Parameter(
+        1, name="max_concentration", nonneg=True
+    )
 
     # You can add constraints before you build the problem
-    builder.constraints[C.CONCENTRATION] = cp.sum_largest(builder.weights, 2) <= builder.parameter["max_concentration"]
+    builder.constraints[C.CONCENTRATION] = (
+        cp.sum_largest(builder.weights, 2) <= builder.parameter["max_concentration"]
+    )
 
     # here we add a constraints
     # w[19] + w[17] <= 0.0001
@@ -40,7 +44,9 @@ if __name__ == "__main__":
     row[19] = 1
     row[17] = 1
 
-    for name, constraint in approx("xxx", row @ builder.weights, 0.0, builder.parameter["random"]):
+    for name, constraint in approx(
+        "xxx", row @ builder.weights, 0.0, builder.parameter["random"]
+    ):
         # print(constraint)
         builder.constraints[name] = constraint
 

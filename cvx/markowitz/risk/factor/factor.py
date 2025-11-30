@@ -104,8 +104,13 @@ class FactorModel(Model):
             if key not in kwargs.keys():
                 raise CvxError(f"Missing keyword {key}")
 
-        if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")
+        if (
+            not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0]
+            == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]
+        ):
+            raise CvxError(
+                "Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty"
+            )
 
         exposure = kwargs[D.EXPOSURE]
         k, assets = exposure.shape
@@ -114,14 +119,22 @@ class FactorModel(Model):
             raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")
 
         if not kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] == k:
-            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")
+            raise CvxError(
+                "Mismatch in length of systematic_vola_uncertainty and exposure"
+            )
 
         if not kwargs[D.CHOLESKY].shape[0] == k:
             raise CvxError("Mismatch in size of chol and exposure")
 
-        self.data[D.EXPOSURE].value = fill_matrix(rows=self.factors, cols=self.assets, x=kwargs["exposure"])
-        self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA])
-        self.data[D.CHOLESKY].value = fill_matrix(rows=self.factors, cols=self.factors, x=kwargs[D.CHOLESKY])
+        self.data[D.EXPOSURE].value = fill_matrix(
+            rows=self.factors, cols=self.assets, x=kwargs["exposure"]
+        )
+        self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(
+            num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA]
+        )
+        self.data[D.CHOLESKY].value = fill_matrix(
+            rows=self.factors, cols=self.factors, x=kwargs[D.CHOLESKY]
+        )
 
         # Robust risk
         self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY].value = fill_vector(
@@ -133,6 +146,8 @@ class FactorModel(Model):
 
     def constraints(self, variables: Variables) -> Expressions:
         return {
-            "factors": variables[D.FACTOR_WEIGHTS] == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],
-            "_abs": variables[D._ABS] >= cp.abs(variables[D.FACTOR_WEIGHTS]),  # Robust risk dummy variable
+            "factors": variables[D.FACTOR_WEIGHTS]
+            == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],
+            "_abs": variables[D._ABS]
+            >= cp.abs(variables[D.FACTOR_WEIGHTS]),  # Robust risk dummy variable
         }

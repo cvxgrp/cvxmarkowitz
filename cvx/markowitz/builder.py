@@ -121,9 +121,13 @@ class Builder:
             self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
 
             # add variable for factor weights
-            self.variables[D.FACTOR_WEIGHTS] = cp.Variable(self.factors, name=D.FACTOR_WEIGHTS)
+            self.variables[D.FACTOR_WEIGHTS] = cp.Variable(
+                self.factors, name=D.FACTOR_WEIGHTS
+            )
             # add bounds for factor weights
-            self.model[M.BOUND_FACTORS] = Bounds(assets=self.factors, name="factors", acting_on=D.FACTOR_WEIGHTS)
+            self.model[M.BOUND_FACTORS] = Bounds(
+                assets=self.factors, name="factors", acting_on=D.FACTOR_WEIGHTS
+            )
             # add variable for absolute factor weights
             self.variables[D._ABS] = cp.Variable(self.factors, name=D._ABS, nonneg=True)
 
@@ -137,7 +141,9 @@ class Builder:
         self.variables[D.WEIGHTS] = cp.Variable(self.assets, name=D.WEIGHTS)
 
         # add bounds on assets
-        self.model[M.BOUND_ASSETS] = Bounds(assets=self.assets, name="assets", acting_on=D.WEIGHTS)
+        self.model[M.BOUND_ASSETS] = Bounds(
+            assets=self.assets, name="assets", acting_on=D.WEIGHTS
+        )
 
     @property
     @abstractmethod
@@ -151,7 +157,9 @@ class Builder:
         Build the cvxpy problem
         """
         for name_model, model in self.model.items():
-            for name_constraint, constraint in model.constraints(self.variables).items():
+            for name_constraint, constraint in model.constraints(
+                self.variables
+            ).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))

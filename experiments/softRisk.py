@@ -15,7 +15,11 @@ from cvx.markowitz.portfolios.soft_risk import SoftRisk
 
 
 def run(path: str = "data/stock_prices.csv") -> None:
-    returns = pd.read_csv(path, index_col=0, header=0, parse_dates=True).pct_change().dropna(axis=0, how="all")
+    returns = (
+        pd.read_csv(path, index_col=0, header=0, parse_dates=True)
+        .pct_change()
+        .dropna(axis=0, how="all")
+    )
     n_components = 10
 
     assets = returns.shape[1]
@@ -23,7 +27,9 @@ def run(path: str = "data/stock_prices.csv") -> None:
     logger.info(f"Returns: \n{returns}")
     pca = PCA(returns=returns.values, n_components=n_components)
     lower_bound_factors = pd.Series(data=-1.0, index=range(n_components))
-    upper_bound_factors = pd.Series(data=+1.0, index=range(n_components))  # len(pca.factors)))
+    upper_bound_factors = pd.Series(
+        data=+1.0, index=range(n_components)
+    )  # len(pca.factors)))
 
     lower_bound_assets = pd.Series(data=0.0, index=returns.columns)
     upper_bound_assets = pd.Series(data=1.0, index=returns.columns)

@@ -29,7 +29,9 @@ class PCA:
 
     def __post_init__(self) -> None:
         if self.n_components > self.returns.shape[1]:
-            raise ValueError("The number of components cannot exceed the number of assets")
+            raise ValueError(
+                "The number of components cannot exceed the number of assets"
+            )
 
         # compute the principal components without sklearn
         # 1. compute the correlation
@@ -50,7 +52,9 @@ class PCA:
 
     @property
     def explained_variance(self) -> Matrix:
-        return np.array(self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues))
+        return np.array(
+            self.eigenvalues[: self.n_components] / np.sum(self.eigenvalues)
+        )
 
     @property
     def cov(self) -> Matrix:

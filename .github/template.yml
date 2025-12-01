@@ -12,3 +12,4 @@ include: |
     ruff.toml
 exclude: |
   .github/workflows/docker.yml
+  .github/workflows/devcontainer.yml

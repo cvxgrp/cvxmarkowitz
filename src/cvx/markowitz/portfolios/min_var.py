@@ -20,7 +20,9 @@ from dataclasses import dataclass
 import cvxpy as cp
 
 from cvx.markowitz.builder import Builder
+from cvx.markowitz.model import Model  # noqa: F401
 from cvx.markowitz.names import ConstraintName as C
+from cvx.markowitz.types import Parameter, Variables  # noqa: F401
 
 
 @dataclass(frozen=True)

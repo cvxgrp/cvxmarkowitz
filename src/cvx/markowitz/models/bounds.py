@@ -21,7 +21,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvx.markowitz.model import Model
-from cvx.markowitz.types import Expressions, Matrix, Variables
+from cvx.markowitz.types import Expressions, Matrix, Parameter, Variables  # noqa: F401
 from cvx.markowitz.utils.fill import fill_vector
 
 

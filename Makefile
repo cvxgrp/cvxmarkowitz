@@ -128,11 +128,16 @@ deptry: install-uv ## run deptry if pyproject.toml exists
 
 ##@ Documentation
 docs: install-uv ## create documentation with pdoc
-	@if [ -d ${SOURCE_FOLDER} ]; then \
-  	  ${UV_BIN} pip install pdoc; \
-	  ${UV_BIN} run pdoc -o _pdoc ${SOURCE_FOLDER}/*; \
+	@if [ -d "$(SOURCE_FOLDER)" ]; then \
+	  PKGS=""; for d in "$(SOURCE_FOLDER)"/*; do [ -d "$$d" ] && PKGS="$$PKGS $$(basename "$$d")"; done; \
+	  if [ -z "$$PKGS" ]; then \
+	    printf "$(YELLOW)[WARN] No packages found under $(SOURCE_FOLDER), skipping docs$(RESET)\n"; \
+	  else \
+	    ${UV_BIN} pip install pdoc && \
+	    PYTHONPATH="$(SOURCE_FOLDER)" ${UV_BIN} run pdoc --docformat google --output-dir _pdoc $$PKGS; \
+	  fi; \
 	else \
-	  printf "${YELLOW}[WARN] Source folder ${SOURCE_FOLDER} not found, skipping docs${RESET}\n"; \
+	  printf "$(YELLOW)[WARN] Source folder $(SOURCE_FOLDER) not found, skipping docs$(RESET)\n"; \
 	fi
 
 book: test docs marimushka ## compile the companion book

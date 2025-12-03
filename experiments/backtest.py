@@ -8,7 +8,7 @@ import pandas as pd
 from cvx.simulator.builder import builder
 from loguru import logger
 
-from cvx.linalg.cholesky import cholesky
+from cvx.markowitz.linalg import cholesky
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.portfolios.min_var import MinVar
 

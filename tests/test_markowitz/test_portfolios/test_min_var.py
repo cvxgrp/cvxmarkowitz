@@ -9,7 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cvx.linalg import cholesky
+from cvx.markowitz.linalg import cholesky
 from cvx.markowitz.names import ConstraintName as C
 from cvx.markowitz.names import DataNames as D
 from cvx.markowitz.names import ModelName as M

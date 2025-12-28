@@ -12,7 +12,7 @@ include:
 - ruff.toml
 - pytest.ini
 - .rhiza
-- books
+- book
 - renovate.json
 exclude:
 - .github/workflows/docker.yml

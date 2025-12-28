@@ -32,6 +32,11 @@
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 Makefile
+book/Makefile.book
+book/marimo/README.md
+book/marimo/rhiza.py
+book/minibook-templates/custom.html.jinja2
+book/pdoc-templates/module.html.jinja2
 pytest.ini
 renovate.json
 ruff.toml

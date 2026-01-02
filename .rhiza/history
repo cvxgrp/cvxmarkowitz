@@ -38,8 +38,6 @@ CONTRIBUTING.md
 Makefile
 book/Makefile.book
 book/README.md
-book/marimo/README.md
-book/marimo/rhiza.py
 book/minibook-templates/custom.html.jinja2
 book/pdoc-templates/module.html.jinja2
 pytest.ini

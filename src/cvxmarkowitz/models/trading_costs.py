@@ -32,7 +32,7 @@ class TradingCosts(Model):
 
     def __post_init__(self) -> None:
         """Initialize trading cost parameters and previous-weights cache."""
-        self.parameter["power"] = cp.Parameter(shape=1, name="power", value=np.ones(1))
+        self.parameter["power"] = cp.Parameter(shape=(), name="power", value=1.0)
 
         # initial weights before rebalancing
         self.data["weights"] = cp.Parameter(shape=self.assets, name="weights", value=np.zeros(self.assets))

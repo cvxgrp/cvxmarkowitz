@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cvx.markowitz.linalg import PCA
+from cvxmarkowitz.linalg import PCA
 
 
 @pytest.fixture()

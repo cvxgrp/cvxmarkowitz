@@ -25,14 +25,14 @@ from typing import Any
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.model import Model
-from cvx.markowitz.models.bounds import Bounds
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.risk.factor.factor import FactorModel
-from cvx.markowitz.risk.sample.sample import SampleCovariance
-from cvx.markowitz.types import File, Matrix, Parameter, Variables
+from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.model import Model
+from cvxmarkowitz.models.bounds import Bounds
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.risk.factor.factor import FactorModel
+from cvxmarkowitz.risk.sample.sample import SampleCovariance
+from cvxmarkowitz.types import File, Matrix, Parameter, Variables
 
 
 def deserialize(

@@ -6,8 +6,8 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.models.trading_costs import TradingCosts
-from cvx.markowitz.names import DataNames as D
+from cvxmarkowitz.models.trading_costs import TradingCosts
+from cvxmarkowitz.names import DataNames as D
 
 
 def test_trading_costs():

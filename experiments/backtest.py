@@ -8,9 +8,9 @@ import pandas as pd
 from cvx.simulator.builder import builder
 from loguru import logger
 
-from cvx.markowitz.linalg import cholesky
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.portfolios.min_var import MinVar
+from cvxmarkowitz.linalg import cholesky
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.portfolios.min_var import MinVar
 
 
 def run(path: str, halflife: int = 10, min_periods: int = 30) -> None:

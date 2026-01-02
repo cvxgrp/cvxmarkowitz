@@ -9,7 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cvx.markowitz.linalg import valid
+from cvxmarkowitz.linalg import valid
 
 
 def test_valid():

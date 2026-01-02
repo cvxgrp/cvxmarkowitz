@@ -6,7 +6,7 @@ remaining slots with zeros as required.
 
 import numpy as np
 
-from cvx.markowitz.utils.fill import fill_matrix, fill_vector
+from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 
 def test_fill_vector():

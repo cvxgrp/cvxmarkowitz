@@ -5,10 +5,10 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cvx.markowitz.builder import CvxError
-from cvx.markowitz.linalg import cholesky
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.risk import SampleCovariance
+from cvxmarkowitz.builder import CvxError
+from cvxmarkowitz.linalg import cholesky
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.risk import SampleCovariance
 
 
 def test_sample():

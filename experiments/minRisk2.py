@@ -7,11 +7,11 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.markowitz.linalg import cholesky
-from cvx.markowitz.names import ConstraintName as C
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.portfolios.min_var import MinVar
-from cvx.markowitz.portfolios.utils import approx
+from cvxmarkowitz.linalg import cholesky
+from cvxmarkowitz.names import ConstraintName as C
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.portfolios.min_var import MinVar
+from cvxmarkowitz.portfolios.utils import approx
 
 if __name__ == "__main__":
     returns = (

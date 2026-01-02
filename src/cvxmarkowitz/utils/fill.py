@@ -15,7 +15,7 @@
 
 import numpy as np
 
-from cvx.markowitz.types import Matrix
+from cvxmarkowitz.types import Matrix
 
 
 def fill_vector(x: Matrix, num: int) -> Matrix:

@@ -17,12 +17,12 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvx.markowitz.linalg import PCA, cholesky
-from cvx.markowitz.models.expected_returns import ExpectedReturns
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.names import ParameterName as P
-from cvx.markowitz.portfolios.soft_risk import SoftRisk
+from cvxmarkowitz.linalg import PCA, cholesky
+from cvxmarkowitz.models.expected_returns import ExpectedReturns
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.names import ParameterName as P
+from cvxmarkowitz.portfolios.soft_risk import SoftRisk
 
 
 def run(path: str = "data/stock_prices.csv") -> None:

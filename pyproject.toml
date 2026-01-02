@@ -23,6 +23,7 @@ repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
 dev = [
+    "fire",
     "mock",
     "yfinance",
     "loguru",

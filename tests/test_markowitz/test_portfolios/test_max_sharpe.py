@@ -8,11 +8,11 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cvx.markowitz.linalg import cholesky
-from cvx.markowitz.names import ConstraintName as C
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.portfolios.max_sharpe import MaxSharpe
+from cvxmarkowitz.linalg import cholesky
+from cvxmarkowitz.names import ConstraintName as C
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.portfolios.max_sharpe import MaxSharpe
 
 
 @pytest.fixture()

@@ -9,9 +9,9 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.builder import CvxError
-from cvx.markowitz.models.expected_returns import ExpectedReturns
-from cvx.markowitz.names import DataNames as D
+from cvxmarkowitz.builder import CvxError
+from cvxmarkowitz.models.expected_returns import ExpectedReturns
+from cvxmarkowitz.names import DataNames as D
 
 
 def test_expected_returns():

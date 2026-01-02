@@ -8,10 +8,10 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.builder import Builder, CvxError
-from cvx.markowitz.names import ConstraintName as C
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
+from cvxmarkowitz.builder import Builder, CvxError
+from cvxmarkowitz.names import ConstraintName as C
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ModelName as M
 
 
 @dataclass(frozen=True)

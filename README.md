@@ -33,15 +33,15 @@ zero. Hence we do **not** need to recompile the problem as a new asset has to be
 added.
 
 Every problem has be constructed by a Builder. Here's a builder for a classic
-[minimum variance problem](cvx/markowitz/portfolios/min_var.py).
-The builder inherits from the [Builder](cvxmarkowitz/markowitz/builder.py)
-and implements the abstract method [build](cvxmarkowitz/markowitz/builder.py#L15).
+[minimum variance problem](cvxmarkowitz/portfolios/min_var.py).
+The builder inherits from the [Builder](cvxmarkowitz/builder.py)
+and implements the abstract method [build](cvxmarkowitz/builder.py#L15).
 The builder remains flexible. At this stage it is possible to add or remove
 constraints,  Only once we trigger the build() method, we construct
 the problem and compile it.
 
 For injecting values for data and parameter into the problem,
-we use the [update](cvxmarkowitz/markowitz/builder.py#L19) method.
+we use the [update](cvxmarkowitz/builder.py#L19) method.
 
 ## Installation
 

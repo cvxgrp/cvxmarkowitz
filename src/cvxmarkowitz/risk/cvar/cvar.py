@@ -20,10 +20,10 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.model import Model
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.types import Matrix, Parameter, Variables  # noqa: F401
-from cvx.markowitz.utils.fill import fill_matrix
+from cvxmarkowitz.model import Model
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.types import Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.utils.fill import fill_matrix
 
 
 @dataclass(frozen=True)

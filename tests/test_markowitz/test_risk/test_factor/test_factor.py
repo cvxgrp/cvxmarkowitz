@@ -11,13 +11,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cvx.markowitz.cvxerror import CvxError
-from cvx.markowitz.linalg import PCA, cholesky
-from cvx.markowitz.linalg.random import rand_cov
-from cvx.markowitz.names import DataNames as D
-from cvx.markowitz.names import ModelName as M
-from cvx.markowitz.portfolios.min_var import MinVar
-from cvx.markowitz.risk import FactorModel
+from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.linalg import PCA, cholesky
+from cvxmarkowitz.linalg.random import rand_cov
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.portfolios.min_var import MinVar
+from cvxmarkowitz.risk import FactorModel
 
 
 @pytest.fixture()

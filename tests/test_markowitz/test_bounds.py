@@ -6,8 +6,8 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvx.markowitz.models.bounds import Bounds
-from cvx.markowitz.names import DataNames as D
+from cvxmarkowitz.models.bounds import Bounds
+from cvxmarkowitz.names import DataNames as D
 
 
 def test_raise_not_implemented():

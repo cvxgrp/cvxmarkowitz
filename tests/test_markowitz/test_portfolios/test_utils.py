@@ -3,7 +3,7 @@
 import cvxpy as cp
 import numpy as np
 
-from cvx.markowitz.portfolios.utils import approx
+from cvxmarkowitz.portfolios.utils import approx
 
 
 def test_approx():

@@ -24,15 +24,15 @@ repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
 dev = [
-    "pytest-cov>=6.0.0",
-    "pytest>=8.3.3",
-    "pre-commit>=4.0.1",
+    #"pytest-cov>=6.0.0",
+    #"pytest>=8.3.3",
+    #"pre-commit>=4.0.1",
     "mock",
     "yfinance",
-    "loguru",
-    "tinycta",
-    "plotly",
-    "cvxsimulator",
+    "loguru>=0.7",
+    #"tinycta",
+    "plotly>=6.5",
+    #"cvxsimulator",
     "scikit-learn",
     "marimo"
 ]

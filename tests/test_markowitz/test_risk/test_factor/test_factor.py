@@ -20,14 +20,14 @@ from cvxmarkowitz.portfolios.min_var import MinVar
 from cvxmarkowitz.risk import FactorModel
 
 
-@pytest.fixture()
+@pytest.fixture
 def returns(resource_dir):
     """Load prices CSV and return daily returns as a NumPy array for tests."""
     prices = pd.read_csv(resource_dir / "stock_prices.csv", index_col=0, header=0, parse_dates=True)
     return prices.pct_change().fillna(0.0).values
 
 
-@pytest.fixture()
+@pytest.fixture
 def factor_model():
     """Provide a small 3-asset/2-factor FactorModel for validation tests."""
     return FactorModel(assets=3, factors=2)

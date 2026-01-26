@@ -13,7 +13,7 @@ import pytest
 from cvxmarkowitz.linalg import PCA
 
 
-@pytest.fixture()
+@pytest.fixture
 def returns(resource_dir):
     """Load prices CSV and return daily returns as a NumPy array.
 
@@ -67,7 +67,7 @@ def test_idiosyncratic(returns):
 def test_too_many_factors(returns):
     """Requesting more components than columns should raise ValueError."""
     # more components than columns
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="number of components cannot exceed"):
         PCA(returns=returns, n_components=22)
 
 

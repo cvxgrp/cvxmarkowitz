@@ -16,13 +16,13 @@ from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.min_var import MinVar
 
 
-@pytest.fixture()
+@pytest.fixture
 def builder():
     """Construct a MinVar builder fixture with 4 assets."""
     return MinVar(assets=4)
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem(builder):
     """Build a cvxpy problem from the MinVar builder."""
     return builder.build()
@@ -41,7 +41,7 @@ def test_constraints(builder):
 def test_factor_weights(builder):
     """Accessing factor weights without factor model should raise KeyError."""
     with pytest.raises(KeyError):
-        builder.factor_weights
+        _ = builder.factor_weights
 
 
 def test_weights(builder):

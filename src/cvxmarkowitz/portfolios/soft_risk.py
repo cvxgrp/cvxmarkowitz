@@ -15,7 +15,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import cvxpy as cp
 
@@ -36,9 +36,11 @@ class SoftRisk(Builder):
     subject to long-only, budget, and max-risk constraints.
     """
 
-    _sigma: cp.Variable = cp.Variable(nonneg=True, name="sigma")
-    _sigma_target_times_omega: cp.CallbackParam = cp.CallbackParam(
-        callback=lambda p, q: 0.0, nonneg=True, name="sigma_target_times_omega"
+    _sigma: cp.Variable = field(default_factory=lambda: cp.Variable(nonneg=True, name="sigma"))
+    _sigma_target_times_omega: cp.CallbackParam = field(
+        default_factory=lambda: cp.CallbackParam(
+            callback=lambda p, q: 0.0, nonneg=True, name="sigma_target_times_omega"
+        )
     )
 
     @property

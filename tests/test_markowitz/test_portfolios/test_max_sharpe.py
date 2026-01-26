@@ -15,13 +15,13 @@ from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.max_sharpe import MaxSharpe
 
 
-@pytest.fixture()
+@pytest.fixture
 def builder():
     """Construct a MaxSharpe builder fixture with 4 assets."""
     return MaxSharpe(assets=4)
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem(builder):
     """Build a cvxpy problem from the MaxSharpe builder with sigma_max set."""
     builder.parameter["sigma_max"].value = 1.0
@@ -41,7 +41,7 @@ def test_constraints(builder):
 def test_factor_weights(builder):
     """Accessing factor weights without a factor model should raise KeyError."""
     with pytest.raises(KeyError):
-        builder.factor_weights
+        _ = builder.factor_weights
 
 
 def test_weights(builder):

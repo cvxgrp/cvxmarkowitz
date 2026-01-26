@@ -41,6 +41,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/cvxmarkowitz"]
 
+[tool.mypy]
+ignore_missing_imports = true
+
 [tool.deptry.per_rule_ignores]
 DEP002 = ["cvxpy-base", "clarabel"]
 DEP001 = ["cvx", "cvxpy"]

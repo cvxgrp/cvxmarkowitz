@@ -19,4 +19,4 @@ from .cholesky import cholesky as cholesky
 from .pca import PCA as PCA
 from .valid import valid as valid
 
-__all__ = ["cholesky", "PCA", "valid"]
+__all__ = ["PCA", "cholesky", "valid"]

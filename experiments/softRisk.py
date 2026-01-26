@@ -1,6 +1,6 @@
-"""Experiment script to run a soft‑risk Markowitz portfolio example.
+"""Experiment script to run a soft-risk Markowitz portfolio example.
 
-This script demonstrates how to assemble a factor‑based portfolio with a
+This script demonstrates how to assemble a factor-based portfolio with a
 soft risk penalty that trades off expected return versus tracking error.
 It is intended for local experimentation; it does not execute any trades.
 
@@ -26,7 +26,7 @@ from cvxmarkowitz.portfolios.soft_risk import SoftRisk
 
 
 def run(path: str = "data/stock_prices.csv") -> None:
-    """Build and parameterize a soft‑risk portfolio, then prepare data.
+    """Build and parameterize a soft-risk portfolio, then prepare data.
 
     Args:
         path: CSV path containing price data with a DateTime index and

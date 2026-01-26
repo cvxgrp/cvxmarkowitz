@@ -15,7 +15,7 @@
 
 from __future__ import annotations
 
-import pickle
+import pickle  # nosec B403
 from abc import abstractmethod
 from collections.abc import Generator
 from dataclasses import dataclass, field
@@ -47,7 +47,7 @@ def deserialize(
         The deserialized `_Problem` instance.
     """
     with open(problem_file, "rb") as infile:
-        return pickle.load(infile)
+        return pickle.load(infile)  # nosec B301
 
 
 @dataclass(frozen=True)

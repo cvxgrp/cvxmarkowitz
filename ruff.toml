@@ -83,8 +83,9 @@ extend-select = [
 
 # Resolve incompatible pydocstyle rules: prefer D211 and D212 over D203 and D213
 ignore = [
-    "D203",  # one-blank-line-before-class (conflicts with D211)
-    "D213",  # multi-line-summary-second-line (conflicts with D212)
+    "D203",   # one-blank-line-before-class (conflicts with D211)
+    "D213",   # multi-line-summary-second-line (conflicts with D212)
+    "TRY003", # Allow dynamic exception messages with f-strings
 ]
 
 [lint.pydocstyle]

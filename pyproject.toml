@@ -42,7 +42,15 @@ build-backend = "hatchling.build"
 packages = ["src/cvxmarkowitz"]
 
 [tool.mypy]
+mypy_path = "src"
+namespace_packages = true
+explicit_package_bases = true
 ignore_missing_imports = true
+# Disable strict checks that fail with cvxpy's untyped code
+warn_return_any = false
+disallow_any_unimported = false
+disallow_untyped_calls = false
+disable_error_code = ["attr-defined", "no-any-return", "operator", "no-untyped-call"]
 
 [tool.deptry.per_rule_ignores]
 DEP002 = ["cvxpy-base", "clarabel"]

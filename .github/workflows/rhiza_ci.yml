@@ -29,7 +29,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.0"
+          version: "0.10.3"
 
       - id: versions
         env:
@@ -60,7 +60,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          version: "0.10.0"
+          version: "0.10.3"
           python-version: ${{ matrix.python-version }}
 
       - name: Run tests

@@ -66,7 +66,7 @@ class SampleCovariance(Model):
             D.VOLA_UNCERTAINTY: Nonnegative vector of per-asset uncertainty.
         """
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for chol and vola_uncertainty")
+            raise CvxError("Mismatch in length for chol and vola_uncertainty")  # noqa: TRY003
 
         self.data[D.CHOLESKY].value = fill_matrix(rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY])
         self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])

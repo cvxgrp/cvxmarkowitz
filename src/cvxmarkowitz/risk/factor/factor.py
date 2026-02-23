@@ -110,22 +110,22 @@ class FactorModel(Model):
         # check the keywords
         for key in self.data.keys():
             if key not in kwargs.keys():
-                raise CvxError(f"Missing keyword {key}")
+                raise CvxError(f"Missing keyword {key}")  # noqa: TRY003
 
         if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")
+            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")  # noqa: TRY003
 
         exposure = kwargs[D.EXPOSURE]
         k, assets = exposure.shape
 
         if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == assets:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")
+            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")  # noqa: TRY003
 
         if not kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] == k:
-            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")
+            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")  # noqa: TRY003
 
         if not kwargs[D.CHOLESKY].shape[0] == k:
-            raise CvxError("Mismatch in size of chol and exposure")
+            raise CvxError("Mismatch in size of chol and exposure")  # noqa: TRY003
 
         self.data[D.EXPOSURE].value = fill_matrix(rows=self.factors, cols=self.assets, x=kwargs["exposure"])
         self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA])

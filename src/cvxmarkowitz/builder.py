@@ -60,7 +60,7 @@ class _Problem:
         for name, model in self.model.items():
             for key in model.data.keys():
                 if key not in kwargs:
-                    raise CvxError(f"Missing data for {key} in model {name}")
+                    raise CvxError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 
             # It's tempting to operate without the models at this stage.
             # However, we would give up a lot of convenience. For example,
@@ -75,7 +75,7 @@ class _Problem:
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:
-            raise CvxError(f"Problem status is {self.problem.status}")
+            raise CvxError(f"Problem status is {self.problem.status}")  # noqa: TRY003
 
         return float(value)
 

@@ -71,6 +71,6 @@ class ExpectedReturns(Model):
         # Robust return estimate
         uncertainty = kwargs["mu_uncertainty"]
         if not uncertainty.shape[0] == exp_returns.shape[0]:
-            raise CvxError("Mismatch in length for mu and mu_uncertainty")
+            raise CvxError("Mismatch in length for mu and mu_uncertainty")  # noqa: TRY003
 
         self.parameter["mu_uncertainty"].value = fill_vector(num=self.assets, x=uncertainty)

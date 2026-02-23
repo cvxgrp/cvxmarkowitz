@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 import cvxpy as cp
 
-from cvxmarkowitz.types import Expressions, Matrix, Parameter, Variables
+from cvxmarkowitz.types import Constraints, Matrix, Parameter, Variables
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,6 @@ class Model(ABC):
     def update(self, **kwargs: Matrix) -> None:
         """Update the data in the risk model."""
 
-    def constraints(self, variables: Variables) -> Expressions:
+    def constraints(self, variables: Variables) -> Constraints:
         """Return the constraints for the risk model."""
         return {}

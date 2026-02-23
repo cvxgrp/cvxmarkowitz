@@ -32,7 +32,7 @@ class PCA:
     def __post_init__(self) -> None:
         """Validate inputs and compute factors, exposures, and eigenvalues."""
         if self.n_components > self.returns.shape[1]:
-            raise ValueError("The number of components cannot exceed the number of assets")
+            raise ValueError("The number of components cannot exceed the number of assets")  # noqa: TRY003
 
         # compute the principal components without sklearn
         # 1. compute the correlation

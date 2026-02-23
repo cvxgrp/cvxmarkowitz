@@ -21,7 +21,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvxmarkowitz.model import Model
-from cvxmarkowitz.types import Expressions, Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.types import Constraints, Expressions, Matrix, Parameter, Variables  # noqa: F401
 from cvxmarkowitz.utils.fill import fill_vector
 
 
@@ -69,7 +69,7 @@ class Bounds(Model):
         self.data[self._f("lower")].value = fill_vector(num=self.assets, x=kwargs[self._f("lower")])
         self.data[self._f("upper")].value = fill_vector(num=self.assets, x=kwargs[self._f("upper")])
 
-    def constraints(self, variables: Variables) -> Expressions:
+    def constraints(self, variables: Variables) -> Constraints:
         """Return lower/upper inequality constraints for `acting_on` variable.
 
         Raises KeyError if `acting_on` is not present in `variables`.

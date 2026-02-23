@@ -32,7 +32,7 @@ def valid(matrix: Matrix) -> tuple[Matrix, Matrix]:
     """
     # make sure matrix  is quadratic
     if matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Matrix must be quadratic")
+        raise ValueError("Matrix must be quadratic")  # noqa: TRY003
 
     _valid = np.isfinite(np.diag(matrix))
     return _valid, matrix[:, _valid][_valid]

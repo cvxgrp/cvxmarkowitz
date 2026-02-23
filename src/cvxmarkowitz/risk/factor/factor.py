@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Expressions, Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.types import Constraints, Expressions, Matrix, Parameter, Variables  # noqa: F401
 from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 
@@ -139,7 +139,7 @@ class FactorModel(Model):
             num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY]
         )
 
-    def constraints(self, variables: Variables) -> Expressions:
+    def constraints(self, variables: Variables) -> Constraints:
         """Return factor-model linking and robust-risk constraints."""
         return {
             "factors": variables[D.FACTOR_WEIGHTS] == self.data[D.EXPOSURE] @ variables[D.WEIGHTS],

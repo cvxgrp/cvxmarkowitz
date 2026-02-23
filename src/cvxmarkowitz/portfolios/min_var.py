@@ -30,7 +30,7 @@ class MinVar(Builder):
     """Construct a long-only, budget-constrained minimum-variance portfolio."""
 
     @property
-    def objective(self) -> cp.Objective:
+    def objective(self) -> cp.Minimize:
         """Return the CVXPY objective for minimizing portfolio risk."""
         return cp.Minimize(self.risk.estimate(self.variables))
 

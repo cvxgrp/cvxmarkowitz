@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Expressions, Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.types import Constraints, Expressions, Matrix, Parameter, Variables  # noqa: F401
 from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 
@@ -71,7 +71,7 @@ class SampleCovariance(Model):
         self.data[D.CHOLESKY].value = fill_matrix(rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY])
         self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])
 
-    def constraints(self, variables: Variables) -> Expressions:
+    def constraints(self, variables: Variables) -> Constraints:
         """Return auxiliary constraints used for robust risk modeling."""
         return {
             "dummy": variables[D._ABS] >= cp.abs(variables[D.WEIGHTS]),  # Robust risk dummy variable

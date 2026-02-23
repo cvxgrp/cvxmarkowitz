@@ -33,7 +33,7 @@ class MaxSharpe(Builder):
     """Maximize expected return under long-only, budget, and risk constraints."""
 
     @property
-    def objective(self) -> cp.Objective:
+    def objective(self) -> cp.Maximize:
         """Return the CVXPY objective for maximizing expected return."""
         return cp.Maximize(self.model[M.RETURN].estimate(self.variables))
 

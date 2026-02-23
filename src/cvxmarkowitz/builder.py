@@ -87,7 +87,7 @@ class _Problem:
         return bool(self.problem.is_dpp())
 
     @property
-    def data(self) -> Generator[tuple[tuple[str, str], Matrix]]:
+    def data(self) -> Generator[tuple[tuple[str, str], cp.Parameter]]:
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
@@ -167,7 +167,7 @@ class Builder:
 
     @property
     @abstractmethod
-    def objective(self) -> cp.Expression:
+    def objective(self) -> cp.Minimize | cp.Maximize:
         """Return the objective function."""
 
     def build(self) -> _Problem:

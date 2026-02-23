@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 import cvxpy as cp
 
-from cvxmarkowitz.types import Constraints, Expressions, Matrix, Parameter, Variables
+from cvxmarkowitz.types import Constraints, Matrix, Parameter, Variables
 
 
 @dataclass(frozen=True)

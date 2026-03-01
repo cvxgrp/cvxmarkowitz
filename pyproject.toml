@@ -12,6 +12,7 @@ readme = "README.md"
 #authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
 #readme = "README.md"
 requires-python = ">=3.11"
+# Private :: Do Not Upload (prevents rhiza_release.yml from publishing to PyPI)
 dependencies = [
     "cvxpy-base>=1.6.0",
     "numpy>=2.4.0",

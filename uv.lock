@@ -665,19 +665,19 @@ wheels = [
 
 [[package]]
 name = "mako"
-version = "1.3.11"
+version = "1.3.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markupsafe" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/59/8a/805404d0c0b9f3d7a326475ca008db57aea9c5c9f2e1e39ed0faa335571c/mako-1.3.11.tar.gz", hash = "sha256:071eb4ab4c5010443152255d77db7faa6ce5916f35226eb02dc34479b6858069", size = 399811, upload-time = "2026-04-14T20:19:51.493Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/00/62/791b31e69ae182791ec67f04850f2f062716bbd205483d63a215f3e062d3/mako-1.3.12.tar.gz", hash = "sha256:9f778e93289bd410bb35daadeb4fc66d95a746f0b75777b942088b7fd7af550a", size = 400219, upload-time = "2026-04-28T19:01:08.512Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/68/a5/19d7aaa7e433713ffe881df33705925a196afb9532efc8475d26593921a6/mako-1.3.11-py3-none-any.whl", hash = "sha256:e372c6e333cf004aa736a15f425087ec977e1fcbd2966aae7f17c8dc1da27a77", size = 78503, upload-time = "2026-04-14T20:19:53.233Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/b1/a0ec7a5a9db730a08daef1fdfb8090435b82465abbf758a596f0ea88727e/mako-1.3.12-py3-none-any.whl", hash = "sha256:8f61569480282dbf557145ce441e4ba888be453c30989f879f0d652e39f53ea9", size = 78521, upload-time = "2026-04-28T19:01:10.393Z" },
 ]
 
 [[package]]
 name = "marimo"
-version = "0.23.3"
+version = "0.23.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -699,9 +699,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b6/3f/7fb38c6c2a1f8d6b3c3ffb8ca6db5ff0b9dacbb113b4d05aa7690b51a771/marimo-0.23.3.tar.gz", hash = "sha256:251a8724b58882d65956ff6a20552cb21e59a6fd4149ca437727894375ec31e9", size = 38406206, upload-time = "2026-04-24T17:56:21.016Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/45/99/13a8947b4544b1b65ed279a550b2d2a57bbcb24fb6591020542f46dca86b/marimo-0.23.5.tar.gz", hash = "sha256:4eb4c7c12ea1c3e8f25e56a9365a4ae1b0b995faa2bd614c576fa0ea3e0c4cad", size = 38417181, upload-time = "2026-05-04T18:51:26.277Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/e7/02d672006fb04cb8aef23aeaf0384482fe63a13f9db6125ad8e13146daee/marimo-0.23.3-py3-none-any.whl", hash = "sha256:329b35b9ca221db9c78780d1714b11f010a00e2a929942db8ae6187960d42496", size = 38828150, upload-time = "2026-04-24T17:56:16.204Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/d1/f2300ce52c391c5e0fa86a6292e45cb419898626b2900c2c1b44a3ba7162/marimo-0.23.5-py3-none-any.whl", hash = "sha256:9cf039ba5a11a5a3035ed0a165d3f84e2d67a4046422925b77fde154062c5112", size = 38835716, upload-time = "2026-05-04T18:51:21.64Z" },
 ]
 
 [[package]]
@@ -1051,11 +1051,11 @@ wheels = [
 
 [[package]]
 name = "parso"
-version = "0.8.6"
+version = "0.8.7"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/81/76/a1e769043c0c0c9fe391b702539d594731a4362334cdf4dc25d0c09761e7/parso-0.8.6.tar.gz", hash = "sha256:2b9a0332696df97d454fa67b81618fd69c35a7b90327cbe6ba5c92d2c68a7bfd", size = 401621, upload-time = "2026-02-09T15:45:24.425Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/30/4b/90c937815137d43ce71ba043cd3566221e9df6b9c805f24b5d138c9d40a7/parso-0.8.7.tar.gz", hash = "sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1", size = 401824, upload-time = "2026-05-01T23:13:02.138Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/61/fae042894f4296ec49e3f193aff5d7c18440da9e48102c3315e1bc4519a7/parso-0.8.6-py2.py3-none-any.whl", hash = "sha256:2c549f800b70a5c4952197248825584cb00f033b29c692671d3bf08bf380baff", size = 106894, upload-time = "2026-02-09T15:45:21.391Z" },
+    { url = "https://files.pythonhosted.org/packages/99/5d/8268b644392ee874ee82a635cd0df1773de230bde356c38de28e298392cc/parso-0.8.7-py2.py3-none-any.whl", hash = "sha256:a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c", size = 107025, upload-time = "2026-05-01T23:12:58.867Z" },
 ]
 
 [[package]]
@@ -1372,11 +1372,11 @@ wheels = [
 
 [[package]]
 name = "pytz"
-version = "2026.1.post1"
+version = "2026.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/56/db/b8721d71d945e6a8ac63c0fc900b2067181dbb50805958d4d4661cf7d277/pytz-2026.1.post1.tar.gz", hash = "sha256:3378dde6a0c3d26719182142c56e60c7f9af7e968076f31aae569d72a0358ee1", size = 321088, upload-time = "2026-03-03T07:47:50.683Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ff/46/dd499ec9038423421951e4fad73051febaa13d2df82b4064f87af8b8c0c3/pytz-2026.2.tar.gz", hash = "sha256:0e60b47b29f21574376f218fe21abc009894a2321ea16c6754f3cad6eb7cdd6a", size = 320861, upload-time = "2026-05-04T01:35:29.667Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/10/99/781fe0c827be2742bcc775efefccb3b048a3a9c6ce9aec0cbf4a101677e5/pytz-2026.1.post1-py2.py3-none-any.whl", hash = "sha256:f2fd16142fda348286a75e1a524be810bb05d444e5a081f37f7affc635035f7a", size = 510489, upload-time = "2026-03-03T07:47:49.167Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/dd/96da98f892250475bdf2328112d7468abdd4acc7b902b6af23f4ed958ea0/pytz-2026.2-py2.py3-none-any.whl", hash = "sha256:04156e608bee23d3792fd45c94ae47fae1036688e75032eea2e3bf0323d1f126", size = 510141, upload-time = "2026-05-04T01:35:27.408Z" },
 ]
 
 [[package]]

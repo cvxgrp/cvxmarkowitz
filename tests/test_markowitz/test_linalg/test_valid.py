@@ -28,5 +28,5 @@ def test_valid():
 def test_invalid():
     """Non-quadratic inputs should raise a ValueError."""
     a = np.zeros((3, 2))
-    with pytest.raises((ValueError, AssertionError)):
+    with pytest.raises(ValueError):
         valid(a)

@@ -108,8 +108,8 @@ class FactorModel(Model):
             idiosyncratic_vola_uncertainty: Nonnegative vector for residual risk uncertainty.
         """
         # check the keywords
-        for key in self.data.keys():
-            if key not in kwargs.keys():
+        for key in self.data:
+            if key not in kwargs:
                 raise CvxError(f"Missing keyword {key}")  # noqa: TRY003
 
         if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:

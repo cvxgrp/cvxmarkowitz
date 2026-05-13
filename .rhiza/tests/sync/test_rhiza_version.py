@@ -47,14 +47,14 @@ class TestRhizaVersion:
 
         # Clear RHIZA_VERSION from environment to test the default value
         import os
-        import subprocess
+        import subprocess  # nosec B404
 
         env = os.environ.copy()
         env.pop("RHIZA_VERSION", None)
 
         cmd = ["/usr/bin/make", "-s", "print-RHIZA_VERSION"]
         logger.info("Running command: %s", " ".join(cmd))
-        proc = subprocess.run(cmd, capture_output=True, text=True, env=env)
+        proc = subprocess.run(cmd, capture_output=True, text=True, env=env)  # nosec B603
         out = strip_ansi(proc.stdout)
         assert "Value of RHIZA_VERSION:\n0.10.2" in out
 
@@ -63,14 +63,14 @@ class TestRhizaVersion:
         proc = run_make(logger, ["sync"])
         out = proc.stdout
         # Check that rhiza>= is used with the version variable
-        assert 'uvx "rhiza>=' in out or "rhiza>=" in out
+        assert 'uvx "rhiza==' in out or "rhiza==" in out
 
     def test_rhiza_version_used_in_validate_target(self, logger):
         """Validate target should use RHIZA_VERSION from .rhiza-version."""
         proc = run_make(logger, ["validate"])
         out = proc.stdout
         # Check that rhiza>= is used with the version variable
-        assert 'uvx "rhiza>=' in out or "rhiza>=" in out
+        assert 'uvx "rhiza==' in out or "rhiza==" in out
 
 
 class TestSummariseSync:
@@ -96,8 +96,8 @@ class TestSummariseSync:
         """Summarise-sync target should use RHIZA_VERSION from .rhiza-version."""
         proc = run_make(logger, ["summarise-sync"])
         out = proc.stdout
-        # Check that rhiza>= is used with the version
-        assert 'uvx "rhiza>=' in out or "rhiza>=" in out
+        # Check that rhiza== is used with the version
+        assert 'uvx "rhiza==' in out or "rhiza==" in out
 
     def test_summarise_sync_skips_in_rhiza_repo(self, logger):
         """Summarise-sync target should skip execution in rhiza repository."""
@@ -123,9 +123,9 @@ class TestSummariseSync:
         proc = run_make(logger, ["sync"])
         out = proc.stdout
 
-        # The format should be: uvx "rhiza>=VERSION" materialize --force .
-        assert 'uvx "rhiza>=' in out
-        assert "materialize --force" in out
+        # The format should be: uvx "rhiza>=VERSION" sync .
+        assert 'uvx "rhiza==' in out
+        assert "sync ." in out
 
     def test_workflow_summarise_command_format(self, logger):
         """Test that the summarise command format matches workflow expectations."""
@@ -133,5 +133,5 @@ class TestSummariseSync:
         out = proc.stdout
 
         # The format should be: uvx "rhiza>=VERSION" summarise .
-        assert 'uvx "rhiza>=' in out
+        assert 'uvx "rhiza==' in out
         assert "summarise" in out

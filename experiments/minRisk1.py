@@ -35,7 +35,7 @@ if __name__ == "__main__":
     holding_costs = pd.Series(data=0.0005, index=returns.columns)
 
     problem = builder.build()
-    assert problem.is_dpp(), "Problem is not DPP"
+    assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
 
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
 

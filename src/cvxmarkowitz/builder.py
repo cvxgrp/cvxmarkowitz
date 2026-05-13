@@ -47,7 +47,7 @@ def deserialize(
         The deserialized `_Problem` instance.
     """
     with open(problem_file, "rb") as infile:
-        return pickle.load(infile)  # nosec B301
+        return pickle.load(infile)  # nosec B301  # noqa: S301
 
 
 @dataclass(frozen=True)
@@ -58,7 +58,7 @@ class _Problem:
     def update(self, **kwargs: Matrix) -> _Problem:
         """Update the problem."""
         for name, model in self.model.items():
-            for key in model.data.keys():
+            for key in model.data:
                 if key not in kwargs:
                     raise CvxError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 
@@ -177,7 +177,7 @@ class Builder:
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
-        assert problem.is_dpp(), "Problem is not DPP"
+        assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
 
         return _Problem(problem=problem, model=self.model)
 

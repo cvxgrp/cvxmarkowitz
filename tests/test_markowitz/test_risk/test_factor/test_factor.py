@@ -12,8 +12,7 @@ import pandas as pd
 import pytest
 
 from cvxmarkowitz.cvxerror import CvxError
-from cvxmarkowitz.linalg import PCA, cholesky
-from cvxmarkowitz.linalg.random import rand_cov
+from cvx.linalg import cholesky, pca, rand_cov
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.min_var import MinVar
@@ -36,7 +35,7 @@ def factor_model():
 def test_timeseries_model(returns):
     """Compute PCA factors and validate factor-model risk on synthetic data."""
     # Here we compute the factors and regress the returns on them
-    factors = PCA(returns=returns, n_components=10)
+    factors = pca(returns, n_components=10)
 
     model = FactorModel(assets=20, factors=10)
 
@@ -44,7 +43,7 @@ def test_timeseries_model(returns):
         **{
             D.CHOLESKY: cholesky(factors.cov),
             D.EXPOSURE: factors.exposure,
-            D.IDIOSYNCRATIC_VOLA: factors.idiosyncratic_vola,
+            D.IDIOSYNCRATIC_VOLA: np.std(factors.idiosyncratic, axis=0),
             D.SYSTEMATIC_VOLA_UNCERTAINTY: np.zeros(10),
             D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.zeros(20),
         }
@@ -75,7 +74,7 @@ def test_estimate_risk(solver):
 
     problem.update(
         **{
-            D.CHOLESKY: cholesky(rand_cov(10)),
+            D.CHOLESKY: cholesky(rand_cov(10, seed=42)),
             D.EXPOSURE: np.random.randn(10, 20),
             D.IDIOSYNCRATIC_VOLA: np.random.randn(20),
             D.LOWER_BOUND_ASSETS: np.zeros(20),
@@ -89,12 +88,11 @@ def test_estimate_risk(solver):
 
     problem.solve(solver=solver)
 
-    # assert prob.value == pytest.approx(0.14138117837204583)
     assert np.array(problem.weights[20:]) == pytest.approx(np.zeros(5), abs=1e-6)
 
     problem.update(
         **{
-            D.CHOLESKY: cholesky(rand_cov(10)),
+            D.CHOLESKY: cholesky(rand_cov(10, seed=43)),
             D.EXPOSURE: np.random.randn(10, 20),
             D.IDIOSYNCRATIC_VOLA: np.random.randn(20),
             D.LOWER_BOUND_ASSETS: np.zeros(20),
@@ -108,7 +106,7 @@ def test_estimate_risk(solver):
 
     problem.solve(solver=solver)
 
-    assert problem.value == pytest.approx(0.5454593844618784, abs=1e-3)
+    assert problem.value == pytest.approx(0.40689729040536793, abs=1e-3)
     assert np.array(problem.weights[20:]) == pytest.approx(np.zeros(5), abs=1e-3)
 
     data = dict(problem.data)

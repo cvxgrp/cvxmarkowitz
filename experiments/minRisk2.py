@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvxmarkowitz.linalg import cholesky
+from cvx.linalg import cholesky
 from cvxmarkowitz.names import ConstraintName as C
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.portfolios.min_var import MinVar

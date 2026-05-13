@@ -6,4 +6,6 @@ templates:
   - github
   - legal
   - tests
+  - github-tests
   - book
+  - github-book

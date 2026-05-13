@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+from cvx.linalg import cholesky
 
 from cvxmarkowitz.builder import CvxError
-from cvx.linalg import cholesky
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.risk import SampleCovariance
 

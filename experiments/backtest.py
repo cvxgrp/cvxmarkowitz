@@ -5,10 +5,10 @@ from __future__ import annotations
 import fire as fire
 import numpy as np
 import pandas as pd
+from cvx.linalg import cholesky
 from cvx.simulator.builder import builder
 from loguru import logger
 
-from cvx.linalg import cholesky
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.portfolios.min_var import MinVar
 

@@ -1,0 +1,37 @@
+INHERIT: docs/mkdocs-base.yml
+
+site_name: cvxmarkowitz
+site_description: Markowitz portfolio optimization – built on CVXPY.
+site_author: Stanford University Convex Optimization Group
+site_url: https://cvxgrp.github.io/cvxmarkowitz/
+repo_url: https://github.com/cvxgrp/cvxmarkowitz
+repo_name: cvxgrp/cvxmarkowitz
+copyright: Copyright &copy; 2023–2026 Stanford University Convex Optimization Group
+
+nav:
+  - Home: index.md
+  - Development:
+      - Tests: development/TESTS.md
+  - Reports:
+      - Test Report: reports/html-report/report.html
+      - Coverage Report: reports/html-coverage/index.html
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cvxgrp/cvxmarkowitz
+
+theme:
+  icon:
+    logo: material/chart-line
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true

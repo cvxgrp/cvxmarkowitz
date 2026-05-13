@@ -45,5 +45,5 @@ build-backend = "hatchling.build"
 packages = ["src/cvxmarkowitz"]
 
 [tool.deptry.per_rule_ignores]
-DEP002 = ["cvxpy-base", "clarabel"]
+DEP002 = ["cvxpy-base", "clarabel", "cvx-linalg"]
 DEP001 = ["cvx", "cvxpy"]

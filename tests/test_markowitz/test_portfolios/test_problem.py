@@ -3,8 +3,7 @@
 import numpy as np
 
 from cvxmarkowitz.builder import deserialize
-from cvxmarkowitz.linalg import cholesky
-from cvxmarkowitz.linalg.random import rand_cov
+from cvx.linalg import cholesky, rand_cov
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.portfolios.min_var import MinVar
 

@@ -9,8 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cvxmarkowitz.linalg import cholesky
-from cvxmarkowitz.linalg.random import rand_cov
+from cvx.linalg import cholesky, rand_cov
 
 
 def test_cholesky():

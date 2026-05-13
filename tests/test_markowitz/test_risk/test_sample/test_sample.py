@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from cvxmarkowitz.builder import CvxError
-from cvxmarkowitz.linalg import cholesky
+from cvx.linalg import cholesky
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.risk import SampleCovariance
 

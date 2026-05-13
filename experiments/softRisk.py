@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-from cvxmarkowitz.linalg import PCA, cholesky
+from cvx.linalg import cholesky, pca
 from cvxmarkowitz.models.expected_returns import ExpectedReturns
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
@@ -43,7 +43,7 @@ def run(path: str = "data/stock_prices.csv") -> None:
     assets = returns.shape[1]
 
     logger.info(f"Returns: \n{returns}")
-    pca = PCA(returns=returns.values, n_components=n_components)
+    factors = pca(returns.values, n_components=n_components)
     lower_bound_factors = pd.Series(data=-1.0, index=range(n_components))
     upper_bound_factors = pd.Series(data=+1.0, index=range(n_components))  # len(pca.factors)))
 
@@ -65,9 +65,9 @@ def run(path: str = "data/stock_prices.csv") -> None:
     # clean up at the end, e.g. integer lots
     problem.update(
         **{
-            D.CHOLESKY: cholesky(pca.cov),
-            D.EXPOSURE: pca.exposure,
-            D.IDIOSYNCRATIC_VOLA: pca.idiosyncratic_vola,
+            D.CHOLESKY: cholesky(factors.cov),
+            D.EXPOSURE: factors.exposure,
+            D.IDIOSYNCRATIC_VOLA: np.std(factors.idiosyncratic, axis=0),
             D.LOWER_BOUND_FACTORS: lower_bound_factors.values,
             D.UPPER_BOUND_FACTORS: upper_bound_factors.values,
             D.LOWER_BOUND_ASSETS: lower_bound_assets[returns.columns].values,

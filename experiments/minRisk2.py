@@ -56,7 +56,7 @@ if __name__ == "__main__":
     print(problem.parameter)
     # assert False
 
-    assert problem.is_dpp(), "Problem is not DPP"
+    assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
 
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
     logger.info(problem)

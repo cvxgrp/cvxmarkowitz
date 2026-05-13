@@ -13,13 +13,15 @@ import subprocess  # nosec B404
 def test_sbom_generation_json(git_repo, logger):
     """Test that SBOM generation works in JSON format."""
     # Run the SBOM generation command for JSON
-    result = subprocess.run(  # nosec B603
+    result = subprocess.run(  # nosec B603 B607
         [
             "uvx",
             "--from",
             "cyclonedx-bom>=7.0.0",
             "cyclonedx-py",
             "environment",
+            "--pyproject",
+            "pyproject.toml",
             "--of",
             "JSON",
             "-o",
@@ -53,17 +55,26 @@ def test_sbom_generation_json(git_repo, logger):
     assert sbom_data["bomFormat"] == "CycloneDX", "SBOM has incorrect bomFormat"
     assert "components" in sbom_data, "SBOM missing components field"
 
+    # Verify primary component (metadata.component) is present for NTIA compliance
+    assert "metadata" in sbom_data, "SBOM missing metadata field"
+    assert "component" in sbom_data["metadata"], "SBOM missing primary component (metadata.component)"
+    primary = sbom_data["metadata"]["component"]
+    assert primary.get("name"), "Primary component missing name"
+    assert primary.get("version"), "Primary component missing version"
+
 
 def test_sbom_generation_xml(git_repo, logger):
     """Test that SBOM generation works in XML format."""
     # Run the SBOM generation command for XML
-    result = subprocess.run(  # nosec B603
+    result = subprocess.run(  # nosec B603 B607
         [
             "uvx",
             "--from",
             "cyclonedx-bom>=7.0.0",
             "cyclonedx-py",
             "environment",
+            "--pyproject",
+            "pyproject.toml",
             "--of",
             "XML",
             "-o",
@@ -106,7 +117,7 @@ def test_sbom_command_syntax(git_repo, logger):
     # Good: uvx --from 'cyclonedx-bom>=7.0.0' cyclonedx-py
 
     # Try the old (incorrect) syntax - should fail
-    result_bad = subprocess.run(  # nosec B603
+    result_bad = subprocess.run(  # nosec B603 B607
         [
             "uvx",
             "cyclonedx-bom@^7.0.0",
@@ -129,13 +140,15 @@ def test_sbom_command_syntax(git_repo, logger):
     assert result_bad.returncode != 0, "Old npm-style syntax should not work"
 
     # Try the new (correct) syntax - should succeed
-    result_good = subprocess.run(  # nosec B603
+    result_good = subprocess.run(  # nosec B603 B607
         [
             "uvx",
             "--from",
             "cyclonedx-bom>=7.0.0",
             "cyclonedx-py",
             "environment",
+            "--pyproject",
+            "pyproject.toml",
             "--of",
             "JSON",
             "-o",

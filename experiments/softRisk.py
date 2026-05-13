@@ -56,7 +56,7 @@ def run(path: str = "data/stock_prices.csv") -> None:
     builder.parameter[P.SIGMA_MAX] = cp.Parameter(1, name="sigma_max", nonneg=True)
 
     problem = builder.build()
-    assert problem.is_dpp(), "Problem is not DPP"
+    assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
 
     logger.info(f"Problem is DPP: {problem.is_dpp()}")
 

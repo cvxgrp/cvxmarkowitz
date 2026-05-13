@@ -60,6 +60,22 @@ def test_idiosyncratic(returns):
     assert np.allclose(returns, result.systematic + result.idiosyncratic)
 
 
+def test_too_many_factors(returns):
+    """When n_components exceeds the number of assets, pca clamps to n_assets.
+
+    The new cvx.linalg.pca API silently caps n_components at min(n_samples,
+    n_assets) rather than raising an error.  This test documents that
+    intentional behaviour: the output shape reflects the actual rank, not the
+    requested component count.
+    """
+    n_assets = returns.shape[1]  # 20
+    result = pca(returns, n_components=n_assets + 5)
+
+    # Output is clamped to the available rank – no exception raised.
+    assert result.factors.shape[1] <= n_assets
+    assert result.exposure.shape[0] <= n_assets
+
+
 @pytest.mark.parametrize("size", [(4, 2), (600, 50), (2000, 100)])
 def test_pca_speed(size):
     """Construct PCA for varying matrix sizes and validate shapes.

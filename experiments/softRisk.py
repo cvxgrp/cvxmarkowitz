@@ -15,9 +15,9 @@ import cvxpy as cp
 import fire
 import numpy as np
 import pandas as pd
+from cvx.linalg import cholesky, pca
 from loguru import logger
 
-from cvx.linalg import cholesky, pca
 from cvxmarkowitz.models.expected_returns import ExpectedReturns
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M

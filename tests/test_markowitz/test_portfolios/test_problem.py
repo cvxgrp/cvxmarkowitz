@@ -1,9 +1,9 @@
 """Tests for serialization/deserialization of Markowitz problems."""
 
 import numpy as np
+from cvx.linalg import cholesky, rand_cov
 
 from cvxmarkowitz.builder import deserialize
-from cvx.linalg import cholesky, rand_cov
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.portfolios.min_var import MinVar
 

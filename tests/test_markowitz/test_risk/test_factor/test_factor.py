@@ -10,9 +10,9 @@ import cvxpy as cp
 import numpy as np
 import pandas as pd
 import pytest
+from cvx.linalg import cholesky, pca, rand_cov
 
 from cvxmarkowitz.cvxerror import CvxError
-from cvx.linalg import cholesky, pca, rand_cov
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.min_var import MinVar

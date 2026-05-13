@@ -123,7 +123,7 @@ class TestSummariseSync:
         proc = run_make(logger, ["sync"])
         out = proc.stdout
 
-        # The format should be: uvx "rhiza>=VERSION" sync .
+        # The format should be: uvx "rhiza==VERSION" sync .
         assert 'uvx "rhiza==' in out
         assert "sync ." in out
 
@@ -132,6 +132,6 @@ class TestSummariseSync:
         proc = run_make(logger, ["summarise-sync"])
         out = proc.stdout
 
-        # The format should be: uvx "rhiza>=VERSION" summarise .
+        # The format should be: uvx "rhiza==VERSION" summarise .
         assert 'uvx "rhiza==' in out
         assert "summarise" in out

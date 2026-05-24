@@ -5,10 +5,4 @@ profiles:
   - github-project
 
 templates:
-  - core
-  - github
   - legal
-  - tests
-  - github-tests
-  - book
-  - github-book

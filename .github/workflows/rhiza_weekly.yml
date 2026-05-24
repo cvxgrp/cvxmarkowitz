@@ -18,11 +18,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v8.1.0
-<<<<<<< ours
-=======
         with:
           version: "0.11.16"
->>>>>>> upstream
 
       - name: Upgrade dependencies and run tests
         run: |
@@ -36,11 +33,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v8.1.0
-<<<<<<< ours
-=======
         with:
           version: "0.11.16"
->>>>>>> upstream
 
       - name: Run semgrep
         run: |
@@ -53,11 +47,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v8.1.0
-<<<<<<< ours
-=======
         with:
           version: "0.11.16"
->>>>>>> upstream
 
       - name: Run pip-audit
         run: |

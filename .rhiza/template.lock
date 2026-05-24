@@ -1,7 +1,7 @@
-sha: f3f752a73a668c2381dd7eea2ca9315447957fa6
+sha: 38a5a25d415f12dfd7fa8cc81e985da9907dc94e
 repo: jebel-quant/rhiza
 host: github
-ref: v0.10.6
+ref: v0.11.0
 include: []
 exclude: []
 templates:
@@ -53,10 +53,12 @@ files:
 - .rhiza/semgrep.yml
 - .rhiza/tests/README.md
 - .rhiza/tests/api/conftest.py
+- .rhiza/tests/api/test_ci_workflow.py
 - .rhiza/tests/api/test_gh_aw_targets.py
 - .rhiza/tests/api/test_github_targets.py
 - .rhiza/tests/api/test_makefile_api.py
 - .rhiza/tests/api/test_makefile_targets.py
+- .rhiza/tests/api/test_release_workflow.py
 - .rhiza/tests/api/test_weekly_workflow.py
 - .rhiza/tests/conftest.py
 - .rhiza/tests/deps/test_dependency_health.py
@@ -81,6 +83,7 @@ files:
 - .rhiza/tests/sync/test_docstrings.py
 - .rhiza/tests/sync/test_readme_validation.py
 - .rhiza/tests/sync/test_rhiza_version.py
+- .rhiza/tests/sync/test_sync_schedule.py
 - .rhiza/tests/test_utils.py
 - .rhiza/tests/utils/test_git_repo_fixture.py
 - .rhiza/utils/pip_audit_policy.py
@@ -94,5 +97,5 @@ files:
 - docs/mkdocs-base.yml
 - pytest.ini
 - ruff.toml
-synced_at: '2026-05-13T12:06:57Z'
+synced_at: '2026-05-24T13:25:15Z'
 strategy: merge

@@ -5,13 +5,7 @@ ref: v0.11.0
 include: []
 exclude: []
 templates:
-- core
-- github
 - legal
-- tests
-- github-tests
-- book
-- github-book
 files:
 - .bandit
 - .editorconfig
@@ -103,5 +97,5 @@ files:
 - ruff.toml
 profiles:
 - github-project
-synced_at: '2026-05-24T14:02:52Z'
+synced_at: '2026-05-25T01:04:00Z'
 strategy: merge

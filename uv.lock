@@ -313,15 +313,15 @@ wheels = [
 
 [[package]]
 name = "cvx-linalg"
-version = "0.6.0"
+version = "0.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "polars" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c4/1b/281a688feb6394930a793987a3bc098f290fddfc4bc304903ff5aa3c8bf0/cvx_linalg-0.6.0.tar.gz", hash = "sha256:6bfc4fef9eb28925153519f77260f866a7478a51a28e1ed547e98b66fd32d2a1", size = 20186, upload-time = "2026-05-19T02:45:29.219Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/40/b4/8704cc758c5b3a43ed82050c5cc77a01922c34517adde4688f02caf09cab/cvx_linalg-0.6.1.tar.gz", hash = "sha256:cbc87ba185a2482df7e638b39ba9f5f656fdda46d4a227b244ca3d61a7b29c6c", size = 20695, upload-time = "2026-05-20T11:45:03.513Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e6/38/b6e59a539ff7e41053ddce35b2d727cc2c3255cdaa80442f25588ebe5193/cvx_linalg-0.6.0-py3-none-any.whl", hash = "sha256:603d5ad27d9fddfdafe10698abb95abd73f40c0cc977438dd99c697d78c0a7f5", size = 22580, upload-time = "2026-05-19T02:45:27.906Z" },
+    { url = "https://files.pythonhosted.org/packages/97/2d/5393709cd1df83bb8486d25fd8a5c91fc5c3f39ea8e81c1cb2c5193e472c/cvx_linalg-0.6.1-py3-none-any.whl", hash = "sha256:5fb2f6a322117f8426536164ac397de4ab5ee3c9249b66ebfc001f3e4156f685", size = 23501, upload-time = "2026-05-20T11:45:02.316Z" },
 ]
 
 [[package]]
@@ -352,7 +352,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "clarabel" },
-    { name = "cvx-linalg", specifier = "==0.6.0" },
+    { name = "cvx-linalg", specifier = "==0.6.1" },
     { name = "cvxpy-base", specifier = ">=1.9.0" },
     { name = "numpy", specifier = ">=2.4.6" },
 ]
@@ -444,15 +444,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c0/00/f8d10588d2019d6d6452653def1ee807353b21983db48550318424b5ff18/fire-0.7.1.tar.gz", hash = "sha256:3b208f05c736de98fb343310d090dcc4d8c78b2a89ea4f32b837c586270a9cbf", size = 88720, upload-time = "2025-08-16T20:20:24.175Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e5/4c/93d0f85318da65923e4b91c1c2ff03d8a458cbefebe3bc612a6693c7906d/fire-0.7.1-py3-none-any.whl", hash = "sha256:e43fd8a5033a9001e7e2973bab96070694b9f12f2e0ecf96d4683971b5ab1882", size = 115945, upload-time = "2025-08-16T20:20:22.87Z" },
-]
-
-[[package]]
-name = "frozendict"
-version = "2.4.7"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/90/b2/2a3d1374b7780999d3184e171e25439a8358c47b481f68be883c14086b4c/frozendict-2.4.7.tar.gz", hash = "sha256:e478fb2a1391a56c8a6e10cc97c4a9002b410ecd1ac28c18d780661762e271bd", size = 317082, upload-time = "2025-11-11T22:40:14.251Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/38/74/f94141b38a51a553efef7f510fc213894161ae49b88bffd037f8d2a7cb2f/frozendict-2.4.7-py3-none-any.whl", hash = "sha256:972af65924ea25cf5b4d9326d549e69a9a4918d8a76a9d3a7cd174d98b237550", size = 16264, upload-time = "2025-11-11T22:40:12.836Z" },
 ]
 
 [[package]]
@@ -705,7 +696,7 @@ wheels = [
 
 [[package]]
 name = "marimo"
-version = "0.23.6"
+version = "0.23.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -720,6 +711,7 @@ dependencies = [
     { name = "psutil" },
     { name = "pygments" },
     { name = "pymdown-extensions" },
+    { name = "python-multipart" },
     { name = "pyyaml" },
     { name = "pyzmq", marker = "python_full_version < '3.15'" },
     { name = "starlette" },
@@ -727,9 +719,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/db/96/7f03859bfc88b9ee25f1562ad1e7e0284c442f2956eaf0f9c849836d378f/marimo-0.23.6.tar.gz", hash = "sha256:d63aeeee1e9ea7cac79bf2530daba915199153dce4d156fade7546474679d3ca", size = 38426356, upload-time = "2026-05-11T21:39:57.588Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/fe/a1dec6111a660ee3bd26521c24788e7aef519a31c60cf37f767f29313454/marimo-0.23.8.tar.gz", hash = "sha256:8049df4ad263e7126e959d7d910b014e6181dffe49f540a89c3174e61a446a99", size = 38505767, upload-time = "2026-05-22T16:24:19.881Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/44/a7/c19a6481dfe7762eb07a5bd0a7d7ae560a2ab5505a519bce159d0fd08beb/marimo-0.23.6-py3-none-any.whl", hash = "sha256:e8d19d875b0212600faa80eaaed0fd3f34dfb7b5241e630cf2b1cedd8dd14509", size = 38849553, upload-time = "2026-05-11T21:39:53.996Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/76/51b57a2e521b9110f25ec935f2774412e2f3d678b3fdea7841987244fb2c/marimo-0.23.8-py3-none-any.whl", hash = "sha256:99a4035d035fb320c8f2dcefc2213e0d64e9de13e989bc3f2a973b19dc40542a", size = 38938839, upload-time = "2026-05-22T16:24:16.102Z" },
 ]
 
 [[package]]
@@ -1424,6 +1416,15 @@ wheels = [
 ]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.29"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/fe/70bd71a6738b09a0bdf6480ca6436b167469ca4578b2a0efbe390b4b0e70/python_multipart-0.0.29.tar.gz", hash = "sha256:643e93849196645e2dbdd81a0f8829a23123ad7f797a84a364c6fb3563f18904", size = 45678, upload-time = "2026-05-17T17:29:47.654Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8f/cb/769cfc37177252872a45a71f3fbdde9d51b471a3f3c14bfe95dde3407386/python_multipart-0.0.29-py3-none-any.whl", hash = "sha256:2ddcc971cef266225f54f552d8fa10bcfbb1f14446caec199060daac59ff2d69", size = 29640, upload-time = "2026-05-17T17:29:45.69Z" },
+]
+
+[[package]]
 name = "pytz"
 version = "2026.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1877,7 +1878,7 @@ wheels = [
 
 [[package]]
 name = "tinycta"
-version = "0.12.3"
+version = "0.12.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cvx-linalg" },
@@ -1888,9 +1889,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/85/28/2cd46266eba5b69fe04e4936379a48e8bfe543a16d3877361bd19aeb1e0b/tinycta-0.12.3.tar.gz", hash = "sha256:c3fb017fab0299de2771e4b9f6ebf974dd26ffa6806b65e45a4da101b9f06872", size = 1651224, upload-time = "2026-05-17T14:40:12.178Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/81/e3/31d104fd76fee41e016cca964848b8b6d5ab697e9ed2ba0c4921f7598f74/tinycta-0.12.4.tar.gz", hash = "sha256:ab71a32b381ee89dae3191983b35e895ccbe2872eb03acfeefef2093412209e0", size = 1651290, upload-time = "2026-05-21T13:25:01.926Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5f/1d/cfbab50e1173ad1ffc913d545a73c60de3ae96147426d16d1a33a31fe232/tinycta-0.12.3-py3-none-any.whl", hash = "sha256:f2d39cf0f27045e65b599573e9956253e02d9a4c69e3d3c25a82f42a06ca5cbd", size = 14074, upload-time = "2026-05-17T14:40:10.292Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/b8/5bc016a78f0a6ce93fcff08559177c4fe153fb0aa9e9bf3f1809c833fa90/tinycta-0.12.4-py3-none-any.whl", hash = "sha256:efaaa1299f7d662e18203813c738779a844522069884715c8eb919ce58402965", size = 14084, upload-time = "2026-05-21T13:25:00.167Z" },
 ]
 
 [[package]]
@@ -2036,12 +2037,11 @@ wheels = [
 
 [[package]]
 name = "yfinance"
-version = "1.3.0"
+version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "curl-cffi" },
-    { name = "frozendict" },
     { name = "multitasking" },
     { name = "numpy" },
     { name = "pandas" },
@@ -2052,7 +2052,7 @@ dependencies = [
     { name = "requests" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/fd/943a7d71ce98a40b9006daccba96a83837acadb8e55361f41c7a81873013/yfinance-1.3.0.tar.gz", hash = "sha256:42c4e64a889dab8eeaffd3a66d4ccf1baffd566910ca63fb6332283f8f9b8a40", size = 145297, upload-time = "2026-04-16T19:51:05.785Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/21/e2/b81f9cac78f1c23e444164f2135e19f849a66774474f8b156fc3702280c3/yfinance-1.4.0.tar.gz", hash = "sha256:6b049c3f28b0d66be54c32d84838ffd60c429277ba378afb0202c4792013c911", size = 153715, upload-time = "2026-05-23T16:28:08.961Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/bc/e46ed5dfb88c6f7af0f641ffb6227d32f484ea989a2987a52a9c35d17aa9/yfinance-1.3.0-py2.py3-none-any.whl", hash = "sha256:c89539f0cf6af026d570131189bd659a962e8fb942376ef8ff8913e77c9fca75", size = 133706, upload-time = "2026-04-16T19:51:04.298Z" },
+    { url = "https://files.pythonhosted.org/packages/95/58/31561402a60d317f9c36288223be99eabedc25b61f18d0b69f0889726545/yfinance-1.4.0-py2.py3-none-any.whl", hash = "sha256:6513654be21bd80a4e9e4e24193255fb4b1921618443113826494bf6efcedcb0", size = 137749, upload-time = "2026-05-23T16:28:07.656Z" },
 ]

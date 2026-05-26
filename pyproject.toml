@@ -17,7 +17,7 @@ dependencies = [
     "cvxpy-base>=1.9.0",
     "numpy>=2.4.6",
     "clarabel",
-    "cvx-linalg==0.6.0"
+    "cvx-linalg==0.6.1"
 ]
 
 [project.urls]

@@ -142,46 +142,6 @@ class TestTemplateBundles:
         if errors:
             pytest.fail("\nBroken symlinks found in bundle dirs:\n" + "\n".join(errors))
 
-    def test_no_file_ownership_conflicts(self, bundles_data, bundles_root):
-        """Test that no deployment path is claimed by more than one bundle."""
-        dest_owners: dict[str, list[str]] = {}
-        for name in bundles_data["bundles"]:
-            bundle_dir = bundles_root / name
-            if not bundle_dir.is_dir():
-                continue
-            for dep_path in _deployment_paths(bundle_dir):
-                dest_owners.setdefault(dep_path, []).append(name)
-
-        conflicts = {dest: owners for dest, owners in dest_owners.items() if len(owners) > 1}
-        if conflicts:
-            lines = [f"  {dest}: {owners}" for dest, owners in sorted(conflicts.items())]
-            pytest.fail("\nFile ownership conflicts (same deployment path in multiple bundles):\n" + "\n".join(lines))
-
-    @pytest.mark.parametrize(
-        ("prefix", "namespace"),
-        [
-            ("github-", ".github/"),
-            ("gitlab-", ".gitlab/"),
-        ],
-    )
-    def test_overlay_bundle_files_stay_within_namespace(self, bundles_data, bundles_root, prefix, namespace):
-        """Test that github-* bundles only deliver .github/ files, gitlab-* only .gitlab/."""
-        violations = []
-        for name in bundles_data["bundles"]:
-            if not name.startswith(prefix):
-                continue
-            bundle_dir = bundles_root / name
-            if not bundle_dir.is_dir():
-                continue
-            for dep_path in _deployment_paths(bundle_dir):
-                if not dep_path.startswith(namespace):
-                    violations.append(f"  [{name}] {dep_path!r} is outside '{namespace}'")
-
-        if violations:
-            pytest.fail(
-                f"\n'{prefix}*' overlay bundles must only deliver files under '{namespace}':\n" + "\n".join(violations)
-            )
-
     # ------------------------------------------------------------------
     # Local profile invariant
     # ------------------------------------------------------------------
@@ -214,12 +174,6 @@ class TestTemplateBundles:
     # Bundle metadata
     # ------------------------------------------------------------------
 
-    def test_all_bundles_have_descriptions(self, bundles_data):
-        """Test that every bundle has a non-empty description field."""
-        missing = [name for name, cfg in bundles_data["bundles"].items() if not str(cfg.get("description", "")).strip()]
-        if missing:
-            pytest.fail(f"\nBundles missing description: {missing}")
-
     def test_bundle_requires_reference_existing_bundles(self, bundles_data, bundle_names):
         """Test that all requires and recommends entries point to existing bundles."""
         bundles = bundles_data["bundles"]
@@ -233,37 +187,6 @@ class TestTemplateBundles:
 
         if errors:
             pytest.fail("\nBundle dependency references missing:\n" + "\n".join(errors))
-
-    def test_no_circular_bundle_dependencies(self, bundles_data, bundle_names):
-        """Test that no circular dependencies exist in bundle requires chains."""
-        bundles = bundles_data["bundles"]
-        visited: set = set()
-        cycles = []
-        for name in bundle_names:
-            if name not in visited:
-                cycle = _find_cycle(name, bundles, visited, [])
-                if cycle:
-                    cycles.append(" -> ".join(cycle))
-        if cycles:
-            pytest.fail("\nCircular bundle dependencies detected:\n" + "\n".join(f"  {c}" for c in cycles))
-
-    @pytest.mark.parametrize("bundle_name", ["github-marimo", "github-tests", "github-book"])
-    def test_github_overlay_bundles_require_github(self, bundles_data, bundle_names, bundle_name):
-        """Test that key github-* overlay bundles require the github bundle."""
-        if bundle_name not in bundle_names:
-            pytest.skip(f"Bundle '{bundle_name}' not defined in this project")
-
-        requires = bundles_data["bundles"][bundle_name].get("requires", [])
-        assert "github" in requires, f"Bundle '{bundle_name}' must list 'github' in its requires, got: {requires}"
-
-    @pytest.mark.parametrize("bundle_name", ["gitlab-marimo", "gitlab-tests", "gitlab-book"])
-    def test_gitlab_overlay_bundles_require_gitlab(self, bundles_data, bundle_names, bundle_name):
-        """Test that key gitlab-* overlay bundles require the gitlab bundle."""
-        if bundle_name not in bundle_names:
-            pytest.skip(f"Bundle '{bundle_name}' not defined in this project")
-
-        requires = bundles_data["bundles"][bundle_name].get("requires", [])
-        assert "gitlab" in requires, f"Bundle '{bundle_name}' must list 'gitlab' in its requires, got: {requires}"
 
     # ------------------------------------------------------------------
     # Profile definitions
@@ -301,10 +224,83 @@ class TestTemplateBundles:
         if empty:
             pytest.fail(f"\nProfiles with no bundles listed: {empty}")
 
+    @pytest.mark.parametrize("bundle_name", ["github-marimo", "github-tests", "github-book"])
+    def test_github_overlay_bundles_require_github(self, bundles_data, bundle_names, bundle_name):
+        """Test that github-marimo, github-tests, and github-book all require the github bundle."""
+        if bundle_name not in bundle_names:
+            pytest.skip(f"Bundle '{bundle_name}' not defined in this project")
+
+        requires = bundles_data["bundles"][bundle_name].get("requires", [])
+        assert "github" in requires, f"Bundle '{bundle_name}' must list 'github' in its requires, got: {requires}"
+
+    @pytest.mark.parametrize("bundle_name", ["gitlab-marimo", "gitlab-tests", "gitlab-book"])
+    def test_gitlab_overlay_bundles_require_gitlab(self, bundles_data, bundle_names, bundle_name):
+        """Test that gitlab-marimo, gitlab-tests, and gitlab-book all require the gitlab bundle."""
+        if bundle_name not in bundle_names:
+            pytest.skip(f"Bundle '{bundle_name}' not defined in this project")
+
+        requires = bundles_data["bundles"][bundle_name].get("requires", [])
+        assert "gitlab" in requires, f"Bundle '{bundle_name}' must list 'gitlab' in its requires, got: {requires}"
+
+    def test_no_circular_bundle_dependencies(self, bundles_data, bundle_names):
+        """Test that no circular dependencies exist in bundle requires chains."""
+        bundles = bundles_data["bundles"]
+        visited: set = set()
+        cycles = []
+        for name in bundle_names:
+            if name not in visited:
+                cycle = _find_cycle(name, bundles, visited, [])
+                if cycle:
+                    cycles.append(" -> ".join(cycle))
+        if cycles:
+            pytest.fail("\nCircular bundle dependencies detected:\n" + "\n".join(f"  {c}" for c in cycles))
+
+    def test_no_file_ownership_conflicts(self, bundles_data):
+        """Test that no file path is claimed by more than one bundle."""
+        bundles = bundles_data["bundles"]
+        dest_owners: dict = {}
+        for bundle_name, bundle_config in bundles.items():
+            for entry in bundle_config.get("files", []):
+                dest = entry["dest"] if isinstance(entry, dict) else entry
+                dest_owners.setdefault(dest, []).append(bundle_name)
+        conflicts = {dest: owners for dest, owners in dest_owners.items() if len(owners) > 1}
+        if conflicts:
+            lines = [f"  {dest}: {owners}" for dest, owners in conflicts.items()]
+            pytest.fail("\nFile ownership conflicts (same path claimed by multiple bundles):\n" + "\n".join(lines))
+
+    @pytest.mark.parametrize(
+        ("prefix", "namespace"),
+        [
+            ("github-", ".github/"),
+            ("gitlab-", ".gitlab/"),
+        ],
+    )
+    def test_overlay_bundle_files_stay_within_namespace(self, bundles_data, prefix, namespace):
+        """Test that github-* overlay bundles only deliver .github/ files and gitlab-* only .gitlab/ files."""
+        bundles = bundles_data["bundles"]
+        violations = []
+        for bundle_name, bundle_config in bundles.items():
+            if not bundle_name.startswith(prefix):
+                continue
+            for entry in bundle_config.get("files", []):
+                dest = entry["dest"] if isinstance(entry, dict) else entry
+                if not dest.startswith(namespace):
+                    violations.append(f"  [{bundle_name}] {dest!r} is outside '{namespace}'")
+        if violations:
+            pytest.fail(
+                f"\n'{prefix}*' overlay bundles must only deliver files under '{namespace}':\n" + "\n".join(violations)
+            )
+
+    def test_all_bundles_have_descriptions(self, bundles_data):
+        """Test that every bundle has a non-empty description field."""
+        missing = [name for name, cfg in bundles_data["bundles"].items() if not str(cfg.get("description", "")).strip()]
+        if missing:
+            pytest.fail(f"\nBundles missing description: {missing}")
+
     def test_profile_transitive_closure_is_self_consistent(self, bundles_data, profiles_data, bundle_names):
         """Test that each profile's full transitive bundle closure has no unresolvable references.
 
-        Also checks for cross-platform contamination (github-* in gitlab profiles or vice versa).
+        Also checks for cross-platform contamination (github-* bundles in gitlab profiles or vice versa).
         """
         if not profiles_data:
             pytest.skip("No profiles defined in template-bundles.yml")

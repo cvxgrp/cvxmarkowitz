@@ -21,7 +21,13 @@ Keeping them in one place avoids typos and improves discoverability.
 
 
 class DataNames:
-    """Keys for data items passed into models and builders."""
+    """Keys for data items passed into models and builders.
+
+    >>> DataNames.RETURNS
+    'returns'
+    >>> DataNames.MU
+    'mu'
+    """
 
     RETURNS = "returns"
     MU = "mu"

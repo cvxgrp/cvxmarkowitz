@@ -372,7 +372,7 @@ dev = [
     { name = "mock" },
     { name = "plotly" },
     { name = "pytest", specifier = ">=9.0.3" },
-    { name = "scikit-learn" },
+    { name = "scikit-learn", specifier = ">=1.0" },
     { name = "tinycta" },
     { name = "yfinance" },
 ]

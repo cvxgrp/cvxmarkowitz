@@ -39,7 +39,7 @@ dev = [
     "tinycta",
     "plotly",
     "cvxsimulator",
-    "scikit-learn",
+    "scikit-learn>=1.0",
     "marimo",
     "pytest>=9.0.3",
 ]

@@ -75,6 +75,7 @@ class FactorModel(Model):
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
     def _residual_risk(self, variables: Variables) -> cp.Expression:
+        """Return the L2 norm of idiosyncratic and its uncertainty contributions."""
         return cp.norm2(
             cp.hstack(
                 [
@@ -88,6 +89,7 @@ class FactorModel(Model):
         )
 
     def _systematic_risk(self, variables: Variables) -> cp.Expression:
+        """Return the L2 norm of systematic and its uncertainty contributions."""
         return cp.norm2(
             cp.hstack(
                 [

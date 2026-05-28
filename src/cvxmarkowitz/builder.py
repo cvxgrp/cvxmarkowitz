@@ -52,6 +52,8 @@ def deserialize(
 
 @dataclass(frozen=True)
 class _Problem:
+    """Frozen container holding a built cvxpy problem and its named models."""
+
     problem: cp.Problem
     model: dict[str, Model] = field(default_factory=dict)
 
@@ -81,34 +83,42 @@ class _Problem:
 
     @property
     def value(self) -> float:
+        """Return the current objective value of the solved problem."""
         return float(self.problem.value)
 
     def is_dpp(self) -> bool:
+        """Return True if the problem satisfies disciplined parameterized programming."""
         return bool(self.problem.is_dpp())
 
     @property
     def data(self) -> Generator[tuple[tuple[str, str], cp.Parameter]]:
+        """Yield ``((model_name, param_key), parameter)`` pairs for all models."""
         for name, model in self.model.items():
             for key, value in model.data.items():
                 yield (name, key), value
 
     @property
     def parameter(self) -> Parameter:
+        """Return a mapping of parameter names to cvxpy Parameter objects."""
         return dict(self.problem.param_dict.items())
 
     @property
     def variables(self) -> Variables:
+        """Return a mapping of variable names to cvxpy Variable objects."""
         return dict(self.problem.var_dict.items())
 
     @property
     def weights(self) -> Matrix:
+        """Return the optimal asset weights as a numpy array."""
         return np.array(self.variables[D.WEIGHTS].value)
 
     @property
     def factor_weights(self) -> Matrix:
+        """Return the optimal factor weights as a numpy array."""
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
     def serialize(self, problem_file: File) -> None:
+        """Pickle this problem to disk for later reuse with `deserialize`."""
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)
 

@@ -45,6 +45,7 @@ class Bounds(Model):
         raise NotImplementedError("No estimation for bounds")
 
     def _f(self, string: str) -> str:
+        """Return ``string`` suffixed with ``self.name`` (e.g. ``"lower_assets"``)."""
         return f"{string}_{self.name}"
 
     def __post_init__(self) -> None:

@@ -8,6 +8,12 @@ authors = [{name = "Thomas Schmelzer", email = "thomas.schmelzer@gmail.com"},
     {name = "Stephen Boyd"}]
 
 readme = "README.md"
+license = "Apache-2.0"
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+]
 
 #authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
 #readme = "README.md"
@@ -21,7 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/cvxgrp/cvxmarkowitz"
+Homepage = "https://github.com/cvxgrp/cvxmarkowitz"
+Repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
 dev = [
@@ -35,6 +42,12 @@ dev = [
     "scikit-learn",
     "marimo",
     "pytest>=9.0.3",
+]
+test = [
+    "pytest>=9.0.3",
+]
+lint = [
+    "ruff",
 ]
 
 [build-system]

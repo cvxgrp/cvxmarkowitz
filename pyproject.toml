@@ -20,7 +20,7 @@ classifiers = [
 requires-python = ">=3.11"
 # Private :: Do Not Upload (prevents rhiza_release.yml from publishing to PyPI)
 dependencies = [
-    "cvxpy-base>=1.9.0",
+    "cvxpy-base>=1.9.1",
     "numpy>=2.4.6",
     "clarabel>=0.11.1",
     "cvx-linalg==0.6.1"

@@ -22,7 +22,7 @@ requires-python = ">=3.11"
 dependencies = [
     "cvxpy-base>=1.9.1",
     "numpy>=2.4.6",
-    "clarabel",
+    "clarabel>=0.11.1",
     "cvx-linalg==0.6.1"
 ]
 
@@ -32,22 +32,22 @@ Repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
 dev = [
-    "fire",
-    "mock",
-    "yfinance",
-    "loguru",
-    "tinycta",
-    "plotly",
-    "cvxsimulator",
-    "scikit-learn",
-    "marimo",
+    "fire>=0.7.1",
+    "mock>=5.2.0",
+    "yfinance>=1.4.0",
+    "loguru>=0.7.3",
+    "tinycta>=0.12.4",
+    "plotly>=6.7.0",
+    "cvxsimulator>=1.5.1",
+    "scikit-learn>=1.6",
+    "marimo>=0.23.8",
     "pytest>=9.0.3",
 ]
 test = [
     "pytest>=9.0.3",
 ]
 lint = [
-    "ruff",
+    "ruff>=0.15.15",
 ]
 
 [build-system]

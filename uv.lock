@@ -357,7 +357,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clarabel" },
+    { name = "clarabel", specifier = ">=0.11.1" },
     { name = "cvx-linalg", specifier = "==0.6.1" },
     { name = "cvxpy-base", specifier = ">=1.9.1" },
     { name = "numpy", specifier = ">=2.4.6" },
@@ -365,18 +365,18 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "cvxsimulator" },
-    { name = "fire" },
-    { name = "loguru" },
-    { name = "marimo" },
-    { name = "mock" },
-    { name = "plotly" },
+    { name = "cvxsimulator", specifier = ">=1.5.1" },
+    { name = "fire", specifier = ">=0.7.1" },
+    { name = "loguru", specifier = ">=0.7.3" },
+    { name = "marimo", specifier = ">=0.23.8" },
+    { name = "mock", specifier = ">=5.2.0" },
+    { name = "plotly", specifier = ">=6.7.0" },
     { name = "pytest", specifier = ">=9.0.3" },
-    { name = "scikit-learn" },
-    { name = "tinycta" },
-    { name = "yfinance" },
+    { name = "scikit-learn", specifier = ">=1.6" },
+    { name = "tinycta", specifier = ">=0.12.4" },
+    { name = "yfinance", specifier = ">=1.4.0" },
 ]
-lint = [{ name = "ruff" }]
+lint = [{ name = "ruff", specifier = ">=0.15.15" }]
 test = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [[package]]

@@ -39,7 +39,7 @@ class SoftRisk(Builder):
     _sigma: cp.Variable = field(default_factory=lambda: cp.Variable(nonneg=True, name="sigma"))
     _sigma_target_times_omega: cp.CallbackParam = field(
         default_factory=lambda: cp.CallbackParam(
-            callback=lambda p, q: 0.0, nonneg=True, name="sigma_target_times_omega"
+            callback=lambda _p, _q: 0.0, nonneg=True, name="sigma_target_times_omega"
         )
     )
 
@@ -62,7 +62,7 @@ class SoftRisk(Builder):
 
         self.parameter[P.OMEGA] = cp.Parameter(nonneg=True, name="risk priority")
         self._sigma_target_times_omega._callback = lambda: (
-            self.parameter[P.SIGMA_TARGET].value * self.parameter[P.OMEGA].value  # type: ignore
+            self.parameter[P.SIGMA_TARGET].value * self.parameter[P.OMEGA].value  # ty: ignore[unsupported-operator]
         )
 
         self.constraints[C.LONG_ONLY] = self.weights >= 0

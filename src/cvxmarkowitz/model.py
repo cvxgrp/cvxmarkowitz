@@ -39,6 +39,6 @@ class Model(ABC):
     def update(self, **kwargs: Matrix) -> None:
         """Update the data in the risk model."""
 
-    def constraints(self, variables: Variables) -> Constraints:
+    def constraints(self, variables: Variables) -> Constraints:  # noqa: ARG002  # base default ignores `variables`; name kept to match overrides (LSP)
         """Return the constraints for the risk model."""
         return {}

@@ -16,5 +16,3 @@
 
 class CvxError(Exception):
     """Generic error raised for invalid model/problem configurations."""
-
-    pass

@@ -20,10 +20,10 @@ classifiers = [
 requires-python = ">=3.11"
 # Private :: Do Not Upload (prevents rhiza_release.yml from publishing to PyPI)
 dependencies = [
-    "cvxpy-base>=1.9.1",
+    "cvxpy-base>=1.9.2",
     "numpy>=2.4.6",
     "clarabel>=0.11.1",
-    "cvx-linalg==0.7.0"
+    "cvx-linalg==0.8.0"
 ]
 
 [project.urls]
@@ -36,18 +36,18 @@ dev = [
     "mock>=5.2.0",
     "yfinance>=1.4.1",
     "loguru>=0.7.3",
-    "tinycta>=0.13.2",
+    "tinycta>=0.13.3",
     "plotly>=6.8.0",
     "cvxsimulator>=1.5.1",
     "scikit-learn>=1.9.0",
-    "marimo>=0.23.9",
-    "pytest>=9.1.0",
+    "marimo>=0.23.10",
+    "pytest>=9.1.1",
 ]
 test = [
-    "pytest>=9.1.0",
+    "pytest>=9.1.1",
 ]
 lint = [
-    "ruff>=0.15.17",
+    "ruff>=0.15.18",
 ]
 
 [build-system]

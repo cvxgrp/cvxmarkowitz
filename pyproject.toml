@@ -57,9 +57,25 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/cvxmarkowitz"]
 
+[tool.deptry.package_module_name_map]
+cvxpy-base = "cvxpy"
+cvx-linalg = "cvx"
+cvxsimulator = "cvx"
+scikit-learn = "sklearn"
+numpy = "numpy"
+clarabel = "clarabel"
+fire = "fire"
+mock = "mock"
+yfinance = "yfinance"
+loguru = "loguru"
+tinycta = "tinycta"
+plotly = "plotly"
+marimo = "marimo"
+pytest = "pytest"
+ruff = "ruff"
+
 [tool.deptry.per_rule_ignores]
-DEP002 = ["cvxpy-base", "clarabel", "cvx-linalg"]
-DEP001 = ["cvx", "cvxpy"]
+DEP002 = ["clarabel", "cvx-linalg"]
 
 [tool.mypy]
 # cvxpy ships an incomplete py.typed surface: its functional atoms

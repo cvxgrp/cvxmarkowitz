@@ -23,7 +23,7 @@ dependencies = [
     "cvxpy-base>=1.9.2",
     "numpy>=2.4.6",
     "clarabel>=0.11.1",
-    "cvx-linalg==0.8.0"
+    "cvx-linalg==0.9.6"
 ]
 
 [project.urls]
@@ -40,7 +40,7 @@ dev = [
     "plotly>=6.8.0",
     "cvxsimulator>=1.5.1",
     "scikit-learn>=1.9.0",
-    "marimo>=0.23.11",
+    "marimo>=0.23.13",
     "pytest>=9.1.1",
 ]
 test = [

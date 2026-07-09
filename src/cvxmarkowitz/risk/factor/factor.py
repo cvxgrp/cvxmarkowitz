@@ -109,25 +109,7 @@ class FactorModel(Model):
             systematic_vola_uncertainty: Nonnegative vector for systematic risk uncertainty.
             idiosyncratic_vola_uncertainty: Nonnegative vector for residual risk uncertainty.
         """
-        # check the keywords
-        for key in self.data:
-            if key not in kwargs:
-                raise CvxError(f"Missing keyword {key}")  # noqa: TRY003
-
-        if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")  # noqa: TRY003
-
-        exposure = kwargs[D.EXPOSURE]
-        k, assets = exposure.shape
-
-        if not kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] == assets:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")  # noqa: TRY003
-
-        if not kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] == k:
-            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")  # noqa: TRY003
-
-        if not kwargs[D.CHOLESKY].shape[0] == k:
-            raise CvxError("Mismatch in size of chol and exposure")  # noqa: TRY003
+        self._validate(**kwargs)
 
         self.data[D.EXPOSURE].value = fill_matrix(rows=self.factors, cols=self.assets, x=kwargs["exposure"])
         self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA])
@@ -140,6 +122,30 @@ class FactorModel(Model):
         self.data[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].value = fill_vector(
             num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY]
         )
+
+    def _validate(self, **kwargs: Matrix) -> None:
+        """Check that all required inputs are present and shape-consistent."""
+        for key in self.data:
+            if key not in kwargs:
+                raise CvxError(f"Missing keyword {key}")  # noqa: TRY003
+
+        self._check_shapes(**kwargs)
+
+    def _check_shapes(self, **kwargs: Matrix) -> None:
+        """Validate that the input dimensions are mutually consistent."""
+        k, assets = kwargs[D.EXPOSURE].shape
+
+        if kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] != kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:
+            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")  # noqa: TRY003
+
+        if kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] != assets:
+            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")  # noqa: TRY003
+
+        if kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] != k:
+            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")  # noqa: TRY003
+
+        if kwargs[D.CHOLESKY].shape[0] != k:
+            raise CvxError("Mismatch in size of chol and exposure")  # noqa: TRY003
 
     def constraints(self, variables: Variables) -> Constraints:
         """Return factor-model linking and robust-risk constraints."""

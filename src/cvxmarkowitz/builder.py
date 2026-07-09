@@ -40,12 +40,23 @@ def deserialize(
 ) -> Any:
     """Load a previously serialized Markowitz problem from disk.
 
+    .. warning::
+
+        This uses :func:`pickle.load`, which executes arbitrary code while
+        unpickling. Only ever call this on files you produced yourself with
+        :meth:`_Problem.serialize`. Never deserialize a file received from an
+        untrusted or unauthenticated source — doing so is equivalent to
+        running that source's code on your machine.
+
     Args:
         problem_file: Path to the pickle file created by `_Problem.serialize`.
 
     Returns:
         The deserialized `_Problem` instance.
     """
+    # nosec B301 / noqa: S301: pickle is the intended format for round-tripping a
+    # built problem. The trust boundary is the caller's responsibility — see the
+    # warning above; the input is assumed to be a self-produced serialize() file.
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)  # nosec B301  # noqa: S301
 

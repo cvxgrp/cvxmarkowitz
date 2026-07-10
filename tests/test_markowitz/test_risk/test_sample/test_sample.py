@@ -111,3 +111,21 @@ def test_mismatch():
                 D.VOLA_UNCERTAINTY: np.array([0.1]),
             }
         )
+
+
+def test_mismatch_cholesky_rows():
+    """A Cholesky whose row count mismatches vola_uncertainty errors.
+
+    The 3x2 Cholesky has ``shape[1] == len(vola_uncertainty)`` but
+    ``shape[0] != len(vola_uncertainty)``; the guard must compare the row
+    count, so this pins ``shape[0]`` specifically.
+    """
+    riskmodel = SampleCovariance(assets=2)
+
+    with pytest.raises(CvxError, match="chol and vola_uncertainty"):
+        riskmodel.update(
+            **{
+                D.CHOLESKY: np.ones((3, 2)),
+                D.VOLA_UNCERTAINTY: np.zeros(2),
+            }
+        )

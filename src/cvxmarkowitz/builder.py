@@ -15,123 +15,24 @@
 
 from __future__ import annotations
 
-import pickle  # nosec B403
 from abc import abstractmethod
-from collections.abc import Generator
 from dataclasses import dataclass, field
-from os import PathLike
-from typing import Any
 
 import cvxpy as cp
-import numpy as np
 
 from cvxmarkowitz.cvxerror import CvxError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.models.bounds import Bounds
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.problem import _Problem, deserialize
 from cvxmarkowitz.risk.factor.factor import FactorModel
 from cvxmarkowitz.risk.sample.sample import SampleCovariance
-from cvxmarkowitz.types import File, Matrix, Parameter, Variables
+from cvxmarkowitz.types import Parameter, Variables
 
-
-def deserialize(
-    problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
-) -> Any:
-    """Load a previously serialized Markowitz problem from disk.
-
-    .. warning::
-
-        This uses :func:`pickle.load`, which executes arbitrary code while
-        unpickling. Only ever call this on files you produced yourself with
-        :meth:`_Problem.serialize`. Never deserialize a file received from an
-        untrusted or unauthenticated source — doing so is equivalent to
-        running that source's code on your machine.
-
-    Args:
-        problem_file: Path to the pickle file created by `_Problem.serialize`.
-
-    Returns:
-        The deserialized `_Problem` instance.
-    """
-    # nosec B301 / noqa: S301: pickle is the intended format for round-tripping a
-    # built problem. The trust boundary is the caller's responsibility — see the
-    # warning above; the input is assumed to be a self-produced serialize() file.
-    with open(problem_file, "rb") as infile:
-        return pickle.load(infile)  # nosec B301  # noqa: S301
-
-
-@dataclass(frozen=True)
-class _Problem:
-    """Frozen container holding a built cvxpy problem and its named models."""
-
-    problem: cp.Problem
-    model: dict[str, Model] = field(default_factory=dict)
-
-    def update(self, **kwargs: Matrix) -> _Problem:
-        """Update the problem."""
-        for name, model in self.model.items():
-            for key in model.data:
-                if key not in kwargs:
-                    raise CvxError(f"Missing data for {key} in model {name}")  # noqa: TRY003
-
-            # It's tempting to operate without the models at this stage.
-            # However, we would give up a lot of convenience. For example,
-            # the models can be prepared to deal with data that has not
-            # exactly the correct shape.
-            model.update(**kwargs)
-
-        return self
-
-    def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
-        """Solve the problem."""
-        value = self.problem.solve(solver=solver, **kwargs)
-
-        if self.problem.status is not cp.OPTIMAL:
-            raise CvxError(f"Problem status is {self.problem.status}")  # noqa: TRY003
-
-        return float(value)
-
-    @property
-    def value(self) -> float:
-        """Return the current objective value of the solved problem."""
-        return float(self.problem.value)
-
-    def is_dpp(self) -> bool:
-        """Return True if the problem satisfies disciplined parameterized programming."""
-        return bool(self.problem.is_dpp())
-
-    @property
-    def data(self) -> Generator[tuple[tuple[str, str], cp.Parameter]]:
-        """Yield ``((model_name, param_key), parameter)`` pairs for all models."""
-        for name, model in self.model.items():
-            for key, value in model.data.items():
-                yield (name, key), value
-
-    @property
-    def parameter(self) -> Parameter:
-        """Return a mapping of parameter names to cvxpy Parameter objects."""
-        return dict(self.problem.param_dict.items())
-
-    @property
-    def variables(self) -> Variables:
-        """Return a mapping of variable names to cvxpy Variable objects."""
-        return dict(self.problem.var_dict.items())
-
-    @property
-    def weights(self) -> Matrix:
-        """Return the optimal asset weights as a numpy array."""
-        return np.array(self.variables[D.WEIGHTS].value)
-
-    @property
-    def factor_weights(self) -> Matrix:
-        """Return the optimal factor weights as a numpy array."""
-        return np.array(self.variables[D.FACTOR_WEIGHTS].value)
-
-    def serialize(self, problem_file: File) -> None:
-        """Pickle this problem to disk for later reuse with `deserialize`."""
-        with open(problem_file, "wb") as outfile:
-            pickle.dump(self, outfile)
+# Re-exported for backwards compatibility: ``deserialize``/``_Problem`` moved to
+# cvxmarkowitz.problem, ``CvxError`` lives in cvxmarkowitz.cvxerror.
+__all__ = ["Builder", "CvxError", "_Problem", "deserialize"]
 
 
 @dataclass(frozen=True)

@@ -225,3 +225,21 @@ def test_mismatch_matrix(factor_model):
                 D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.3]),
             }
         )
+
+
+def test_mismatch_matrix_nonsquare(factor_model):
+    """A Cholesky whose first axis (not second) mismatches the factor count errors.
+
+    The 3x2 factor Cholesky has ``shape[1] == factors`` but ``shape[0] != factors``;
+    the guard must check the row count, so this pins ``shape[0]`` specifically.
+    """
+    with pytest.raises(CvxError, match="chol and exposure"):
+        factor_model.update(
+            **{
+                D.CHOLESKY: np.ones((3, 2)),
+                D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+                D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+                D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+                D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.3]),
+            }
+        )

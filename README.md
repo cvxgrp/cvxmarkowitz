@@ -31,16 +31,16 @@ the number of assets fixed by setting the weights for the assets not used to
 zero. Hence we do **not** need to recompile the problem as a new asset has to be
 added.
 
-Every problem has be constructed by a Builder. Here's a builder for a classic
-[minimum variance problem](cvxmarkowitz/portfolios/min_var.py).
-The builder inherits from the [Builder](cvxmarkowitz/builder.py)
-and implements the abstract method [build](cvxmarkowitz/builder.py#L15).
+Every problem has to be constructed by a Builder. Here's a builder for a classic
+[minimum variance problem](src/cvxmarkowitz/portfolios/min_var.py).
+The builder inherits from the [Builder](src/cvxmarkowitz/builder.py)
+and implements the abstract method [build](src/cvxmarkowitz/builder.py#L95).
 The builder remains flexible. At this stage it is possible to add or remove
-constraints,  Only once we trigger the build() method, we construct
+constraints. Only once we trigger the build() method do we construct
 the problem and compile it.
 
-For injecting values for data and parameter into the problem,
-we use the [update](cvxmarkowitz/builder.py#L19) method.
+For injecting values for data and parameters into the problem,
+we use the [update](src/cvxmarkowitz/problem.py#L84) method.
 
 ## Installation
 
@@ -50,26 +50,61 @@ You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):
 pip install cvxmarkowitz
 ```
 
-## uv
+## Usage
 
-You need to install [task](https://taskfile.dev).
-Starting with
+Build a minimum-variance problem once, then re-solve it repeatedly with new
+data. The compiled problem is [DPP](https://www.cvxpy.org/tutorial/advanced/index.html#disciplined-parametrized-programming)-compliant,
+so subsequent solves reuse the cached compilation.
 
-```bash
-task markowitz:install
+```python
+import numpy as np
+from cvx.linalg import cholesky
+
+from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.portfolios.min_var import MinVar
+
+# Build a long-only, budget-constrained minimum-variance problem for 4 assets.
+problem = MinVar(assets=4).build()
+
+# Inject data and parameters. Here only 2 of the 4 asset slots are used;
+# the unused assets are pinned to zero weight.
+problem.update(
+    **{
+        D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        D.LOWER_BOUND_ASSETS: np.zeros(2),
+        D.UPPER_BOUND_ASSETS: np.ones(2),
+        D.VOLA_UNCERTAINTY: np.zeros(2),
+    }
+)
+
+objective = problem.solve()  # defaults to the CLARABEL solver
+
+print("objective:", round(objective, 4))
+print("weights:", np.round(problem.weights, 3))
 ```
 
-will install [uv](https://github.com/astral-sh/uv) and create
-the virtual environment defined in
-pyproject.toml and locked in uv.lock.
+```result
+objective: 0.9354
+weights: [0.75 0.25 0.   0.  ]
+```
+
+## Development
+
+This project uses [uv](https://github.com/astral-sh/uv) and a
+[Rhiza](https://github.com/jebel-quant/rhiza)-managed `Makefile`. To create the
+virtual environment defined in `pyproject.toml` and locked in `uv.lock`:
+
+```bash
+make install
+```
 
 ## marimo
 
-We install [marimo](https://marimo.io) on the fly within the aforementioned
-virtual environment. Executing
+We install [marimo](https://marimo.io) on the fly within the virtual
+environment. Executing
 
 ```bash
-task markowitz:marimo
+make marimo
 ```
 
 will install and start marimo.

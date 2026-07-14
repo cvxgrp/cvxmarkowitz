@@ -37,17 +37,17 @@ dev = [
     "yfinance>=1.5.1",
     "loguru>=0.7.3",
     "tinycta>=0.13.3",
-    "plotly>=6.8.0",
+    "plotly>=6.9.0",
     "cvxsimulator>=1.5.1",
     "scikit-learn>=1.9.0",
-    "marimo>=0.23.13",
+    "marimo>=0.23.14",
     "pytest>=9.1.1",
 ]
 test = [
     "pytest>=9.1.1",
 ]
 lint = [
-    "ruff>=0.15.20",
+    "ruff>=0.15.21",
 ]
 
 [build-system]

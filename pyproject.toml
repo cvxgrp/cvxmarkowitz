@@ -36,7 +36,7 @@ dev = [
     "mock>=5.2.0",
     "yfinance>=1.5.1",
     "loguru>=0.7.3",
-    "tinycta>=0.13.3",
+    "tinycta>=0.14.0",
     "plotly>=6.9.0",
     "cvxsimulator>=1.5.1",
     "scikit-learn>=1.9.0",
@@ -47,7 +47,7 @@ test = [
     "pytest>=9.1.1",
 ]
 lint = [
-    "ruff>=0.15.21",
+    "ruff>=0.15.22",
 ]
 
 [build-system]

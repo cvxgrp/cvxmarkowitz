@@ -34,20 +34,20 @@ Repository = "https://github.com/cvxgrp/cvxmarkowitz"
 dev = [
     "fire>=0.7.1",
     "mock>=5.2.0",
-    "yfinance>=1.5.1",
+    "yfinance>=1.5.2",
     "loguru>=0.7.3",
     "tinycta>=0.14.0",
     "plotly>=6.9.0",
     "cvxsimulator>=1.5.1",
     "scikit-learn>=1.9.0",
-    "marimo>=0.23.14",
+    "marimo>=0.23.15",
     "pytest>=9.1.1",
 ]
 test = [
     "pytest>=9.1.1",
 ]
 lint = [
-    "ruff>=0.15.22",
+    "ruff>=0.16.0",
 ]
 
 [build-system]

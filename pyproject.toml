@@ -46,9 +46,6 @@ dev = [
 test = [
     "pytest>=9.1.1",
 ]
-lint = [
-    "ruff>=0.16.1",
-]
 
 [build-system]
 requires = ["hatchling"]
@@ -72,7 +69,6 @@ tinycta = "tinycta"
 plotly = "plotly"
 marimo = "marimo"
 pytest = "pytest"
-ruff = "ruff"
 
 [tool.deptry.per_rule_ignores]
 DEP002 = ["clarabel", "cvx-linalg"]

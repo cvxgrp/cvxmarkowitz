@@ -180,6 +180,15 @@ class Problem:
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
     def serialize(self, problem_file: File) -> None:
-        """Pickle this problem to disk for later reuse with `deserialize`."""
+        """Pickle this problem to disk for later reuse with `deserialize`.
+
+        Call this before :meth:`solve`. Solving attaches a live solver handle to
+        the underlying cvxpy problem, and that handle is not picklable — a
+        solved problem raises ``TypeError: cannot pickle 'builtins.DefaultSolver'
+        object`` here.
+
+        Args:
+            problem_file: Destination path for the pickle file.
+        """
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)

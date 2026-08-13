@@ -25,14 +25,14 @@ from cvxmarkowitz.model import Model
 from cvxmarkowitz.models.bounds import Bounds
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
-from cvxmarkowitz.problem import _Problem, deserialize
+from cvxmarkowitz.problem import Problem, deserialize
 from cvxmarkowitz.risk.factor.factor import FactorModel
 from cvxmarkowitz.risk.sample.sample import SampleCovariance
 from cvxmarkowitz.types import Parameter, Variables
 
-# Re-exported for backwards compatibility: ``deserialize``/``_Problem`` moved to
+# Re-exported for backwards compatibility: ``deserialize``/``Problem`` moved to
 # cvxmarkowitz.problem, ``CvxError`` lives in cvxmarkowitz.cvxerror.
-__all__ = ["Builder", "CvxError", "_Problem", "deserialize"]
+__all__ = ["Builder", "CvxError", "Problem", "deserialize"]
 
 
 @dataclass(frozen=True)
@@ -92,7 +92,7 @@ class Builder(ABC):
     def objective(self) -> cp.Minimize | cp.Maximize:
         """Return the objective function."""
 
-    def build(self) -> _Problem:
+    def build(self) -> Problem:
         """Build the cvxpy problem."""
         for name_model, model in self.model.items():
             for name_constraint, constraint in model.constraints(self.variables).items():
@@ -101,7 +101,7 @@ class Builder(ABC):
         problem = cp.Problem(self.objective, list(self.constraints.values()))
         assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
 
-        return _Problem(problem=problem, model=self.model)
+        return Problem(problem=problem, model=self.model)
 
     @property
     def weights(self) -> cp.Variable:

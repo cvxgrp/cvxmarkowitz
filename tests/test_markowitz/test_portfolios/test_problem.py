@@ -7,9 +7,8 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky, rand_cov
 
-from cvxmarkowitz.builder import CvxError, deserialize
+from cvxmarkowitz import CvxError, MinVar, deserialize
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.portfolios.min_var import MinVar
 
 
 def test_problem_data():

@@ -41,7 +41,7 @@ def deserialize(
 
         This uses :func:`pickle.load`, which executes arbitrary code while
         unpickling. Only ever call this on files you produced yourself with
-        :meth:`_Problem.serialize`. Never deserialize a file received from an
+        :meth:`Problem.serialize`. Never deserialize a file received from an
         untrusted or unauthenticated source — doing so is equivalent to
         running that source's code on your machine.
 
@@ -51,12 +51,12 @@ def deserialize(
     than silently unpickling.
 
     Args:
-        problem_file: Path to the pickle file created by `_Problem.serialize`.
+        problem_file: Path to the pickle file created by `Problem.serialize`.
         trusted: Must be set to ``True`` to confirm the file originates from a
             trusted source. Defaults to ``False``, which refuses to load.
 
     Returns:
-        The deserialized `_Problem` instance.
+        The deserialized `Problem` instance.
 
     Raises:
         CvxError: If ``trusted`` is not explicitly set to ``True``.
@@ -65,7 +65,7 @@ def deserialize(
         raise CvxError(  # noqa: TRY003
             "Refusing to deserialize: pickle.load executes arbitrary code. "
             "Pass trusted=True only for a file you produced yourself with "
-            "_Problem.serialize()."
+            "Problem.serialize()."
         )
     # nosec B301 / noqa: S301: pickle is the intended format for round-tripping a
     # built problem. The trust boundary is guarded by the trusted flag above; the
@@ -75,13 +75,13 @@ def deserialize(
 
 
 @dataclass(frozen=True)
-class _Problem:
+class Problem:
     """Frozen container holding a built cvxpy problem and its named models."""
 
     problem: cp.Problem
     model: dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs: Matrix) -> _Problem:
+    def update(self, **kwargs: Matrix) -> Problem:
         """Update the problem."""
         for name, model in self.model.items():
             for key in model.data:

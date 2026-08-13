@@ -23,7 +23,6 @@ import numpy.typing as npt
 File = str | bytes | PathLike[str]
 Parameter = dict[str, cp.Parameter]
 Variables = dict[str, cp.Variable]
-Expressions = dict[str, cp.Expression]
 Constraints = dict[str, cp.Constraint]
 
 Matrix: TypeAlias = npt.NDArray[np.float64]

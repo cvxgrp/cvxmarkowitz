@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Constraints, Expressions, Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.types import Constraints, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 

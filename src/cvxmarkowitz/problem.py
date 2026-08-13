@@ -105,6 +105,44 @@ class _Problem:
 
         return float(value)
 
+    def get_problem_data(
+        self,
+        solver: str = cp.CLARABEL,
+        gp: bool = False,
+        enforce_dpp: bool = False,
+        ignore_dpp: bool = False,
+        verbose: bool = False,
+        canon_backend: str | None = None,
+        solver_opts: dict[str, Any] | None = None,
+    ) -> Any:
+        """Return the low-level data the solver would be handed for this problem.
+
+        This forwards to :meth:`cvxpy.Problem.get_problem_data`, exposing the
+        compiled form of the problem without solving it. Useful for inspecting
+        the canonicalization or for driving a solver directly.
+
+        Args:
+            solver: The target solver to compile for.
+            gp: Whether to parse the problem as a disciplined geometric program.
+            enforce_dpp: Raise if the problem is not DPP-compliant.
+            ignore_dpp: Treat the problem as non-DPP even if it is compliant.
+            verbose: Print compilation progress.
+            canon_backend: Canonicalization backend to use, or None for the default.
+            solver_opts: Extra options forwarded to the solver.
+
+        Returns:
+            The ``(data, chain, inverse_data)`` triple produced by cvxpy.
+        """
+        return self.problem.get_problem_data(
+            solver,
+            gp=gp,
+            enforce_dpp=enforce_dpp,
+            ignore_dpp=ignore_dpp,
+            verbose=verbose,
+            canon_backend=canon_backend,
+            solver_opts=solver_opts,
+        )
+
     @property
     def value(self) -> float:
         """Return the current objective value of the solved problem."""

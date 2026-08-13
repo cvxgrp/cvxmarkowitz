@@ -2,6 +2,7 @@
 
 import dataclasses
 
+import cvxpy as cp
 import numpy as np
 import pytest
 from cvx.linalg import cholesky, rand_cov
@@ -9,6 +10,15 @@ from cvx.linalg import cholesky, rand_cov
 from cvxmarkowitz.builder import CvxError, deserialize
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.portfolios.min_var import MinVar
+
+
+def test_problem_data():
+    """get_problem_data returns the compiled data, chain and inverse data."""
+    problem = MinVar(assets=10).build()
+    data, solving_chain, inverse_data = problem.get_problem_data(solver=cp.CLARABEL)
+    assert data
+    assert solving_chain
+    assert inverse_data
 
 
 def test_problem_is_frozen():

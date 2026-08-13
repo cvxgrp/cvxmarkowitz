@@ -67,9 +67,9 @@ def deserialize(
             "Pass trusted=True only for a file you produced yourself with "
             "Problem.serialize()."
         )
-    # nosec B301 / noqa: S301: pickle is the intended format for round-tripping a
-    # built problem. The trust boundary is guarded by the trusted flag above; the
-    # input is assumed to be a self-produced serialize() file.
+    # pickle is the intended format for round-tripping a built problem. The trust
+    # boundary is guarded by the trusted flag above; the input is assumed to be a
+    # self-produced serialize() file. Suppressions are on the call itself below.
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)  # nosec B301  # noqa: S301
 

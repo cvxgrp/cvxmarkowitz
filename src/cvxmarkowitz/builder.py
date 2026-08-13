@@ -15,7 +15,7 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
 import cvxpy as cp
@@ -36,7 +36,7 @@ __all__ = ["Builder", "CvxError", "_Problem", "deserialize"]
 
 
 @dataclass(frozen=True)
-class Builder:
+class Builder(ABC):
     """Assemble variables, models, and constraints for Markowitz problems.
 
     Attributes:

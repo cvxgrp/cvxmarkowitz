@@ -80,6 +80,12 @@ def test_infeasible_problem():
         problem.solve(solver=cp.CLARABEL)
 
 
+def test_builder_is_abstract():
+    """The base Builder should not be instantiable without an objective."""
+    with pytest.raises(TypeError, match="objective"):
+        Builder(assets=3)
+
+
 def test_builder_risk():
     """The builder.risk property should reference the risk model in model dict."""
     builder = DummyBuilder(assets=1)

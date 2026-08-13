@@ -1,7 +1,6 @@
 # [cvxmarkowitz](http://www.cvxgrp.org/cvxmarkowitz)
 
-[![PyPI version](https://badge.fury.io/py/cvxmarkowitz.svg)](https://badge.fury.io/py/cvxmarkowitz)
-[![Apache 2.0 License](https://img.shields.io/badge/License-APACHEv2-brightgreen.svg)](https://github.com/cvxgrp/cvxmarkowitz/blob/master/LICENSE)
+[![Apache 2.0 License](https://img.shields.io/badge/License-APACHEv2-brightgreen.svg)](https://github.com/cvxgrp/cvxmarkowitz/blob/main/LICENSE)
 [![Coverage](https://www.cvxgrp.org/cvxmarkowitz/coverage-badge.svg)](https://www.cvxgrp.org/cvxmarkowitz/reports/html-coverage/)
 
 ## Motivation
@@ -32,7 +31,7 @@ added.
 Every problem has to be constructed by a Builder. Here's a builder for a classic
 [minimum variance problem](src/cvxmarkowitz/portfolios/min_var.py).
 The builder inherits from the [Builder](src/cvxmarkowitz/builder.py)
-and implements the abstract method [build](src/cvxmarkowitz/builder.py#L95).
+and implements the abstract property [objective](src/cvxmarkowitz/builder.py#L92).
 The builder remains flexible. At this stage it is possible to add or remove
 constraints. Only once we trigger the build() method do we construct
 the problem and compile it.
@@ -42,10 +41,10 @@ we use the [update](src/cvxmarkowitz/problem.py#L84) method.
 
 ## Installation
 
-You can install the package via [PyPI](https://pypi.org/project/cvxmarkowitz/):
+The package is not published on PyPI. Install it from the git source:
 
 ```bash
-pip install cvxmarkowitz
+pip install git+https://github.com/cvxgrp/cvxmarkowitz
 ```
 
 ## Usage

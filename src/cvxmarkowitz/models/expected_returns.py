@@ -20,7 +20,7 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import Matrix, Variables
@@ -71,6 +71,6 @@ class ExpectedReturns(Model):
         # Robust return estimate
         uncertainty = kwargs["mu_uncertainty"]
         if not uncertainty.shape[0] == exp_returns.shape[0]:
-            raise CvxError("Mismatch in length for mu and mu_uncertainty")  # noqa: TRY003
+            raise CvxDataError("Mismatch in length for mu and mu_uncertainty")  # noqa: TRY003
 
         self.parameter["mu_uncertainty"].value = fill_vector(num=self.assets, x=uncertainty)

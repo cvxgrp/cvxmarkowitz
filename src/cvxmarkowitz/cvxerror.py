@@ -15,4 +15,36 @@
 
 
 class CvxError(Exception):
-    """Generic error raised for invalid model/problem configurations."""
+    """Base error for the package.
+
+    Every error raised by cvxmarkowitz derives from this, so
+    ``except CvxError`` continues to catch all of them. Prefer catching one
+    of the subclasses below when the handling differs by failure mode.
+    """
+
+
+class CvxDataError(CvxError):
+    """Input data is missing, or its shape disagrees with the model.
+
+    Raised when required keyword data is absent, or when arrays that must
+    agree in length or shape do not. Recoverable by supplying corrected
+    input and retrying.
+    """
+
+
+class CvxSolverError(CvxError):
+    """The solver returned a non-optimal status.
+
+    Raised when a problem is infeasible, unbounded, or otherwise did not
+    solve to optimality. Retrying with the same input will not help;
+    another solver or a relaxed formulation might.
+    """
+
+
+class CvxTrustError(CvxError):
+    """A trust boundary was crossed without explicit consent.
+
+    Raised when :func:`~cvxmarkowitz.problem.deserialize` is called without
+    ``trusted=True``. This is a security guard, not a transient failure —
+    catching it to retry with ``trusted=True`` defeats its purpose.
+    """

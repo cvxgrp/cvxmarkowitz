@@ -20,7 +20,7 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import Constraints, Matrix, Variables
@@ -127,7 +127,7 @@ class FactorModel(Model):
         """Check that all required inputs are present and shape-consistent."""
         for key in self.data:
             if key not in kwargs:
-                raise CvxError(f"Missing keyword {key}")  # noqa: TRY003
+                raise CvxDataError(f"Missing keyword {key}")  # noqa: TRY003
 
         self._check_shapes(**kwargs)
 
@@ -136,16 +136,16 @@ class FactorModel(Model):
         k, assets = kwargs[D.EXPOSURE].shape
 
         if kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] != kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")  # noqa: TRY003
+            raise CvxDataError("Mismatch in length for idiosyncratic_vola and idiosyncratic_vola_uncertainty")  # noqa: TRY003
 
         if kwargs[D.IDIOSYNCRATIC_VOLA].shape[0] != assets:
-            raise CvxError("Mismatch in length for idiosyncratic_vola and exposure")  # noqa: TRY003
+            raise CvxDataError("Mismatch in length for idiosyncratic_vola and exposure")  # noqa: TRY003
 
         if kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY].shape[0] != k:
-            raise CvxError("Mismatch in length of systematic_vola_uncertainty and exposure")  # noqa: TRY003
+            raise CvxDataError("Mismatch in length of systematic_vola_uncertainty and exposure")  # noqa: TRY003
 
         if kwargs[D.CHOLESKY].shape[0] != k:
-            raise CvxError("Mismatch in size of chol and exposure")  # noqa: TRY003
+            raise CvxDataError("Mismatch in size of chol and exposure")  # noqa: TRY003
 
     def constraints(self, variables: Variables) -> Constraints:
         """Return factor-model linking and robust-risk constraints."""

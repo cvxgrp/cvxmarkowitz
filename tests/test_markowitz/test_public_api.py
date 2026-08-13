@@ -20,7 +20,10 @@ def test_documented_entry_points_are_exported():
     """The builders, the built problem and the error type are reachable directly."""
     expected = {
         "Builder",
+        "CvxDataError",
         "CvxError",
+        "CvxSolverError",
+        "CvxTrustError",
         "MaxSharpe",
         "MinVar",
         "Problem",
@@ -28,6 +31,16 @@ def test_documented_entry_points_are_exported():
         "deserialize",
     }
     assert expected <= set(cvxmarkowitz.__all__)
+
+
+def test_error_subclasses_derive_from_the_base():
+    """Catching CvxError still catches every specific error the package raises."""
+    for subclass in (
+        cvxmarkowitz.CvxDataError,
+        cvxmarkowitz.CvxSolverError,
+        cvxmarkowitz.CvxTrustError,
+    ):
+        assert issubclass(subclass, cvxmarkowitz.CvxError)
 
 
 def test_build_returns_the_exported_problem_type():

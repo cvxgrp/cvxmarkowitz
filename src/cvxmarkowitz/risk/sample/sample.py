@@ -20,7 +20,7 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import Constraints, Matrix, Variables
@@ -66,7 +66,7 @@ class SampleCovariance(Model):
             D.VOLA_UNCERTAINTY: Nonnegative vector of per-asset uncertainty.
         """
         if not kwargs[D.CHOLESKY].shape[0] == kwargs[D.VOLA_UNCERTAINTY].shape[0]:
-            raise CvxError("Mismatch in length for chol and vola_uncertainty")  # noqa: TRY003
+            raise CvxDataError("Mismatch in length for chol and vola_uncertainty")  # noqa: TRY003
 
         self.data[D.CHOLESKY].value = fill_matrix(rows=self.assets, cols=self.assets, x=kwargs[D.CHOLESKY])
         self.data[D.VOLA_UNCERTAINTY].value = fill_vector(num=self.assets, x=kwargs[D.VOLA_UNCERTAINTY])

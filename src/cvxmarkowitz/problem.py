@@ -24,7 +24,7 @@ from typing import Any
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxDataError, CvxSolverError, CvxTrustError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import File, Matrix, Parameter, Variables
@@ -62,7 +62,7 @@ def deserialize(
         CvxError: If ``trusted`` is not explicitly set to ``True``.
     """
     if not trusted:
-        raise CvxError(  # noqa: TRY003
+        raise CvxTrustError(  # noqa: TRY003
             "Refusing to deserialize: pickle.load executes arbitrary code. "
             "Pass trusted=True only for a file you produced yourself with "
             "Problem.serialize()."
@@ -86,7 +86,7 @@ class Problem:
         for name, model in self.model.items():
             for key in model.data:
                 if key not in kwargs:
-                    raise CvxError(f"Missing data for {key} in model {name}")  # noqa: TRY003
+                    raise CvxDataError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 
             # It's tempting to operate without the models at this stage.
             # However, we would give up a lot of convenience. For example,
@@ -101,7 +101,7 @@ class Problem:
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:
-            raise CvxError(f"Problem status is {self.problem.status}")  # noqa: TRY003
+            raise CvxSolverError(f"Problem status is {self.problem.status}")  # noqa: TRY003
 
         return float(value)
 

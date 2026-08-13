@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky, rand_cov
 
-from cvxmarkowitz import CvxError, MinVar, deserialize
+from cvxmarkowitz import CvxError, CvxTrustError, MinVar, deserialize
 from cvxmarkowitz.names import DataNames as D
 
 
@@ -37,12 +37,16 @@ def test_deserialize_requires_trusted(tmp_path):
     path = tmp_path / "problem.pkl"
     problem.serialize(path)
 
-    with pytest.raises(CvxError, match="trusted=True"):
+    with pytest.raises(CvxTrustError, match="trusted=True"):
         deserialize(path)
 
     # The default is False, so a positional/implicit call is also refused.
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxTrustError):
         deserialize(path, trusted=False)
+
+    # The refusal is still catchable via the package's base error.
+    with pytest.raises(CvxError):
+        deserialize(path)
 
 
 def test_serialize(tmp_path):

@@ -16,7 +16,10 @@
 from __future__ import annotations
 
 from .builder import Builder as Builder
+from .cvxerror import CvxDataError as CvxDataError
 from .cvxerror import CvxError as CvxError
+from .cvxerror import CvxSolverError as CvxSolverError
+from .cvxerror import CvxTrustError as CvxTrustError
 from .portfolios.max_sharpe import MaxSharpe as MaxSharpe
 from .portfolios.min_var import MinVar as MinVar
 from .portfolios.soft_risk import SoftRisk as SoftRisk
@@ -25,7 +28,10 @@ from .problem import deserialize as deserialize
 
 __all__ = [
     "Builder",
+    "CvxDataError",
     "CvxError",
+    "CvxSolverError",
+    "CvxTrustError",
     "MaxSharpe",
     "MinVar",
     "Problem",

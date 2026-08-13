@@ -8,7 +8,7 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvxmarkowitz.builder import Builder, CvxError
+from cvxmarkowitz import Builder, CvxDataError, CvxSolverError
 from cvxmarkowitz.names import ConstraintName as C
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
@@ -53,15 +53,15 @@ def test_dummy():
 
 
 def test_missing_data():
-    """Updating with a wrong keyword should raise CvxError."""
+    """Updating with a wrong keyword should raise CvxDataError."""
     builder = DummyBuilder(assets=1)
     problem = builder.build()
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxDataError):
         problem.update(cov=np.eye(1))
 
 
 def test_infeasible_problem():
-    """Infeasible bounds should lead to a solver failure wrapped as CvxError."""
+    """Infeasible bounds should lead to a solver failure wrapped as CvxSolverError."""
     builder = DummyBuilder(assets=1)
 
     problem = builder.build()
@@ -76,7 +76,7 @@ def test_infeasible_problem():
         }
     )
 
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxSolverError):
         problem.solve(solver=cp.CLARABEL)
 
 

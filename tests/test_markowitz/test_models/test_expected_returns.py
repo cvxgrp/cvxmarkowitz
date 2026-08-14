@@ -9,7 +9,7 @@ import cvxpy as cp
 import numpy as np
 import pytest
 
-from cvxmarkowitz.builder import CvxError
+from cvxmarkowitz import CvxDataError
 from cvxmarkowitz.models.expected_returns import ExpectedReturns
 from cvxmarkowitz.names import DataNames as D
 
@@ -57,8 +57,8 @@ def test_expected_returns_robust():
 
 
 def test_mismatch():
-    """Mismatched mu and mu_uncertainty lengths should raise CvxError."""
+    """Mismatched mu and mu_uncertainty lengths should raise CvxDataError."""
     assets = 3
     model = ExpectedReturns(assets=assets)
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxDataError):
         model.update(mu=np.array([0.1, 0.2]), mu_uncertainty=np.array([0.03]))

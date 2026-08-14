@@ -7,9 +7,8 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky, rand_cov
 
-from cvxmarkowitz.builder import CvxError, deserialize
+from cvxmarkowitz import CvxError, CvxTrustError, MinVar, deserialize
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.portfolios.min_var import MinVar
 
 
 def test_problem_data():
@@ -38,12 +37,37 @@ def test_deserialize_requires_trusted(tmp_path):
     path = tmp_path / "problem.pkl"
     problem.serialize(path)
 
-    with pytest.raises(CvxError, match="trusted=True"):
+    with pytest.raises(CvxTrustError, match="trusted=True"):
         deserialize(path)
 
     # The default is False, so a positional/implicit call is also refused.
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxTrustError):
         deserialize(path, trusted=False)
+
+    # The refusal is still catchable via the package's base error.
+    with pytest.raises(CvxError):
+        deserialize(path)
+
+
+def test_serialize_after_solve_is_unsupported(tmp_path):
+    """A solved problem cannot be pickled: the solver handle is not picklable.
+
+    Args:
+        tmp_path: Pytest temporary directory for storing the pickle file.
+    """
+    problem = MinVar(assets=2).build()
+    problem.update(
+        **{
+            D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.VOLA_UNCERTAINTY: np.zeros(2),
+        }
+    )
+    problem.solve()
+
+    with pytest.raises(TypeError, match="pickle"):
+        problem.serialize(tmp_path / "solved.pkl")
 
 
 def test_serialize(tmp_path):

@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky
 
-from cvxmarkowitz.builder import CvxError
+from cvxmarkowitz import CvxDataError
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.risk import SampleCovariance
 
@@ -99,10 +99,10 @@ def test_robust_sample_large():
 
 
 def test_mismatch():
-    """Updating with mismatched vector lengths should raise CvxError."""
+    """Updating with mismatched vector lengths should raise CvxDataError."""
     riskmodel = SampleCovariance(assets=4)
 
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxDataError):
         riskmodel.update(
             **{
                 D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
@@ -122,7 +122,7 @@ def test_mismatch_cholesky_rows():
     """
     riskmodel = SampleCovariance(assets=2)
 
-    with pytest.raises(CvxError, match="chol and vola_uncertainty"):
+    with pytest.raises(CvxDataError, match="chol and vola_uncertainty"):
         riskmodel.update(
             **{
                 D.CHOLESKY: np.ones((3, 2)),

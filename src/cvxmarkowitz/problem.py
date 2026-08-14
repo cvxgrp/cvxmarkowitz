@@ -24,7 +24,7 @@ from typing import Any
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxDataError, CvxSolverError, CvxTrustError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import File, Matrix, Parameter, Variables
@@ -41,7 +41,7 @@ def deserialize(
 
         This uses :func:`pickle.load`, which executes arbitrary code while
         unpickling. Only ever call this on files you produced yourself with
-        :meth:`_Problem.serialize`. Never deserialize a file received from an
+        :meth:`Problem.serialize`. Never deserialize a file received from an
         untrusted or unauthenticated source — doing so is equivalent to
         running that source's code on your machine.
 
@@ -51,42 +51,42 @@ def deserialize(
     than silently unpickling.
 
     Args:
-        problem_file: Path to the pickle file created by `_Problem.serialize`.
+        problem_file: Path to the pickle file created by `Problem.serialize`.
         trusted: Must be set to ``True`` to confirm the file originates from a
             trusted source. Defaults to ``False``, which refuses to load.
 
     Returns:
-        The deserialized `_Problem` instance.
+        The deserialized `Problem` instance.
 
     Raises:
         CvxError: If ``trusted`` is not explicitly set to ``True``.
     """
     if not trusted:
-        raise CvxError(  # noqa: TRY003
+        raise CvxTrustError(  # noqa: TRY003
             "Refusing to deserialize: pickle.load executes arbitrary code. "
             "Pass trusted=True only for a file you produced yourself with "
-            "_Problem.serialize()."
+            "Problem.serialize()."
         )
-    # nosec B301 / noqa: S301: pickle is the intended format for round-tripping a
-    # built problem. The trust boundary is guarded by the trusted flag above; the
-    # input is assumed to be a self-produced serialize() file.
+    # pickle is the intended format for round-tripping a built problem. The trust
+    # boundary is guarded by the trusted flag above; the input is assumed to be a
+    # self-produced serialize() file. Suppressions are on the call itself below.
     with open(problem_file, "rb") as infile:
         return pickle.load(infile)  # nosec B301  # noqa: S301
 
 
 @dataclass(frozen=True)
-class _Problem:
+class Problem:
     """Frozen container holding a built cvxpy problem and its named models."""
 
     problem: cp.Problem
     model: dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs: Matrix) -> _Problem:
+    def update(self, **kwargs: Matrix) -> Problem:
         """Update the problem."""
         for name, model in self.model.items():
             for key in model.data:
                 if key not in kwargs:
-                    raise CvxError(f"Missing data for {key} in model {name}")  # noqa: TRY003
+                    raise CvxDataError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 
             # It's tempting to operate without the models at this stage.
             # However, we would give up a lot of convenience. For example,
@@ -101,7 +101,7 @@ class _Problem:
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:
-            raise CvxError(f"Problem status is {self.problem.status}")  # noqa: TRY003
+            raise CvxSolverError(f"Problem status is {self.problem.status}")  # noqa: TRY003
 
         return float(value)
 
@@ -180,6 +180,15 @@ class _Problem:
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
 
     def serialize(self, problem_file: File) -> None:
-        """Pickle this problem to disk for later reuse with `deserialize`."""
+        """Pickle this problem to disk for later reuse with `deserialize`.
+
+        Call this before :meth:`solve`. Solving attaches a live solver handle to
+        the underlying cvxpy problem, and that handle is not picklable — a
+        solved problem raises ``TypeError: cannot pickle 'builtins.DefaultSolver'
+        object`` here.
+
+        Args:
+            problem_file: Destination path for the pickle file.
+        """
         with open(problem_file, "wb") as outfile:
             pickle.dump(self, outfile)

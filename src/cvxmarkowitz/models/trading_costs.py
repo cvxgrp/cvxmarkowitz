@@ -22,7 +22,7 @@ import numpy as np
 
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Expressions, Matrix, Parameter, Variables  # noqa: F401
+from cvxmarkowitz.types import Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
 

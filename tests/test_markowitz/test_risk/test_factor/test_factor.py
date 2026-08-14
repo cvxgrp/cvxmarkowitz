@@ -12,7 +12,7 @@ import pandas as pd
 import pytest
 from cvx.linalg import cholesky, pca, rand_cov
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz import CvxDataError
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.min_var import MinVar
@@ -159,8 +159,8 @@ def test_factor_mini():
 
 
 def test_missing_key(factor_model):
-    """Updating without a required key should raise CvxError."""
-    with pytest.raises(CvxError):
+    """Updating without a required key should raise CvxDataError."""
+    with pytest.raises(CvxDataError):
         factor_model.update(
             **{
                 D.CHOLESKY: np.eye(2),
@@ -172,8 +172,8 @@ def test_missing_key(factor_model):
 
 
 def test_mismatch_idiosyncratic_vola(factor_model):
-    """Idiosyncratic_vola length mismatch vs. assets should raise CvxError."""
-    with pytest.raises(CvxError):
+    """Idiosyncratic_vola length mismatch vs. assets should raise CvxDataError."""
+    with pytest.raises(CvxDataError):
         factor_model.update(
             **{
                 D.CHOLESKY: np.eye(2),
@@ -186,8 +186,8 @@ def test_mismatch_idiosyncratic_vola(factor_model):
 
 
 def test_mismatch_exposure_idiosyncratic_vola(factor_model):
-    """Exposure shape inconsistent with vectors should raise CvxError."""
-    with pytest.raises(CvxError):
+    """Exposure shape inconsistent with vectors should raise CvxDataError."""
+    with pytest.raises(CvxDataError):
         factor_model.update(
             **{
                 D.CHOLESKY: np.eye(2),
@@ -201,7 +201,7 @@ def test_mismatch_exposure_idiosyncratic_vola(factor_model):
 
 def test_mismatch_systematic_vola(factor_model):
     """Systematic_vola_uncertainty length mismatch vs. factors should error."""
-    with pytest.raises(CvxError):
+    with pytest.raises(CvxDataError):
         factor_model.update(
             **{
                 D.CHOLESKY: np.eye(2),
@@ -214,8 +214,8 @@ def test_mismatch_systematic_vola(factor_model):
 
 
 def test_mismatch_matrix(factor_model):
-    """Cholesky shape inconsistent with exposure matrix should raise CvxError."""
-    with pytest.raises(CvxError):
+    """Cholesky shape inconsistent with exposure matrix should raise CvxDataError."""
+    with pytest.raises(CvxDataError):
         factor_model.update(
             **{
                 D.CHOLESKY: np.eye(1),
@@ -233,7 +233,7 @@ def test_mismatch_matrix_nonsquare(factor_model):
     The 3x2 factor Cholesky has ``shape[1] == factors`` but ``shape[0] != factors``;
     the guard must check the row count, so this pins ``shape[0]`` specifically.
     """
-    with pytest.raises(CvxError, match="chol and exposure"):
+    with pytest.raises(CvxDataError, match="chol and exposure"):
         factor_model.update(
             **{
                 D.CHOLESKY: np.ones((3, 2)),

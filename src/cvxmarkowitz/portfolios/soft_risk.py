@@ -20,12 +20,10 @@ from dataclasses import dataclass, field
 import cvxpy as cp
 
 from cvxmarkowitz.builder import Builder
-from cvxmarkowitz.model import Model  # noqa: F401
 from cvxmarkowitz.models.expected_returns import ExpectedReturns
 from cvxmarkowitz.names import ConstraintName as C
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.names import ParameterName as P
-from cvxmarkowitz.types import Parameter, Variables  # noqa: F401
 
 
 @dataclass(frozen=True)

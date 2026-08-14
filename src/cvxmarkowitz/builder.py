@@ -25,14 +25,14 @@ from cvxmarkowitz.model import Model
 from cvxmarkowitz.models.bounds import Bounds
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
-from cvxmarkowitz.problem import Problem, deserialize
+from cvxmarkowitz.problem import Problem
 from cvxmarkowitz.risk.factor.factor import FactorModel
 from cvxmarkowitz.risk.sample.sample import SampleCovariance
 from cvxmarkowitz.types import Parameter, Variables
 
-# Re-exported for backwards compatibility: ``deserialize``/``Problem`` moved to
+# Re-exported for backwards compatibility: ``Problem`` moved to
 # cvxmarkowitz.problem, ``CvxError`` lives in cvxmarkowitz.cvxerror.
-__all__ = ["Builder", "CvxError", "Problem", "deserialize"]
+__all__ = ["Builder", "CvxError", "Problem"]
 
 
 @dataclass(frozen=True)

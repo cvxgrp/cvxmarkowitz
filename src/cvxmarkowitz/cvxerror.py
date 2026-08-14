@@ -39,12 +39,3 @@ class CvxSolverError(CvxError):
     solve to optimality. Retrying with the same input will not help;
     another solver or a relaxed formulation might.
     """
-
-
-class CvxTrustError(CvxError):
-    """A trust boundary was crossed without explicit consent.
-
-    Raised when :func:`~cvxmarkowitz.problem.deserialize` is called without
-    ``trusted=True``. This is a security guard, not a transient failure —
-    catching it to retry with ``trusted=True`` defeats its purpose.
-    """

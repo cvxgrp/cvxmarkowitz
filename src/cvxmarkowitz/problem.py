@@ -11,67 +11,21 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-"""The built problem container and its (de)serialization round-trip."""
+"""The built problem container returned by :meth:`Builder.build`."""
 
 from __future__ import annotations
 
-import pickle  # nosec B403
 from collections.abc import Generator
 from dataclasses import dataclass, field
-from os import PathLike
 from typing import Any
 
 import cvxpy as cp
 import numpy as np
 
-from cvxmarkowitz.cvxerror import CvxDataError, CvxSolverError, CvxTrustError
+from cvxmarkowitz.cvxerror import CvxDataError, CvxSolverError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import File, Matrix, Parameter, Variables
-
-
-def deserialize(
-    problem_file: str | bytes | PathLike[str] | PathLike[bytes] | int,
-    *,
-    trusted: bool = False,
-) -> Any:
-    """Load a previously serialized Markowitz problem from disk.
-
-    .. warning::
-
-        This uses :func:`pickle.load`, which executes arbitrary code while
-        unpickling. Only ever call this on files you produced yourself with
-        :meth:`Problem.serialize`. Never deserialize a file received from an
-        untrusted or unauthenticated source — doing so is equivalent to
-        running that source's code on your machine.
-
-    To make that trust boundary explicit, deserialization is opt-in: you must
-    pass ``trusted=True`` to confirm the file is one you produced yourself.
-    Calling without it raises :class:`~cvxmarkowitz.cvxerror.CvxError` rather
-    than silently unpickling.
-
-    Args:
-        problem_file: Path to the pickle file created by `Problem.serialize`.
-        trusted: Must be set to ``True`` to confirm the file originates from a
-            trusted source. Defaults to ``False``, which refuses to load.
-
-    Returns:
-        The deserialized `Problem` instance.
-
-    Raises:
-        CvxError: If ``trusted`` is not explicitly set to ``True``.
-    """
-    if not trusted:
-        raise CvxTrustError(  # noqa: TRY003
-            "Refusing to deserialize: pickle.load executes arbitrary code. "
-            "Pass trusted=True only for a file you produced yourself with "
-            "Problem.serialize()."
-        )
-    # pickle is the intended format for round-tripping a built problem. The trust
-    # boundary is guarded by the trusted flag above; the input is assumed to be a
-    # self-produced serialize() file. Suppressions are on the call itself below.
-    with open(problem_file, "rb") as infile:
-        return pickle.load(infile)  # nosec B301  # noqa: S301
+from cvxmarkowitz.types import Matrix, Parameter, Variables
 
 
 @dataclass(frozen=True)
@@ -178,17 +132,3 @@ class Problem:
     def factor_weights(self) -> Matrix:
         """Return the optimal factor weights as a numpy array."""
         return np.array(self.variables[D.FACTOR_WEIGHTS].value)
-
-    def serialize(self, problem_file: File) -> None:
-        """Pickle this problem to disk for later reuse with `deserialize`.
-
-        Call this before :meth:`solve`. Solving attaches a live solver handle to
-        the underlying cvxpy problem, and that handle is not picklable — a
-        solved problem raises ``TypeError: cannot pickle 'builtins.DefaultSolver'
-        object`` here.
-
-        Args:
-            problem_file: Destination path for the pickle file.
-        """
-        with open(problem_file, "wb") as outfile:
-            pickle.dump(self, outfile)

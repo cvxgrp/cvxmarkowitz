@@ -85,59 +85,43 @@ objective: 0.9354
 weights: [0.75 0.25 0.   0.  ]
 ```
 
-### Reusing a compiled problem across sessions
+### Reusing a built problem
 
-A built problem can be written to disk and loaded back, so the cvxpy
-compilation survives a restart. Serialize **before** solving: a solved problem
-holds a live solver handle that cannot be pickled.
+The problems are parameterized (DPP-compliant), so a single built problem can be
+re-solved with fresh data. Build once, then `update` and `solve` in a loop — the
+cvxpy canonicalization is paid for on the first solve and reused afterwards.
 
 ```python
-import tempfile
-from pathlib import Path
+problem = MinVar(assets=4).build()  # build once
 
-from cvxmarkowitz import deserialize
-
-data = {
-    D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
-    D.LOWER_BOUND_ASSETS: np.zeros(2),
-    D.UPPER_BOUND_ASSETS: np.ones(2),
-    D.VOLA_UNCERTAINTY: np.zeros(2),
-}
-
-with tempfile.TemporaryDirectory() as tmp:
-    path = Path(tmp) / "problem.pkl"
-
-    # Build and store the compiled problem without solving it.
-    MinVar(assets=4).build().serialize(path)
-
-    # Later, or in another process: load it and solve.
-    recovered = deserialize(path, trusted=True)
-    recovered.update(**data)
-    print("recovered objective:", round(recovered.solve(), 4))
+for correlation in (0.0, 0.5, 0.9):
+    problem.update(
+        **{
+            D.CHOLESKY: cholesky(np.array([[1.0, correlation], [correlation, 2.0]])),
+            D.LOWER_BOUND_ASSETS: np.zeros(2),
+            D.UPPER_BOUND_ASSETS: np.ones(2),
+            D.VOLA_UNCERTAINTY: np.zeros(2),
+        }
+    )
+    print(f"rho={correlation}: objective={problem.solve():.4f}")
 ```
 
 ```result
-recovered objective: 0.9354
+rho=0.0: objective=0.8165
+rho=0.5: objective=0.9354
+rho=0.9: objective=0.9958
 ```
-
-> **`deserialize` executes arbitrary code.** It is `pickle.load` underneath, so
-> loading a file is equivalent to running whatever that file's author chose to
-> run. The `trusted=True` flag is a deliberate gate, not a formality: without it
-> the call raises `CvxTrustError` rather than unpickling. Only ever pass it for a
-> file you produced yourself with `serialize`, and never for one received over a
-> network or from an untrusted source.
 
 ## Errors
 
 Everything the package raises derives from `CvxError`, so a single
-`except CvxError` still catches all of it. Three subclasses separate the failure
+`except CvxError` still catches all of it. Two subclasses separate the failure
 modes that want different handling:
 
 | Error | Raised when | Retry helps? |
 |---|---|---|
 | `CvxDataError` | required data is missing, or shapes disagree | yes, with corrected input |
 | `CvxSolverError` | the solver returned a non-optimal status | no — try another solver or relax the problem |
-| `CvxTrustError` | `deserialize` was called without `trusted=True` | no — it is a security guard |
 
 ## Development
 

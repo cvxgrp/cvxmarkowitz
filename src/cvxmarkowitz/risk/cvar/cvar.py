@@ -20,6 +20,7 @@ from dataclasses import dataclass
 import cvxpy as cp
 import numpy as np
 
+from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.types import Matrix, Variables
@@ -39,22 +40,38 @@ class CVar(Model):
         Creates the returns matrix parameter with shape `(rows, assets)` and
         zeros as default value. The `alpha` quantile controls tail size during
         estimation in `estimate`.
+
+        Raises:
+            CvxDataError: If `alpha` and `rows` leave fewer than one scenario in
+                the left tail. Checked here rather than in `estimate` because
+                both fields are frozen once construction returns, so the caller
+                is told at the point where the mistake can still be corrected.
         """
-        # self.k = int(self.n * (1 - self.alpha))
+        if self._tail_size < 1:
+            raise CvxDataError(  # noqa: TRY003
+                f"alpha={self.alpha} leaves no scenarios in the left tail of rows={self.rows}. "
+                f"Lower alpha or raise rows so that int(rows * (1 - alpha)) is at least 1."
+            )
+
         self.data[D.RETURNS] = cp.Parameter(
             shape=(self.rows, self.assets),
             name=D.RETURNS,
             value=np.zeros((self.rows, self.assets)),
         )
 
+    @property
+    def _tail_size(self) -> int:
+        """Return the number of scenarios averaged over the left tail."""
+        return int(self.rows * (1 - self.alpha))
+
     def estimate(self, variables: Variables) -> cp.Expression:
         """Estimate the risk by computing the Cholesky decomposition of self.cov."""
-        # R is a matrix of returns, n is the number of rows in R
-        # n = self.R.shape[0]
-        # k is the number of returns in the left tail
-        # k = int(n * (1 - self.alpha))
+        # R is a matrix of returns, n is the number of rows in R.
+        # k is the number of returns in the left tail; __post_init__ has already
+        # rejected any (alpha, rows) pair that would make it zero, which would
+        # otherwise reach cvxpy as a bare ValueError and divide by zero here.
+        k = self._tail_size
         # average value of the k elements in the left tail
-        k = int(self.rows * (1 - self.alpha))
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
 
     def update(self, **kwargs: Matrix) -> None:

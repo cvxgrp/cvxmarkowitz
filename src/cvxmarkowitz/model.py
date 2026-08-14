@@ -31,6 +31,27 @@ class Model(ABC):
     parameter: Parameter = field(default_factory=dict)
     data: Parameter = field(default_factory=dict)
 
+    @property
+    def keywords(self) -> tuple[str, ...]:
+        """Return the keyword names this model's `update` consumes.
+
+        `Problem.update` checks these against the keywords it was handed before
+        any value is written, so that a missing one is reported as a
+        `CvxDataError` rather than escaping as whatever the model's own
+        `kwargs[...]` lookup happens to raise.
+
+        The default is the keys of `data`, which is where a model registers the
+        cvxpy Parameters it fills from keyword arguments. **Override it whenever
+        `update` reads a keyword that `data` does not back** -- otherwise the
+        check cannot see that keyword and a caller who omits it gets a bare
+        `KeyError`, which is outside the `CvxError` tree the package promises.
+        `ExpectedReturns` is the one such model today.
+
+        Returns a tuple rather than a set so the key named in the error message
+        follows the insertion order of `data` instead of set iteration order.
+        """
+        return tuple(self.data)
+
     @abstractmethod
     def estimate(self, variables: Variables) -> cp.Expression:
         """Estimate the variance given the portfolio weights."""

@@ -73,3 +73,4 @@ class ParameterName:
     SIGMA_MAX = "sigma_max"
     OMEGA = "omega"
     SIGMA_TARGET = "sigma_target"
+    POWER = "power"

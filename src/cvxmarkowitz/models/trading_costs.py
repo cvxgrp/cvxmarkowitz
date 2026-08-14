@@ -22,6 +22,7 @@ import numpy as np
 
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz.names import ParameterName as P
 from cvxmarkowitz.types import Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
@@ -32,10 +33,11 @@ class TradingCosts(Model):
 
     def __post_init__(self) -> None:
         """Initialize trading cost parameters and previous-weights cache."""
-        self.parameter["power"] = cp.Parameter(shape=(), name="power", value=1.0)
+        self.parameter[P.POWER] = cp.Parameter(shape=(), name=P.POWER, value=1.0)
 
-        # initial weights before rebalancing
-        self.data["weights"] = cp.Parameter(shape=self.assets, name="weights", value=np.zeros(self.assets))
+        # initial weights before rebalancing -- keyed by D.WEIGHTS, the same name
+        # the decision variable uses, since it is the previous value of it.
+        self.data[D.WEIGHTS] = cp.Parameter(shape=self.assets, name=D.WEIGHTS, value=np.zeros(self.assets))
 
     def estimate(self, variables: Variables) -> cp.Expression:
         """Estimate trading costs for a rebalance.
@@ -49,8 +51,8 @@ class TradingCosts(Model):
         """
         return cp.sum(
             cp.power(
-                cp.abs(variables[D.WEIGHTS] - self.data["weights"]),
-                p=self.parameter["power"],
+                cp.abs(variables[D.WEIGHTS] - self.data[D.WEIGHTS]),
+                p=self.parameter[P.POWER],
             )
         )
 
@@ -60,4 +62,4 @@ class TradingCosts(Model):
         Expected keyword arguments:
             weights: Vector of previous weights used as the trading baseline.
         """
-        self.data["weights"].value = fill_vector(num=self.assets, x=kwargs["weights"])
+        self.data[D.WEIGHTS].value = fill_vector(num=self.assets, x=kwargs[D.WEIGHTS])

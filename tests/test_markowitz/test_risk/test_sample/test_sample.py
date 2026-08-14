@@ -11,6 +11,19 @@ from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.risk import SampleCovariance
 
 
+def test_keywords_defaults_to_the_data_keys():
+    """A model that adds nothing to `data` inherits `keywords` from it.
+
+    The base-class half of the contract `ExpectedReturns` overrides: most
+    models consume exactly the keywords their `data` declares, so the default
+    implementation is what guards them in `Problem.update`.
+    """
+    riskmodel = SampleCovariance(assets=2)
+
+    assert set(riskmodel.keywords) == set(riskmodel.data)
+    assert set(riskmodel.keywords) == {D.CHOLESKY, D.VOLA_UNCERTAINTY}
+
+
 def test_sample():
     """Plain sample risk for 2 assets reproduces expected volatility."""
     riskmodel = SampleCovariance(assets=2)

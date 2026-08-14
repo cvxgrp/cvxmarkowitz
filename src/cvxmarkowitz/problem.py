@@ -60,7 +60,10 @@ class Problem:
             CvxDataError: If any model is missing data for one of its parameters.
         """
         for name, model in self.model.items():
-            for key in model.data:
+            # `Model.keywords`, not `model.data`: a model may consume a keyword
+            # that `data` does not back (see `ExpectedReturns.keywords`), and
+            # checking `data` alone let those through to a bare KeyError.
+            for key in model.keywords:
                 if key not in kwargs:
                     raise CvxDataError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 

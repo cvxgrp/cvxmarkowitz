@@ -1,7 +1,7 @@
 [project]
 name = "cvxmarkowitz"
 version = "0.0.1"
-description = "Markowitz"
+description = "Build DPP-compliant Markowitz portfolio problems with cvxpy once, then re-solve them with fresh data"
 authors = [{name = "Thomas Schmelzer", email = "thomas.schmelzer@gmail.com"},
     {name = "Kasper Johansson"},
     {name = "Philipp Schiele"},
@@ -14,8 +14,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
-#authors = ["Thomas Schmelzer", "Kasper Johansson", "Philipp Schiele", "Stephen Boyd"]
-#readme = "README.md"
 requires-python = ">=3.11"
 # Private :: Do Not Upload (prevents rhiza_release.yml from publishing to PyPI)
 dependencies = [

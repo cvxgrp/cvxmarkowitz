@@ -25,7 +25,22 @@ from cvxmarkowitz.types import Constraints, Matrix, Parameter, Variables
 
 @dataclass(frozen=True)
 class Model(ABC):
-    """Abstract risk model."""
+    """Abstract base for every component a `Builder` assembles.
+
+    Risk models are only part of it: `Bounds`, `ExpectedReturns`, `TradingCosts`
+    and `HoldingCosts` derive from this too. A component owns the cvxpy
+    Parameters it is built from and contributes an objective term (`estimate`),
+    constraints (`constraints`), or -- as `Bounds` does -- only the latter.
+
+    Attributes:
+        assets: Number of entries the component's parameters are sized for.
+        parameter: cvxpy Parameters the component holds that `data` does not
+            back. Some are set once at construction (`TradingCosts` fixes the
+            cost exponent this way); others are written by `update` from a
+            keyword, which is the case that requires overriding `keywords`.
+        data: cvxpy Parameters `update` fills from its keyword arguments, and
+            the default source of `keywords`.
+    """
 
     assets: int
     parameter: Parameter = field(default_factory=dict)
@@ -54,12 +69,24 @@ class Model(ABC):
 
     @abstractmethod
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Estimate the variance given the portfolio weights."""
+        """Return this component's objective contribution, given the variables.
+
+        What the expression means is the component's own business: a risk model
+        returns a risk measure (`FactorModel` and `SampleCovariance` a norm, not
+        a variance; `CVar` a conditional value-at-risk), `ExpectedReturns` a
+        robust expected return, the cost models a cost. A component that
+        contributes no objective term at all raises `NotImplementedError` here
+        -- see `Bounds`, which is pure constraints.
+        """
 
     @abstractmethod
     def update(self, **kwargs: Matrix) -> None:
-        """Update the data in the risk model."""
+        """Write fresh values into this component's parameters, in place.
+
+        Each implementation documents the keywords it consumes; `keywords` is
+        what `Problem.update` checks those against before any value is written.
+        """
 
     def constraints(self, variables: Variables) -> Constraints:  # noqa: ARG002  # base default ignores `variables`; name kept to match overrides (LSP)
-        """Return the constraints for the risk model."""
+        """Return this component's named constraints; none by default."""
         return {}

@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky
 
+from cvxmarkowitz import CvxDataError
 from cvxmarkowitz.names import ConstraintName as C
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
@@ -39,8 +40,8 @@ def test_constraints(builder):
 
 
 def test_factor_weights(builder):
-    """Accessing factor weights without factor model should raise KeyError."""
-    with pytest.raises(KeyError):
+    """Accessing factor weights without a factor model should raise CvxDataError."""
+    with pytest.raises(CvxDataError, match="without 'factors'"):
         _ = builder.factor_weights
 
 

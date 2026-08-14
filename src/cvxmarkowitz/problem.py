@@ -35,8 +35,30 @@ class Problem:
     problem: cp.Problem
     model: dict[str, Model] = field(default_factory=dict)
 
-    def update(self, **kwargs: Matrix) -> Problem:
-        """Update the problem."""
+    def update(self, **kwargs: Matrix) -> None:
+        """Overwrite the parameter values of every model, **in place**.
+
+        This mutates the problem rather than returning a new one. `frozen=True`
+        on this dataclass only stops attribute rebinding; the `model` mapping and
+        the cvxpy Parameters it holds stay mutable, and that is deliberate --
+        writing new values into the same compiled problem is exactly what lets
+        cvxpy reuse its cached canonicalization across solves:
+
+            problem = MinVar(assets=4).build()   # compile once
+            for data in datasets:
+                problem.update(**data)           # overwrite in place
+                problem.solve()
+
+        Consequently there is only ever one problem. Two `update` calls against
+        the same object do not yield two independently parametrized problems --
+        the second overwrites the first. Call `build()` again for that.
+
+        Returns `None` (like `Model.update`) so the in-place semantics are
+        visible at the call site.
+
+        Raises:
+            CvxDataError: If any model is missing data for one of its parameters.
+        """
         for name, model in self.model.items():
             for key in model.data:
                 if key not in kwargs:
@@ -47,8 +69,6 @@ class Problem:
             # the models can be prepared to deal with data that has not
             # exactly the correct shape.
             model.update(**kwargs)
-
-        return self
 
     def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
         """Solve the problem."""
@@ -130,5 +150,15 @@ class Problem:
 
     @property
     def factor_weights(self) -> Matrix:
-        """Return the optimal factor weights as a numpy array."""
-        return np.array(self.variables[D.FACTOR_WEIGHTS].value)
+        """Return the optimal factor weights as a numpy array.
+
+        Raises:
+            CvxDataError: If the problem was built without a factor risk model,
+                in which case there is no factor-weight variable.
+        """
+        try:
+            return np.array(self.variables[D.FACTOR_WEIGHTS].value)
+        except KeyError as err:
+            raise CvxDataError(  # noqa: TRY003
+                "No factor weights: this problem was built without 'factors'."
+            ) from err

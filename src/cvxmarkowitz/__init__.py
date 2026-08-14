@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 from .builder import Builder as Builder
+from .cvxerror import CvxBuildError as CvxBuildError
 from .cvxerror import CvxDataError as CvxDataError
 from .cvxerror import CvxError as CvxError
 from .cvxerror import CvxSolverError as CvxSolverError
@@ -26,6 +27,7 @@ from .problem import Problem as Problem
 
 __all__ = [
     "Builder",
+    "CvxBuildError",
     "CvxDataError",
     "CvxError",
     "CvxSolverError",

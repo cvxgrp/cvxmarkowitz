@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 import cvxpy as cp
 
-from cvxmarkowitz.cvxerror import CvxError
+from cvxmarkowitz.cvxerror import CvxBuildError, CvxDataError, CvxError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.models.bounds import Bounds
 from cvxmarkowitz.names import DataNames as D
@@ -42,8 +42,12 @@ class Builder(ABC):
     Attributes:
         assets: Number of asset weights to optimize.
         factors: Optional number of factors; if provided, a FactorModel is used,
-            otherwise a SampleCovariance risk model is configured.
-        model: Mapping of model components (e.g., bounds, risk) by name.
+            otherwise a SampleCovariance risk model is configured. Ignored for the
+            choice of risk model when one is injected via `model`, but still
+            controls which variables and bounds are created.
+        model: Mapping of model components (e.g., bounds, risk) by name. Pass an
+            entry under `ModelName.RISK` to supply your own risk model instead of
+            the `factors`-based default -- see `__post_init__`.
         constraints: Mapping of named cvxpy constraints added during build.
         variables: Mapping of problem variables (weights, factor weights, etc.).
         parameter: Mapping of cvxpy Parameters used by the builder/models.
@@ -57,17 +61,23 @@ class Builder(ABC):
     parameter: Parameter = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        """Initialize default risk model, variables, and bounds.
+        """Initialize the risk model, variables, and bounds.
 
-        Selects a factor-based or sample-covariance risk model depending on
-        `factors`, creates the corresponding variables (weights and, if
-        applicable, factor weights and their absolute values), and registers
-        per-asset and/or per-factor bound models.
+        Creates the variables (weights and, if `factors` is given, factor weights
+        and their absolute values) and registers the per-asset and/or per-factor
+        bound models.
+
+        The risk model is only defaulted when the caller did not supply one.
+        Passing `model={ModelName.RISK: my_model}` to the constructor keeps that
+        model, which is how risk models outside the two defaults -- `CVar`, say --
+        are used with a builder:
+
+            MinVar(assets=10, model={M.RISK: CVar(assets=10, rows=100)})
+
+        With no entry under `ModelName.RISK`, the default is a `FactorModel` when
+        `factors` is set and a `SampleCovariance` otherwise.
         """
-        # pick the correct risk model
         if self.factors is not None:
-            self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
-
             # add variable for factor weights
             self.variables[D.FACTOR_WEIGHTS] = cp.Variable(self.factors, name=D.FACTOR_WEIGHTS)
             # add bounds for factor weights
@@ -75,10 +85,16 @@ class Builder(ABC):
             # add variable for absolute factor weights
             self.variables[D._ABS] = cp.Variable(self.factors, name=D._ABS, nonneg=True)
 
+            # pick the default risk model, unless the caller injected one
+            if M.RISK not in self.model:
+                self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
+
         else:
-            self.model[M.RISK] = SampleCovariance(assets=self.assets)
             # add variable for absolute weights
             self.variables[D._ABS] = cp.Variable(self.assets, name=D._ABS, nonneg=True)
+
+            if M.RISK not in self.model:
+                self.model[M.RISK] = SampleCovariance(assets=self.assets)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.
@@ -93,13 +109,26 @@ class Builder(ABC):
         """Return the objective function."""
 
     def build(self) -> Problem:
-        """Build the cvxpy problem."""
+        """Build the cvxpy problem.
+
+        Raises:
+            CvxBuildError: If the assembled problem is not DPP-compliant. This is
+                checked with a raise rather than an `assert` on purpose: `assert`
+                is stripped under `python -O`, and DPP compliance is the invariant
+                the whole caching story rests on.
+        """
         for name_model, model in self.model.items():
             for name_constraint, constraint in model.constraints(self.variables).items():
                 self.constraints[f"{name_model}_{name_constraint}"] = constraint
 
         problem = cp.Problem(self.objective, list(self.constraints.values()))
-        assert problem.is_dpp(), "Problem is not DPP"  # noqa: S101
+
+        if not problem.is_dpp():
+            raise CvxBuildError(  # noqa: TRY003
+                "The assembled problem is not DPP-compliant, so cvxpy cannot cache "
+                "its canonicalization. Check the objective and the constraints for "
+                "expressions that are not affine in the parameters."
+            )
 
         return Problem(problem=problem, model=self.model)
 
@@ -117,7 +146,14 @@ class Builder(ABC):
     def factor_weights(self) -> cp.Variable:
         """Return the factor-weight variable.
 
-        Note: Only present when a factor risk model is used; accessing this
-        property without factors configured will raise a KeyError.
+        Raises:
+            CvxDataError: If the builder was constructed without `factors`, in
+                which case there is no factor-weight variable to return.
         """
-        return self.variables[D.FACTOR_WEIGHTS]
+        try:
+            return self.variables[D.FACTOR_WEIGHTS]
+        except KeyError as err:
+            raise CvxDataError(  # noqa: TRY003
+                "No factor weights: this builder was constructed without 'factors'. "
+                "Pass factors=<number of factors> to use a factor risk model."
+            ) from err

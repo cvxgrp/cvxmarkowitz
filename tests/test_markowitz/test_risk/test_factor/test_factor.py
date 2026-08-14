@@ -150,12 +150,46 @@ def test_factor_mini():
     residual = np.sqrt(0.03)
     systematic = np.sqrt(1.098725)
 
-    assert model._residual_risk(variables=variables).value == pytest.approx(residual)
-    assert model._systematic_risk(variables=variables).value == pytest.approx(systematic)
+    assert model.residual_risk(variables=variables).value == pytest.approx(residual)
+    assert model.systematic_risk(variables=variables).value == pytest.approx(systematic)
 
     total = np.linalg.norm(np.array([residual, systematic]))
 
     assert model.estimate(variables=variables).value == pytest.approx(total)
+
+
+def test_estimate_decomposes_into_its_two_parts():
+    """estimate() is the Euclidean norm of the systematic and residual parts.
+
+    Asserted through the public surface only, so the decomposition can be
+    reformulated internally as long as the relationship holds.
+    """
+    model = FactorModel(assets=3, factors=2)
+
+    variables = {
+        D.WEIGHTS: cp.Variable(3),
+        D.FACTOR_WEIGHTS: cp.Variable(2),
+        D._ABS: cp.Variable(2),
+    }
+
+    model.update(
+        **{
+            D.CHOLESKY: np.eye(2),
+            D.EXPOSURE: np.array([[1, 0, 1], [1, 0.5, 1]]),
+            D.IDIOSYNCRATIC_VOLA: np.array([0.1, 0.1, 0.1]),
+            D.IDIOSYNCRATIC_VOLA_UNCERTAINTY: np.array([0.3, 0.3, 0.3]),
+            D.SYSTEMATIC_VOLA_UNCERTAINTY: np.array([0.2, 0.1]),
+        }
+    )
+
+    variables[D.WEIGHTS].value = np.array([0.5, 0.1, 0.2])
+    variables[D.FACTOR_WEIGHTS] = model.data[D.EXPOSURE] @ variables[D.WEIGHTS]
+    variables[D._ABS] = cp.abs(variables[D.FACTOR_WEIGHTS])
+
+    residual = model.residual_risk(variables=variables).value
+    systematic = model.systematic_risk(variables=variables).value
+
+    assert model.estimate(variables=variables).value == pytest.approx(np.linalg.norm([residual, systematic]))
 
 
 def test_missing_key(factor_model):

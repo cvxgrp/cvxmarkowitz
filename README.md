@@ -134,8 +134,8 @@ rho=0.9: objective=0.9958
 ## Errors
 
 Everything the package raises derives from `CvxError`, so a single
-`except CvxError` still catches all of it. Two subclasses separate the failure
-modes that want different handling:
+`except CvxError` still catches all of it. The subclasses below separate the
+failure modes that want different handling:
 
 | Error | Raised when | Retry helps? |
 |---|---|---|

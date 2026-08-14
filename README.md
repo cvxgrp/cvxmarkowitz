@@ -31,7 +31,7 @@ added.
 Every problem has to be constructed by a Builder. Here's a builder for a classic
 [minimum variance problem](src/cvxmarkowitz/portfolios/min_var.py).
 The builder inherits from the [Builder](src/cvxmarkowitz/builder.py)
-and implements the abstract property [objective](src/cvxmarkowitz/builder.py#L92).
+and implements the abstract property [objective](src/cvxmarkowitz/builder.py).
 The builder remains flexible. At this stage it is possible to add or remove
 constraints. Only once we trigger the build() method do we construct
 the problem and compile it.

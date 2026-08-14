@@ -125,7 +125,7 @@ class FactorModel(Model):
         """
         self._validate(**kwargs)
 
-        self.data[D.EXPOSURE].value = fill_matrix(rows=self.factors, cols=self.assets, x=kwargs["exposure"])
+        self.data[D.EXPOSURE].value = fill_matrix(rows=self.factors, cols=self.assets, x=kwargs[D.EXPOSURE])
         self.data[D.IDIOSYNCRATIC_VOLA].value = fill_vector(num=self.assets, x=kwargs[D.IDIOSYNCRATIC_VOLA])
         self.data[D.CHOLESKY].value = fill_matrix(rows=self.factors, cols=self.factors, x=kwargs[D.CHOLESKY])
 

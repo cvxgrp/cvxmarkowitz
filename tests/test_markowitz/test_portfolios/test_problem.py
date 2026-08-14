@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from cvx.linalg import cholesky
 
-from cvxmarkowitz import CvxDataError, MinVar
+from cvxmarkowitz import CvxDataError, MaxSharpe, MinVar
 from cvxmarkowitz.names import DataNames as D
 
 
@@ -17,6 +17,23 @@ def _data(correlation: float) -> dict[str, np.ndarray]:
         D.CHOLESKY: cholesky(np.array([[1.0, correlation], [correlation, 2.0]])),
         D.LOWER_BOUND_ASSETS: np.zeros(2),
         D.UPPER_BOUND_ASSETS: np.ones(2),
+        D.VOLA_UNCERTAINTY: np.zeros(2),
+    }
+
+
+def _max_sharpe_data() -> dict[str, np.ndarray]:
+    """Return a complete data payload for a two-asset MaxSharpe problem.
+
+    MaxSharpe is the case that matters here because it carries an
+    `ExpectedReturns` model, the only one with a keyword held in `parameter`
+    rather than `data`.
+    """
+    return {
+        D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
+        D.LOWER_BOUND_ASSETS: np.zeros(2),
+        D.UPPER_BOUND_ASSETS: np.ones(2),
+        D.MU: np.array([0.25, 0.30]),
+        D.MU_UNCERTAINTY: np.zeros(2),
         D.VOLA_UNCERTAINTY: np.zeros(2),
     }
 
@@ -74,3 +91,41 @@ def test_factor_weights_without_factors():
     problem = MinVar(assets=2).build()
     with pytest.raises(CvxDataError, match="without 'factors'"):
         _ = problem.factor_weights
+
+
+def test_missing_parameter_backed_keyword_raises_cvx_data_error():
+    """Omitting `mu_uncertainty` raises CvxDataError, not a bare KeyError.
+
+    `ExpectedReturns` keeps `mu_uncertainty` in `model.parameter` rather than
+    `model.data`. `Problem.update` used to build its presence check from
+    `model.data` alone, so this call fell through to `kwargs["mu_uncertainty"]`
+    inside the model and raised `KeyError` -- outside the `CvxError` tree the
+    README promises `except CvxError` catches in full.
+    """
+    problem = MaxSharpe(assets=2).build()
+    payload = _max_sharpe_data()
+    del payload[D.MU_UNCERTAINTY]
+
+    with pytest.raises(CvxDataError, match=D.MU_UNCERTAINTY):
+        problem.update(**payload)
+
+
+def test_dropping_any_required_keyword_raises_cvx_data_error():
+    """Every keyword a model declares is guarded, not just the ones in `data`.
+
+    The general form of the test above. It walks `Model.keywords` instead of
+    naming keys, so a model that later starts consuming a keyword without
+    declaring it is caught here rather than raising `KeyError` at a caller.
+    """
+    problem = MaxSharpe(assets=2).build()
+    required = {key for model in problem.model.values() for key in model.keywords}
+
+    # the parameter-backed keyword must be among them; that is the whole point
+    assert D.MU_UNCERTAINTY in required
+    assert required == set(_max_sharpe_data())
+
+    for omitted in sorted(required):
+        payload = _max_sharpe_data()
+        del payload[omitted]
+        with pytest.raises(CvxDataError, match="Missing data for"):
+            problem.update(**payload)

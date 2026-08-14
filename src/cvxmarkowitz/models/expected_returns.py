@@ -40,12 +40,23 @@ class ExpectedReturns(Model):
         )
 
         # Robust return estimate
-        self.parameter["mu_uncertainty"] = cp.Parameter(
+        self.parameter[D.MU_UNCERTAINTY] = cp.Parameter(
             shape=self.assets,
-            name="mu_uncertainty",
+            name=D.MU_UNCERTAINTY,
             value=np.zeros(self.assets),
             nonneg=True,
         )
+
+    @property
+    def keywords(self) -> tuple[str, ...]:
+        """Return the keywords `update` consumes, including `mu_uncertainty`.
+
+        `mu_uncertainty` is registered in `parameter` rather than `data`, so the
+        base implementation -- the keys of `data` -- would not list it, and
+        `Problem.update` would let a caller omit it and then fail with a
+        `KeyError` from `update` below.
+        """
+        return (*self.data, D.MU_UNCERTAINTY)
 
     def estimate(self, variables: Variables) -> cp.Expression:
         """Return robust expected return w^T mu - mu_uncertainty^T |w|.
@@ -56,21 +67,21 @@ class ExpectedReturns(Model):
         Returns:
             A CVXPY expression for the robust expected return.
         """
-        return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter["mu_uncertainty"] @ cp.abs(variables[D.WEIGHTS])
+        return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[D.MU_UNCERTAINTY] @ cp.abs(variables[D.WEIGHTS])
 
     def update(self, **kwargs: Matrix) -> None:
         """Update expected returns and their uncertainty bounds.
 
         Expected keyword arguments:
-            D.MU: Vector of expected returns.
+            mu: Vector of expected returns.
             mu_uncertainty: Nonnegative vector with element-wise uncertainty.
         """
         exp_returns = kwargs[D.MU]
         self.data[D.MU].value = fill_vector(num=self.assets, x=exp_returns)
 
         # Robust return estimate
-        uncertainty = kwargs["mu_uncertainty"]
+        uncertainty = kwargs[D.MU_UNCERTAINTY]
         if not uncertainty.shape[0] == exp_returns.shape[0]:
             raise CvxDataError("Mismatch in length for mu and mu_uncertainty")  # noqa: TRY003
 
-        self.parameter["mu_uncertainty"].value = fill_vector(num=self.assets, x=uncertainty)
+        self.parameter[D.MU_UNCERTAINTY].value = fill_vector(num=self.assets, x=uncertainty)

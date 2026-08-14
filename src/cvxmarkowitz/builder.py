@@ -22,12 +22,16 @@ import cvxpy as cp
 
 from cvxmarkowitz.cvxerror import CvxBuildError, CvxDataError, CvxError
 from cvxmarkowitz.model import Model
+
+# `Bounds` is imported concretely on purpose: it is not a default being chosen
+# among alternatives but part of what a Builder unconditionally is, so putting
+# it behind a selector would be indirection with nothing to select. The risk
+# model *is* a choice, and `default_risk_model` owns it -- see cvxmarkowitz.risk.
 from cvxmarkowitz.models.bounds import Bounds
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.problem import Problem
-from cvxmarkowitz.risk.factor.factor import FactorModel
-from cvxmarkowitz.risk.sample.sample import SampleCovariance
+from cvxmarkowitz.risk import default_risk_model
 from cvxmarkowitz.types import Parameter, Variables
 
 # Re-exported for backwards compatibility: ``Problem`` moved to
@@ -74,8 +78,9 @@ class Builder(ABC):
 
             MinVar(assets=10, model={M.RISK: CVar(assets=10, rows=100)})
 
-        With no entry under `ModelName.RISK`, the default is a `FactorModel` when
-        `factors` is set and a `SampleCovariance` otherwise.
+        With no entry under `ModelName.RISK`, `cvxmarkowitz.risk.default_risk_model`
+        picks one: a `FactorModel` when `factors` is set, a `SampleCovariance`
+        otherwise.
         """
         if self.factors is not None:
             # add variable for factor weights
@@ -85,16 +90,13 @@ class Builder(ABC):
             # add variable for absolute factor weights
             self.variables[D._ABS] = cp.Variable(self.factors, name=D._ABS, nonneg=True)
 
-            # pick the default risk model, unless the caller injected one
-            if M.RISK not in self.model:
-                self.model[M.RISK] = FactorModel(assets=self.assets, factors=self.factors)
-
         else:
             # add variable for absolute weights
             self.variables[D._ABS] = cp.Variable(self.assets, name=D._ABS, nonneg=True)
 
-            if M.RISK not in self.model:
-                self.model[M.RISK] = SampleCovariance(assets=self.assets)
+        # pick the default risk model, unless the caller injected one
+        if M.RISK not in self.model:
+            self.model[M.RISK] = default_risk_model(assets=self.assets, factors=self.factors)
 
         # Note that for the SampleCovariance model the factor_weights are None.
         # They are only included for the harmony of the interfaces for both models.

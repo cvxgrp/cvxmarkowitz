@@ -9,6 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from cvxmarkowitz import CvxDataError
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ModelName as M
 from cvxmarkowitz.portfolios.min_var import MinVar
@@ -69,3 +70,37 @@ def test_default_risk_model_is_used_when_none_is_given():
     """Without an injected model the factors-based default still applies."""
     assert D.CHOLESKY in MinVar(assets=14).risk.data
     assert D.EXPOSURE in MinVar(assets=14, factors=3).risk.data
+
+
+@pytest.mark.parametrize(
+    ("alpha", "rows"),
+    [
+        (0.95, 10),  # int(10 * 0.05) == 0
+        (0.95, 0),  # the bare `rows` default
+        (1.0, 100),  # no tail at all
+    ],
+)
+def test_empty_tail_is_rejected_at_construction(alpha, rows):
+    """An (alpha, rows) pair leaving no left tail must raise CvxDataError.
+
+    Without the guard the zero tail size reaches cvxpy as a bare ValueError from
+    `sum_smallest`, which is outside the CvxError tree and names neither field.
+    """
+    with pytest.raises(CvxDataError, match="left tail"):
+        CVar(assets=4, alpha=alpha, rows=rows)
+
+
+def test_empty_tail_error_names_both_fields():
+    """The message must point at the two fields the caller can actually change."""
+    with pytest.raises(CvxDataError) as excinfo:
+        CVar(assets=4, alpha=0.95, rows=10)
+
+    assert "alpha=0.95" in str(excinfo.value)
+    assert "rows=10" in str(excinfo.value)
+
+
+def test_smallest_admissible_tail_is_accepted():
+    """A single scenario in the tail is enough; the guard must not over-reject."""
+    model = CVar(assets=4, alpha=0.95, rows=20)  # int(20 * 0.05) == 1
+
+    assert D.RETURNS in model.data

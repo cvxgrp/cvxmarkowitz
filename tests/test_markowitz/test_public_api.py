@@ -23,12 +23,10 @@ def test_documented_entry_points_are_exported():
         "CvxDataError",
         "CvxError",
         "CvxSolverError",
-        "CvxTrustError",
         "MaxSharpe",
         "MinVar",
         "Problem",
         "SoftRisk",
-        "deserialize",
     }
     assert expected <= set(cvxmarkowitz.__all__)
 
@@ -38,7 +36,6 @@ def test_error_subclasses_derive_from_the_base():
     for subclass in (
         cvxmarkowitz.CvxDataError,
         cvxmarkowitz.CvxSolverError,
-        cvxmarkowitz.CvxTrustError,
     ):
         assert issubclass(subclass, cvxmarkowitz.CvxError)
 

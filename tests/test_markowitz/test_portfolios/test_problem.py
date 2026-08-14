@@ -1,14 +1,11 @@
-"""Tests for serialization/deserialization of Markowitz problems."""
+"""Tests for the built Problem container."""
 
 import dataclasses
 
 import cvxpy as cp
-import numpy as np
 import pytest
-from cvx.linalg import cholesky, rand_cov
 
-from cvxmarkowitz import CvxError, CvxTrustError, MinVar, deserialize
-from cvxmarkowitz.names import DataNames as D
+from cvxmarkowitz import MinVar
 
 
 def test_problem_data():
@@ -25,77 +22,3 @@ def test_problem_is_frozen():
     problem = MinVar(assets=10).build()
     with pytest.raises(dataclasses.FrozenInstanceError):
         problem.problem = None
-
-
-def test_deserialize_requires_trusted(tmp_path):
-    """Deserialize refuses to unpickle unless trusted=True is passed.
-
-    Args:
-        tmp_path: Pytest temporary directory for storing the pickle file.
-    """
-    problem = MinVar(assets=10).build()
-    path = tmp_path / "problem.pkl"
-    problem.serialize(path)
-
-    with pytest.raises(CvxTrustError, match="trusted=True"):
-        deserialize(path)
-
-    # The default is False, so a positional/implicit call is also refused.
-    with pytest.raises(CvxTrustError):
-        deserialize(path, trusted=False)
-
-    # The refusal is still catchable via the package's base error.
-    with pytest.raises(CvxError):
-        deserialize(path)
-
-
-def test_serialize_after_solve_is_unsupported(tmp_path):
-    """A solved problem cannot be pickled: the solver handle is not picklable.
-
-    Args:
-        tmp_path: Pytest temporary directory for storing the pickle file.
-    """
-    problem = MinVar(assets=2).build()
-    problem.update(
-        **{
-            D.CHOLESKY: cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])),
-            D.LOWER_BOUND_ASSETS: np.zeros(2),
-            D.UPPER_BOUND_ASSETS: np.ones(2),
-            D.VOLA_UNCERTAINTY: np.zeros(2),
-        }
-    )
-    problem.solve()
-
-    with pytest.raises(TypeError, match="pickle"):
-        problem.serialize(tmp_path / "solved.pkl")
-
-
-def test_serialize(tmp_path):
-    """Serialize a problem, deserialize it, and compare resulting weights.
-
-    Args:
-        tmp_path: Pytest temporary directory for storing the pickle file.
-    """
-    problem = MinVar(assets=10).build()
-    problem.serialize(tmp_path / "problem.pkl")
-    problem_recovered = deserialize(tmp_path / "problem.pkl", trusted=True)
-
-    covariance = rand_cov(10)
-
-    input_data = {
-        D.CHOLESKY: cholesky(covariance),
-        D.LOWER_BOUND_ASSETS: np.zeros(10),
-        D.UPPER_BOUND_ASSETS: np.ones(10),
-        D.VOLA_UNCERTAINTY: np.zeros(10),
-    }
-
-    problem.update(**input_data)
-
-    problem.solve()
-    sol1 = problem.weights
-
-    problem_recovered.update(**input_data)
-    problem_recovered.solve()
-    sol2 = problem_recovered.weights
-
-    np.testing.assert_array_equal(sol1, sol2)

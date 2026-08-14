@@ -13,14 +13,12 @@
 #    limitations under the License.
 """Common type aliases used across the Markowitz package."""
 
-from os import PathLike
 from typing import TypeAlias
 
 import cvxpy as cp
 import numpy as np
 import numpy.typing as npt
 
-File = str | bytes | PathLike[str]
 Parameter = dict[str, cp.Parameter]
 Variables = dict[str, cp.Variable]
 Constraints = dict[str, cp.Constraint]

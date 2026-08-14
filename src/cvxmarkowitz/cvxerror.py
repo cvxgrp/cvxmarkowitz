@@ -39,3 +39,16 @@ class CvxSolverError(CvxError):
     solve to optimality. Retrying with the same input will not help;
     another solver or a relaxed formulation might.
     """
+
+
+class CvxBuildError(CvxError):
+    """The assembled problem does not satisfy the package's construction rules.
+
+    Raised by :meth:`Builder.build` when the problem it assembled is not
+    :abbr:`DPP (disciplined parametrized programming)`-compliant. The whole
+    point of building a parametrized problem here is that cvxpy caches the
+    canonicalization and reuses it on later solves, and only DPP-compliant
+    problems get that treatment -- so a non-DPP problem is a formulation bug,
+    not a data problem. Retrying will not help; the objective or the
+    constraints have to change.
+    """

@@ -37,7 +37,26 @@ constraints. Only once we trigger the build() method do we construct
 the problem and compile it.
 
 For injecting values for data and parameters into the problem,
-we use the [update](src/cvxmarkowitz/problem.py#L84) method.
+we use the [update](src/cvxmarkowitz/problem.py) method. It overwrites the
+parameter values **in place** and returns `None` — there is only ever one
+problem, which is precisely what lets CVXPY reuse the cached compilation.
+
+The builder picks a risk model for you: a `FactorModel` when you pass `factors`,
+a `SampleCovariance` otherwise. To use a different one — `CVar`, say — pass it in
+under `ModelName.RISK` and the builder keeps yours instead of defaulting:
+
+```python
+from cvxmarkowitz import MinVar
+from cvxmarkowitz.names import ModelName as M
+from cvxmarkowitz.risk import CVar
+
+builder = MinVar(assets=14, model={M.RISK: CVar(alpha=0.95, rows=50, assets=14)})
+print(type(builder.risk).__name__)
+```
+
+```result
+CVar
+```
 
 ## Installation
 
@@ -121,7 +140,11 @@ modes that want different handling:
 | Error | Raised when | Retry helps? |
 |---|---|---|
 | `CvxDataError` | required data is missing, or shapes disagree | yes, with corrected input |
+| `CvxBuildError` | the assembled problem is not DPP-compliant | no — the formulation has to change |
 | `CvxSolverError` | the solver returned a non-optimal status | no — try another solver or relax the problem |
+
+The `CvxBuildError` check is a raise rather than an `assert`, so it still fires
+under `python -O`.
 
 ## Development
 
@@ -143,3 +166,21 @@ make marimo
 ```
 
 will install and start marimo.
+
+## experiments
+
+`experiments/` holds standalone research scripts — backtests and the figures
+behind the talks — not part of the installed package. They pull in the `dev`
+dependency group (`yfinance`, `loguru`, `cvxsimulator`, `tinycta`, `plotly`),
+so run them against the full development environment:
+
+```bash
+make install
+uv run --group dev python experiments/minRisk1.py
+```
+
+They are deliberately outside the quality gates: `make typecheck`,
+`make docs-coverage`, `make deptry` and `make security` all scope to `src/`, and
+the coverage gate scopes to `tests/`. Only `make fmt` reaches them, since
+pre-commit runs repo-wide. Treat them as scratch work — if something here earns
+a stability guarantee, it belongs in `src/cvxmarkowitz/`.

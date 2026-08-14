@@ -303,13 +303,13 @@ version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "clarabel" },
-    { name = "cvx-linalg" },
     { name = "cvxpy-base" },
     { name = "numpy" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "cvx-linalg" },
     { name = "cvxsimulator" },
     { name = "fire" },
     { name = "loguru" },
@@ -322,19 +322,20 @@ dev = [
     { name = "yfinance" },
 ]
 test = [
+    { name = "cvx-linalg" },
     { name = "pytest" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "clarabel", specifier = ">=0.11.1" },
-    { name = "cvx-linalg", specifier = "==0.9.6" },
     { name = "cvxpy-base", specifier = ">=1.9.2" },
     { name = "numpy", specifier = ">=2.4.6" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "cvx-linalg", specifier = ">=0.9.6" },
     { name = "cvxsimulator", specifier = ">=1.5.1" },
     { name = "fire", specifier = ">=0.7.1" },
     { name = "loguru", specifier = ">=0.7.3" },
@@ -346,7 +347,10 @@ dev = [
     { name = "tinycta", specifier = ">=0.14.0" },
     { name = "yfinance", specifier = ">=1.5.2" },
 ]
-test = [{ name = "pytest", specifier = ">=9.1.1" }]
+test = [
+    { name = "cvx-linalg", specifier = ">=0.9.6" },
+    { name = "pytest", specifier = ">=9.1.1" },
+]
 
 [[package]]
 name = "cvxpy-base"

@@ -68,14 +68,24 @@ class FactorModel(Model):
         )
 
     def estimate(self, variables: Variables) -> cp.Expression:
-        """Compute the total variance."""
-        var_residual = self._residual_risk(variables)
-        var_systematic = self._systematic_risk(variables)
+        """Compute the total risk as the norm of its systematic and residual parts.
+
+        The two parts are available on their own via `systematic_risk` and
+        `residual_risk`; this is their Euclidean combination.
+        """
+        var_residual = self.residual_risk(variables)
+        var_systematic = self.systematic_risk(variables)
 
         return cp.norm2(cp.vstack([var_systematic, var_residual]))
 
-    def _residual_risk(self, variables: Variables) -> cp.Expression:
-        """Return the L2 norm of idiosyncratic and its uncertainty contributions."""
+    def residual_risk(self, variables: Variables) -> cp.Expression:
+        """Return the asset-specific (idiosyncratic) part of the risk.
+
+        The L2 norm of the idiosyncratic volatility contribution and its
+        uncertainty contribution. Part of the model's public surface: the
+        systematic/residual split is what a factor model is for, and
+        `estimate` is the norm of this and `systematic_risk`.
+        """
         return cp.norm2(
             cp.hstack(
                 [
@@ -88,8 +98,12 @@ class FactorModel(Model):
             )
         )
 
-    def _systematic_risk(self, variables: Variables) -> cp.Expression:
-        """Return the L2 norm of systematic and its uncertainty contributions."""
+    def systematic_risk(self, variables: Variables) -> cp.Expression:
+        """Return the factor-driven (systematic) part of the risk.
+
+        The L2 norm of the systematic volatility contribution and its
+        uncertainty contribution. See `residual_risk` for the counterpart.
+        """
         return cp.norm2(
             cp.hstack(
                 [

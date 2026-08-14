@@ -22,7 +22,6 @@ dependencies = [
     "cvxpy-base>=1.9.2",
     "numpy>=2.4.6",
     "clarabel>=0.11.1",
-    "cvx-linalg==0.9.6"
 ]
 
 [project.urls]
@@ -30,6 +29,10 @@ Homepage = "https://github.com/cvxgrp/cvxmarkowitz"
 Repository = "https://github.com/cvxgrp/cvxmarkowitz"
 
 [dependency-groups]
+# cvx-linalg is a test/example helper, not a runtime dependency: nothing under
+# src/ imports it. It builds Cholesky factors and random covariances for the
+# tests, the README example and the experiments/ scripts, so the library's
+# consumers should not be made to install it.
 dev = [
     "fire>=0.7.1",
     "mock>=5.2.0",
@@ -38,12 +41,14 @@ dev = [
     "tinycta>=0.14.0",
     "plotly>=6.9.0",
     "cvxsimulator>=1.5.1",
+    "cvx-linalg>=0.9.6",
     "scikit-learn>=1.9.0",
     "marimo>=0.23.16",
     "pytest>=9.1.1",
 ]
 test = [
     "pytest>=9.1.1",
+    "cvx-linalg>=0.9.6",
 ]
 
 [build-system]
@@ -70,7 +75,10 @@ marimo = "marimo"
 pytest = "pytest"
 
 [tool.deptry.per_rule_ignores]
-DEP002 = ["clarabel", "cvx-linalg"]
+# clarabel is declared but never imported on purpose: it is a solver backend that
+# cvxpy resolves by name at runtime. Nothing else belongs here -- a dependency
+# that src/ does not import is either a backend like this one or misplaced.
+DEP002 = ["clarabel"]
 
 # Tests here are grouped by the behaviour they exercise rather than mirrored
 # one-to-one onto source modules: tests/test_markowitz/ covers src/cvxmarkowitz/
@@ -88,6 +96,26 @@ reason = "Tests are grouped by behaviour under tests/test_markowitz/; per-module
 # invisible to static analysis, so `mypy --strict` reports spurious
 # attr-defined / no-any-return / no-untyped-call errors at every cvxpy call
 # site. Treat cvxpy as untyped so those expressions resolve to Any.
+#
+# What this costs, stated plainly: under this override every cvxpy symbol is Any
+# to mypy, including the classes on our own public surface (cp.Expression,
+# cp.Variable, cp.Parameter, cp.Problem, cp.Minimize/Maximize). So mypy's "no
+# issues found" covers the dataclass plumbing and the numpy edges, NOT the
+# optimisation semantics -- do not read it as more than that.
+#
+# What covers the rest: `ty`, which runs in the same `make typecheck` target and
+# does resolve cvxpy's real types (verified: it rejects an attribute typo on a
+# cp.Variable and rejects returning a cp.Variable where cp.Problem is declared,
+# and it is what flags the Parameter.value operator issue in soft_risk.py). The
+# two checkers are complementary here, which is why both run. Removing `ty` from
+# the target on the grounds that "mypy --strict already passes" would silently
+# drop all cvxpy type checking.
+#
+# Narrowing this to `disable_error_code` on cvxpy instead was tried and does not
+# work: per-module overrides apply to errors reported *in* that module, while
+# these 34 errors are reported in our files. Scoping the disables to
+# cvxmarkowitz.* would work, but it trades attr-defined and operator across all
+# of our own code for coverage `ty` already provides properly.
 [[tool.mypy.overrides]]
 module = ["cvxpy", "cvxpy.*"]
 follow_imports = "skip"

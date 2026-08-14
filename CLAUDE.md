@@ -42,7 +42,7 @@ because a change to a template-owned file is reverted by the next
 | `pyproject.toml` | manifest, tool config, dependency groups |
 | `README.md`, `mkdocs.yml` | project docs and site nav |
 | `.rhiza/template.yml` | which template ref this repo tracks |
-| `.clusterfuzzlite/`, `copyright.txt`, `portfolio.png` | local extras |
+| `copyright.txt`, `portfolio.png` | local extras |
 
 **Template-owned — fix upstream, not here:** `.github/**`, everything under
 `.rhiza/` except `template.yml`, all of `docs/`, plus `ruff.toml`, `pytest.ini`,

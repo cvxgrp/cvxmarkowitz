@@ -10,7 +10,11 @@ Run locally:
     pip install atheris numpy
     python tests/fuzz/fuzz_fill.py -atheris_runs=20000
 
-Run in ClusterFuzzLite: this file is built by .clusterfuzzlite/build.sh.
+CI fuzzing is off: the ClusterFuzzLite workflow is opt-in and needs both the
+`FUZZING_ENABLED` repository variable and a `.clusterfuzzlite/` config, and this
+repo currently has neither. Restoring that directory with a `build.sh` that
+compiles this harness is what turns the workflow back on; until then this file
+is a local-only harness.
 """
 
 from __future__ import annotations

@@ -56,6 +56,52 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/cvxmarkowitz"]
 
+
+[tool.rhiza-task]
+# Settings recovered from the make layer that rhiza v1.4.0 retired. Each entry
+# below differs from rhiza-task's own default; the settings that matched the
+# default were deliberately dropped rather than restated (see the note at the
+# end of this table).
+
+# Was `COVERAGE_FAIL_UNDER = 100` in the repo-owned Makefile; rhiza-task
+# defaults to 90. Without this the `test` gate passes at 91% coverage and the
+# 100% invariant this repo maintains stops being enforced. Note that a
+# `fail-under` under [tool.coverage.report] would NOT substitute: the gate
+# passes --cov-fail-under on the command line, which outranks the config file.
+coverage-fail-under = 100
+
+# Was `TYPECHECKER ?= both` in .rhiza/make.d/python.mk; rhiza-task defaults to
+# `ty` alone. Without this mypy --strict stops running, and CLAUDE.md is
+# explicit that mypy and ty cover different ground here (cvxpy is treated as
+# untyped for mypy, so only ty checks the optimisation semantics). This is also
+# stricter than the make layer was: the old shell `case` let mypy's exit status
+# win, so a `ty` failure could pass.
+typechecker = "both"
+
+# Was `RHIZA_CI_OS_MATRIX` in .rhiza/.env; rhiza-task defaults to
+# ["ubuntu-latest"]. This MUST live here now: v1.4.0 stopped shipping
+# .rhiza/.gitignore, whose `!.env` negation was the only reason .rhiza/.env was
+# tracked, so the file is developer-local from here on and a CI checkout never
+# contains it. Without this line CI silently narrows to Linux only.
+ci-os-matrix = ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+# Not set, on purpose:
+#   source-folder          "src" is already the default.
+#   marimo-folder          "docs/notebooks" is already the default.
+#   mkdocs-extra-packages  the Makefile's `--with 'mkdocstrings[python]'` only
+#                          restated the default. Naming this setting REPLACES
+#                          the default list, so a redundant line is the one
+#                          someone later edits to add a package and silently
+#                          drops mkdocstrings from the book build with.
+#   license-ignore-packages  the make layer's only entry was `+= docutils`,
+#                          contributed by marimo.mk. rhiza-task appends docutils
+#                          itself whenever marimo is in the task registry.
+#   pytest-rhiza           v1.3.3 had no RHIZA_CHECKS_VERSION pin and ran the
+#                          in-tree .rhiza/tests/ instead. Taking the CLI default
+#                          is an upgrade decision, not a preserved value.
+#   layers                 "python" is the default, and `layers` selects the
+#                          language layer only -- book/marimo tasks are always
+#                          registered, so this repo's mkdocs.yml still builds.
 [tool.deptry.package_module_name_map]
 cvxpy-base = "cvxpy"
 cvx-linalg = "cvx"

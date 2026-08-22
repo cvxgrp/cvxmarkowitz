@@ -7,10 +7,3 @@ profiles:
 templates:
   - legal
 
-# Destination paths the sync must not deliver -- where the file lands in this repo,
-# not where it sits in the template clone.
-exclude:
-  # The mutation-testing workflow. Retired upstream in rhiza v1.5.0 and removed here; it
-  # had survived the orphan sweep only because it was never listed in template.lock.
-  # Excluded so a downgrade or an upstream revival does not bring it back.
-  - .github/workflows/rhiza_mutation.yml

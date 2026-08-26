@@ -11,7 +11,7 @@ copyright: Copyright &copy; 2023–2026 Stanford University Convex Optimization 
 nav:
   - Home: index.md
   - Development:
-      - Tests: development/TESTS.md
+      - Rhiza: development/rhiza.md
   - Reports:
       - Test Report: reports/html-report/report.html
       - Coverage Report: reports/html-coverage/index.html

@@ -103,6 +103,15 @@ guards inputs by walking `Model.keywords`, which defaults to the keys of
 or a caller who omits that keyword gets a bare `KeyError` rather than a
 `CvxDataError`.
 
+**A model must also declare the dimensions its data implies.**
+`Model.dimensions` is abstract for the same reason `keywords` exists: `update`
+zero-pads short input up to the compiled size, so a payload that describes two
+assets to the risk model and four to the bounds does not fail on its own -- it
+leaves the padded tail riskless and unbounded and the solver empties the
+portfolio into it. `Problem.update` collects the `(variable, size)` claims of
+every model and rejects the payload before writing a single value. A model that
+consumes a keyword without declaring its size reopens that hole silently.
+
 **Everything raised derives from `CvxError`.** `CvxDataError`, `CvxBuildError`
 and `CvxSolverError` split the failure modes by whether retrying helps; the
 table in `README.md` is the contract. `tests/test_markowitz/test_public_api.py`

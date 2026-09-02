@@ -26,3 +26,14 @@ def test_trading_costs():
 
     variables = {D.WEIGHTS: weights}
     assert model.estimate(variables).value == pytest.approx(0.8)
+
+
+def test_dimensions():
+    """The model reports the universe its previous weights describe.
+
+    Keyed by `D.WEIGHTS` in both halves of the pair: the previous weights are
+    the previous value of the weight variable, and are sized by it.
+    """
+    model = TradingCosts(assets=3)
+
+    assert model.dimensions(**{D.WEIGHTS: np.array([0.1, 0.2])}) == ((D.WEIGHTS, 2),)

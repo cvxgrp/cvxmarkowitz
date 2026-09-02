@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Constraints, Matrix, Variables
+from cvxmarkowitz.types import Constraints, Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 
@@ -111,6 +111,21 @@ class FactorModel(Model):
                     self.data[D.SYSTEMATIC_VOLA_UNCERTAINTY] @ variables[D._ABS],
                 ]
             )
+        )
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the asset and factor counts every factor-model input implies."""
+        factors, assets = np.shape(kwargs[D.EXPOSURE])
+        chol_rows, chol_cols = np.shape(kwargs[D.CHOLESKY])
+
+        return (
+            (D.WEIGHTS, assets),
+            (D.WEIGHTS, len(kwargs[D.IDIOSYNCRATIC_VOLA])),
+            (D.WEIGHTS, len(kwargs[D.IDIOSYNCRATIC_VOLA_UNCERTAINTY])),
+            (D.FACTOR_WEIGHTS, factors),
+            (D.FACTOR_WEIGHTS, chol_rows),
+            (D.FACTOR_WEIGHTS, chol_cols),
+            (D.FACTOR_WEIGHTS, len(kwargs[D.SYSTEMATIC_VOLA_UNCERTAINTY])),
         )
 
     def update(self, **kwargs: Matrix) -> None:

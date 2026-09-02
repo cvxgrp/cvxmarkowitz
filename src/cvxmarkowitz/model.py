@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 import cvxpy as cp
 
-from cvxmarkowitz.types import Constraints, Matrix, Parameter, Variables
+from cvxmarkowitz.types import Constraints, Dimensions, Matrix, Parameter, Variables
 
 
 @dataclass(frozen=True)
@@ -77,6 +77,29 @@ class Model(ABC):
         robust expected return, the cost models a cost. A component that
         contributes no objective term at all raises `NotImplementedError` here
         -- see `Bounds`, which is pure constraints.
+        """
+
+    @abstractmethod
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the size every input in `kwargs` implies for a problem variable.
+
+        One `(variable name, size)` pair per input this model consumes, the
+        variable named by `DataNames` -- `WEIGHTS` for anything sized by the
+        asset universe, `FACTOR_WEIGHTS` for anything sized by the factors.
+        Several pairs may name the same variable; that is the point.
+
+        `Problem.update` collects these across every model and rejects a payload
+        whose claims disagree. It has to, because `update` pads short inputs up
+        to the compiled size (see `cvxmarkowitz.utils.fill`): a payload that
+        hands the risk model two assets and the bounds four does not fail on its
+        own -- it leaves the padded tail both zero-risk and unbounded, and the
+        solver puts the whole portfolio there. Each model already checks its own
+        inputs against each other; this is what checks them across models.
+
+        Abstract, rather than a default a model may quietly not override, for
+        the reason `keywords` documents: that shape of contract has already been
+        got wrong once here. A model with nothing to declare returns `()`, but it
+        forfeits the cross-check for every keyword it consumes.
         """
 
     @abstractmethod

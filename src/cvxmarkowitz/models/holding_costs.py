@@ -22,7 +22,7 @@ import numpy as np
 
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Matrix, Variables
+from cvxmarkowitz.types import Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
 
@@ -37,6 +37,10 @@ class HoldingCosts(Model):
     def estimate(self, variables: Variables) -> cp.Expression:
         """Return total holding costs as -sum(w_i * c_i)."""
         return cp.sum(cp.neg(cp.multiply(variables[D.WEIGHTS], self.data[D.HOLDING_COSTS])))
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the number of assets the holding-cost vector implies."""
+        return ((D.WEIGHTS, len(kwargs[D.HOLDING_COSTS])),)
 
     def update(self, **kwargs: Matrix) -> None:
         """Update the holding-cost vector from kwargs[D.HOLDING_COSTS]."""

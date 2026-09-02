@@ -21,7 +21,7 @@ import cvxpy as cp
 import numpy as np
 
 from cvxmarkowitz.model import Model
-from cvxmarkowitz.types import Constraints, Matrix, Variables
+from cvxmarkowitz.types import Constraints, Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
 
@@ -65,8 +65,21 @@ class Bounds(Model):
             value=np.ones(self.assets),
         )
 
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the size both bound vectors imply for the variable bounded.
+
+        Both, not just the lower one: a payload giving a lower bound for two
+        assets and an upper bound for four would otherwise pad the lower bound
+        with zeros and leave the tail free between 0 and the real upper bound,
+        which is the same silent-tail failure `Problem.update` exists to catch.
+        """
+        return (
+            (self.acting_on, len(kwargs[self._f("lower")])),
+            (self.acting_on, len(kwargs[self._f("upper")])),
+        )
+
     def update(self, **kwargs: Matrix) -> None:
-        """Assign lower/upper vectors, padding or trimming to asset length."""
+        """Assign lower/upper vectors, zero-padding them to the compiled length."""
         self.data[self._f("lower")].value = fill_vector(num=self.assets, x=kwargs[self._f("lower")])
         self.data[self._f("upper")].value = fill_vector(num=self.assets, x=kwargs[self._f("upper")])
 

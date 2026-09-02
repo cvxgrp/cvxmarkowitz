@@ -24,3 +24,9 @@ Variables = dict[str, cp.Variable]
 Constraints = dict[str, cp.Constraint]
 
 Matrix: TypeAlias = npt.NDArray[np.float64]
+
+# What `Model.dimensions` reports: (variable name, size) claims, one per input
+# the model consumes. A tuple rather than a mapping because several inputs of
+# one model speak about the same variable, and it is exactly their
+# disagreement that `Problem.update` is looking for.
+Dimensions: TypeAlias = tuple[tuple[str, int], ...]

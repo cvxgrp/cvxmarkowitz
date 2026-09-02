@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Constraints, Matrix, Variables
+from cvxmarkowitz.types import Constraints, Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_matrix, fill_vector
 
 
@@ -56,6 +56,16 @@ class SampleCovariance(Model):
                     self.data[D.VOLA_UNCERTAINTY] @ variables[D._ABS],
                 ]
             )
+        )
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the number of assets the Cholesky factor and uncertainty imply."""
+        rows, cols = np.shape(kwargs[D.CHOLESKY])
+
+        return (
+            (D.WEIGHTS, rows),
+            (D.WEIGHTS, cols),
+            (D.WEIGHTS, len(kwargs[D.VOLA_UNCERTAINTY])),
         )
 
     def update(self, **kwargs: Matrix) -> None:

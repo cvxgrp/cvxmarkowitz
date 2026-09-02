@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Matrix, Variables
+from cvxmarkowitz.types import Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_matrix
 
 
@@ -73,6 +73,15 @@ class CVar(Model):
         k = self._tail_size
         # average value of the k elements in the left tail
         return -cp.sum_smallest(self.data[D.RETURNS] @ variables[D.WEIGHTS], k=k) / k
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the number of assets the scenario matrix implies.
+
+        Its row count is the number of scenarios, which is this model's own
+        business rather than a size shared with the other models, so it is not
+        declared here.
+        """
+        return ((D.WEIGHTS, np.shape(kwargs[D.RETURNS])[1]),)
 
     def update(self, **kwargs: Matrix) -> None:
         """Update the returns matrix used by the CVaR model.

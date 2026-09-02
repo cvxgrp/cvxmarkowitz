@@ -28,6 +28,14 @@ the number of assets fixed by setting the weights for the assets not used to
 zero. Hence we do **not** need to recompile the problem as a new asset has to be
 added.
 
+The padding is one-directional and it has to be consistent. Data for *more*
+assets than the problem was built for does not fit and raises a `CvxDataError`,
+and so does a payload whose models disagree about how large the universe is --
+handing the risk model two assets and the bounds four would otherwise leave the
+padded tail both riskless and unbounded, and the solver would put the whole
+portfolio there. `update` checks this across all models before it writes
+anything.
+
 Every problem has to be constructed by a Builder. Here's a builder for a classic
 [minimum variance problem](src/cvxmarkowitz/portfolios/min_var.py).
 The builder inherits from the [Builder](src/cvxmarkowitz/builder.py)

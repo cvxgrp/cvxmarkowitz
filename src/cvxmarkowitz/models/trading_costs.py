@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
 from cvxmarkowitz.names import ParameterName as P
-from cvxmarkowitz.types import Matrix, Variables
+from cvxmarkowitz.types import Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
 
@@ -55,6 +55,10 @@ class TradingCosts(Model):
                 p=self.parameter[P.POWER],
             )
         )
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the number of assets the previous weights imply."""
+        return ((D.WEIGHTS, len(kwargs[D.WEIGHTS])),)
 
     def update(self, **kwargs: Matrix) -> None:
         """Update cached data values.

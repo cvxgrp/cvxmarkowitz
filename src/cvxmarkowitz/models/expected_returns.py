@@ -23,7 +23,7 @@ import numpy as np
 from cvxmarkowitz.cvxerror import CvxDataError
 from cvxmarkowitz.model import Model
 from cvxmarkowitz.names import DataNames as D
-from cvxmarkowitz.types import Matrix, Variables
+from cvxmarkowitz.types import Dimensions, Matrix, Variables
 from cvxmarkowitz.utils.fill import fill_vector
 
 
@@ -68,6 +68,13 @@ class ExpectedReturns(Model):
             A CVXPY expression for the robust expected return.
         """
         return self.data[D.MU] @ variables[D.WEIGHTS] - self.parameter[D.MU_UNCERTAINTY] @ cp.abs(variables[D.WEIGHTS])
+
+    def dimensions(self, **kwargs: Matrix) -> Dimensions:
+        """Return the number of assets `mu` and its uncertainty imply."""
+        return (
+            (D.WEIGHTS, len(kwargs[D.MU])),
+            (D.WEIGHTS, len(kwargs[D.MU_UNCERTAINTY])),
+        )
 
     def update(self, **kwargs: Matrix) -> None:
         """Update expected returns and their uncertainty bounds.

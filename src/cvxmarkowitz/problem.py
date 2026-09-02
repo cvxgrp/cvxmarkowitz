@@ -53,11 +53,45 @@ class Problem:
         the same object do not yield two independently parametrized problems --
         the second overwrites the first. Call `build()` again for that.
 
+        The whole payload is validated against every model before the first
+        value is written, so a rejected payload leaves the problem exactly as it
+        was rather than half-overwritten. See `_validate`.
+
         Returns `None` (like `Model.update`) so the in-place semantics are
         visible at the call site.
 
         Raises:
-            CvxDataError: If any model is missing data for one of its parameters.
+            CvxDataError: If any model is missing data for one of its parameters,
+                or if the models disagree about how large the universe is.
+        """
+        self._validate(**kwargs)
+
+        for model in self.model.values():
+            # It's tempting to operate without the models at this stage.
+            # However, we would give up a lot of convenience. For example,
+            # the models can be prepared to deal with data that has not
+            # exactly the correct shape.
+            model.update(**kwargs)
+
+    def _validate(self, **kwargs: Matrix) -> None:
+        """Check the payload against every model, writing nothing.
+
+        Two passes, both over all models, both raising `CvxDataError`:
+
+        1. every keyword each model declares is present, and
+        2. the models agree on the size of each variable they describe.
+
+        The second is not redundant with the shape checks inside the models.
+        `Model.update` pads a short input up to the compiled size, so a payload
+        that describes two assets to the risk model and four to the bounds
+        solves without complaint -- and solves wrongly, because the padded tail
+        carries no risk while the bounds leave it free, which the solver reads as
+        two riskless assets. Nothing inside a single model can see that; only
+        comparing the models can.
+
+        Raises:
+            CvxDataError: On a missing keyword, or on models that disagree about
+                the size of a variable.
         """
         for name, model in self.model.items():
             # `Model.keywords`, not `model.data`: a model may consume a keyword
@@ -67,11 +101,17 @@ class Problem:
                 if key not in kwargs:
                     raise CvxDataError(f"Missing data for {key} in model {name}")  # noqa: TRY003
 
-            # It's tempting to operate without the models at this stage.
-            # However, we would give up a lot of convenience. For example,
-            # the models can be prepared to deal with data that has not
-            # exactly the correct shape.
-            model.update(**kwargs)
+        claimed: dict[str, tuple[str, int]] = {}
+
+        for name, model in self.model.items():
+            for variable, size in model.dimensions(**kwargs):
+                first_name, first_size = claimed.setdefault(variable, (name, size))
+
+                if size != first_size:
+                    raise CvxDataError(  # noqa: TRY003
+                        f"Inconsistent size for {variable}: model {first_name} was given "
+                        f"{first_size}, model {name} was given {size}"
+                    )
 
     def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
         """Solve the problem."""

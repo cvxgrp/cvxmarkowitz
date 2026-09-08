@@ -299,7 +299,6 @@ wheels = [
 
 [[package]]
 name = "cvxmarkowitz"
-version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "clarabel" },

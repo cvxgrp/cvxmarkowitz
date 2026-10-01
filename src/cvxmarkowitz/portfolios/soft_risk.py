@@ -32,6 +32,30 @@ class SoftRisk(Builder):
 
     The objective is maximize w^T mu - omega * (sigma - sigma_target)_+
     subject to long-only, budget, and max-risk constraints.
+
+    Example:
+        >>> import numpy as np
+        >>> from cvxmarkowitz.names import DataNames as D
+        >>> from cvxmarkowitz.names import ParameterName as P
+        >>> builder = SoftRisk(assets=4)
+        >>> builder.parameter[P.SIGMA_MAX].value = 1.0
+        >>> builder.parameter[P.SIGMA_TARGET].value = 0.9
+        >>> builder.parameter[P.OMEGA].value = 0.5
+        >>> problem = builder.build()
+        >>> problem.update(
+        ...     **{
+        ...         D.CHOLESKY: np.linalg.cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])).T,
+        ...         D.LOWER_BOUND_ASSETS: np.zeros(2),
+        ...         D.UPPER_BOUND_ASSETS: np.ones(2),
+        ...         D.VOLA_UNCERTAINTY: np.zeros(2),
+        ...         D.MU: np.array([0.25, 0.30]),
+        ...         D.MU_UNCERTAINTY: np.zeros(2),
+        ...     }
+        ... )
+        >>> round(problem.solve(), 4)
+        0.246
+        >>> round(float(problem.weights.sum()), 6)
+        1.0
     """
 
     _sigma: cp.Variable = field(default_factory=lambda: cp.Variable(nonneg=True, name="sigma"))

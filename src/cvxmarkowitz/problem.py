@@ -63,6 +63,28 @@ class Problem:
         Raises:
             CvxDataError: If any model is missing data for one of its parameters,
                 or if the models disagree about how large the universe is.
+
+        Example:
+            An incomplete payload is rejected before anything is written; a
+            complete one describing 2 of the 4 compiled assets is accepted:
+
+            >>> import numpy as np
+            >>> from cvxmarkowitz import MinVar
+            >>> from cvxmarkowitz.names import DataNames as D
+            >>> problem = MinVar(assets=4).build()
+            >>> chol = np.linalg.cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])).T
+            >>> problem.update(**{D.CHOLESKY: chol})
+            Traceback (most recent call last):
+            ...
+            cvxmarkowitz.cvxerror.CvxDataError: Missing data for vola_uncertainty in model risk
+            >>> problem.update(
+            ...     **{
+            ...         D.CHOLESKY: chol,
+            ...         D.LOWER_BOUND_ASSETS: np.zeros(2),
+            ...         D.UPPER_BOUND_ASSETS: np.ones(2),
+            ...         D.VOLA_UNCERTAINTY: np.zeros(2),
+            ...     }
+            ... )
         """
         self._validate(**kwargs)
 
@@ -114,7 +136,26 @@ class Problem:
                     )
 
     def solve(self, solver: str = cp.CLARABEL, **kwargs: Any) -> float:
-        """Solve the problem."""
+        """Solve the problem.
+
+        Example:
+            >>> import numpy as np
+            >>> from cvxmarkowitz import MinVar
+            >>> from cvxmarkowitz.names import DataNames as D
+            >>> problem = MinVar(assets=4).build()
+            >>> problem.update(
+            ...     **{
+            ...         D.CHOLESKY: np.linalg.cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])).T,
+            ...         D.LOWER_BOUND_ASSETS: np.zeros(2),
+            ...         D.UPPER_BOUND_ASSETS: np.ones(2),
+            ...         D.VOLA_UNCERTAINTY: np.zeros(2),
+            ...     }
+            ... )
+            >>> round(problem.solve(), 4)
+            0.9354
+            >>> np.round(problem.weights, 3).tolist()
+            [0.75, 0.25, 0.0, 0.0]
+        """
         value = self.problem.solve(solver=solver, **kwargs)
 
         if self.problem.status is not cp.OPTIMAL:

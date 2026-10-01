@@ -55,6 +55,18 @@ class Builder(ABC):
         constraints: Mapping of named cvxpy constraints added during build.
         variables: Mapping of problem variables (weights, factor weights, etc.).
         parameter: Mapping of cvxpy Parameters used by the builder/models.
+
+    Example:
+        `Builder` is abstract; a concrete subclass such as `MinVar` supplies the
+        objective. `build` compiles the problem once, and it is DPP-compliant:
+
+        >>> from cvxmarkowitz import MinVar, Problem
+        >>> builder = MinVar(assets=4)
+        >>> builder.weights.shape
+        (4,)
+        >>> problem = builder.build()
+        >>> isinstance(problem, Problem), problem.is_dpp()
+        (True, True)
     """
 
     assets: int = 0

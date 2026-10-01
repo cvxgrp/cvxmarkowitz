@@ -25,7 +25,25 @@ from cvxmarkowitz.names import ConstraintName as C
 
 @dataclass(frozen=True)
 class MinVar(Builder):
-    """Construct a long-only, budget-constrained minimum-variance portfolio."""
+    """Construct a long-only, budget-constrained minimum-variance portfolio.
+
+    Example:
+        >>> import numpy as np
+        >>> from cvxmarkowitz.names import DataNames as D
+        >>> problem = MinVar(assets=4).build()
+        >>> problem.update(
+        ...     **{
+        ...         D.CHOLESKY: np.linalg.cholesky(np.array([[1.0, 0.5], [0.5, 2.0]])).T,
+        ...         D.LOWER_BOUND_ASSETS: np.zeros(2),
+        ...         D.UPPER_BOUND_ASSETS: np.ones(2),
+        ...         D.VOLA_UNCERTAINTY: np.zeros(2),
+        ...     }
+        ... )
+        >>> round(problem.solve(), 4)
+        0.9354
+        >>> round(float(problem.weights.sum()), 6)
+        1.0
+    """
 
     @property
     def objective(self) -> cp.Minimize:

@@ -27,7 +27,7 @@ Two consequences that are easy to violate by accident:
 ## Repository layout and ownership
 
 This repo is **rhiza-managed**: `.rhiza/template.yml` points at
-`jebel-quant/rhiza` (currently `v1.3.3`) and a large part of the development
+`jebel-quant/rhiza` (currently `v1.8.0`) and a large part of the development
 infrastructure is synced from there. Knowing which half you are editing matters,
 because a change to a template-owned file is reverted by the next
 `/rhiza:update`.
@@ -39,34 +39,42 @@ because a change to a template-owned file is reverted by the next
 | `src/cvxmarkowitz/` | the library |
 | `tests/` | the test suite (except `tests/test_rhiza_packaging.py`) |
 | `experiments/` | standalone research scripts, not part of the package |
-| `pyproject.toml` | manifest, tool config, dependency groups |
+| `pyproject.toml` | manifest, tool config, dependency groups, `[tool.rhiza-task]` |
 | `README.md`, `mkdocs.yml` | project docs and site nav |
-| `.rhiza/template.yml` | which template ref this repo tracks |
+| `.rhiza/template.yml` | which template ref this repo tracks, and its `exclude:` list |
+| `SECURITY.md`, `.github/rulesets/*.json` | excluded from the sync in `.rhiza/template.yml`, maintained here |
+| `.github/ISSUE_TEMPLATE/`, `.github/DISCUSSION_TEMPLATE/` | not delivered by the template |
 | `copyright.txt`, `portfolio.png` | local extras |
 
-**Template-owned — fix upstream, not here:** `.github/**`, everything under
-`.rhiza/` except `template.yml`, all of `docs/`, plus `ruff.toml`, `pytest.ini`,
-`.pre-commit-config.yaml`, `.bandit`, `.editorconfig`, `.gitignore`,
-`.python-version`, `cliff.toml`, `LICENSE`, `SECURITY.md` and
-`tests/test_rhiza_packaging.py`.
+**Template-owned — fix upstream, not here:** `Makefile`, `ruff.toml`,
+`pytest.ini`, `.pre-commit-config.yaml`, `.bandit`, `.editorconfig`,
+`.gitignore`, `.python-version`, `cliff.toml`, `LICENSE`, the `rhiza_*.yml`
+workflows and the other synced files under `.github/`, `.rhiza/` apart from
+`template.yml`, `docs/index.md`, `docs/mkdocs-base.yml`,
+`docs/development/rhiza.md` and `tests/test_rhiza_packaging.py`.
 
-The authoritative list is the `files:` block of `.rhiza/template.lock` — 68
+The authoritative list is the `files:` block of `.rhiza/template.lock` — 29
 paths, machine-generated, do not hand-edit.
 
-**The documented extension points** are the exception to the rule above. These
-are template-delivered but merged rather than replaced, so local edits survive a
-sync:
+**The extension points** are where repo-specific behaviour goes instead:
 
-- `Makefile` — a thin shim that sets overrides and then `include`s
-  `.rhiza/rhiza.mk`. This is where `COVERAGE_FAIL_UNDER = 100` lives, raising the
-  template's default of 90. Keep it small.
-- `.rhiza/make.d/custom-task.mk` and `custom-env.mk` — repo-specific targets.
-- `local.mk` — developer-local, gitignored, optional.
+- `[tool.rhiza-task]` in `pyproject.toml` — settings that differ from the task
+  runner's defaults. This is where `coverage-fail-under = 100` lives, raising the
+  default of 90; `typechecker = "both"`, which keeps `mypy --strict` running
+  alongside `ty`; and the CI OS matrix. Each entry carries a comment saying why.
+- `local.mk` — repo-specific make targets, picked up by the `Makefile`'s
+  `-include`. Not gitignored; none exists today.
+- a `rhiza_task.tasks` entry point — repo-specific tasks for the runner.
+
+The `Makefile` itself is a template-owned shim that forwards every target to a
+pinned `rhiza-task` release; nothing appended to it survives a sync.
 
 ## Commands
 
-Always go through `make`; the flags, thresholds and exclusions live in the
-targets, so invoking the tools directly measures something else.
+Always go through `make`, which runs each target as a task of the pinned
+`rhiza-task` release; the flags, thresholds and exclusions live in those tasks
+and in `[tool.rhiza-task]`, so invoking the tools directly measures something
+else.
 
 | Command | What it runs |
 | --- | --- |
@@ -75,9 +83,9 @@ targets, so invoking the tools directly measures something else.
 | `make fmt` | the full pre-commit suite (ruff, markdownlint, bandit, actionlint, …) |
 | `make typecheck` | `ty` **and** `mypy --strict` over `src/` |
 | `make docs-coverage` | interrogate, at a 100% minimum |
-| `make deps` | deptry (`make deptry` is the deprecated spelling) |
+| `make deps` | deptry |
 | `make security` | bandit |
-| `make rhiza-test` | the template's own bundled tests under `.rhiza/tests/` |
+| `make rhiza-test` | the template's structural checks (pyproject, README, docstrings), via `pytest-rhiza` |
 | `make all` | everything CI runs |
 | `make help` | the full target list |
 
@@ -88,7 +96,8 @@ mypy, because its functional atoms are exported dynamically and `mypy --strict`
 reports spurious errors at every call site. The cost is that every cvxpy symbol
 is `Any` to mypy — so mypy's "no issues found" covers the dataclass plumbing and
 the numpy edges, *not* the optimisation semantics. `ty` covers those. Do not
-drop `ty` from `make typecheck` on the grounds that mypy passes.
+drop `typechecker = "both"` from `[tool.rhiza-task]` on the grounds that mypy
+passes; without it the runner falls back to `ty` alone.
 
 **Use the constants in `names.py`.** `DataNames`, `ModelName`, `ConstraintName`
 and `ParameterName` exist so that a key is spelled once. Indexing `data`,
@@ -124,7 +133,7 @@ the abstract base class. `Bounds` is still imported directly by `builder.py` on
 purpose — it is unconditional structure, not a choice among alternatives.
 
 **Both gates are at 100% and should stay there.** Test coverage
-(`COVERAGE_FAIL_UNDER = 100`) and docstring coverage (interrogate). New code
+(`coverage-fail-under = 100` in `[tool.rhiza-task]`) and docstring coverage (interrogate). New code
 needs tests and docstrings in the same change.
 
 **Tests are grouped by behaviour, not mirrored onto modules.** `tests/` does not
@@ -134,14 +143,20 @@ guaranteed by the 100% gate instead. The suite uses no mocks — keep it that wa
 and assert behaviour rather than implementation.
 
 **`experiments/` is scratch work.** It sits outside every gate except `make fmt`
-(`typecheck`, `docs-coverage`, `deps` and `security` all scope to `src/`). If
+(`typecheck`, `deps` and `security` scope to `src/`, `docs-coverage` to `src/`
+and `tests/`). If
 something there earns a stability guarantee it belongs in `src/cvxmarkowitz/`.
 
 ## Release
 
-Versioning is driven by `bump-my-version`, configured in `pyproject.toml` to
-read and rewrite `[project].version` directly. The release workflow commits and
-tags itself, so `commit` and `tag` are both `false` there.
+The version is not written down anywhere. `[project]` declares
+`dynamic = ["version"]` and hatch-vcs (`[tool.hatch.version] source = "vcs"`)
+derives it from the newest git tag, so a checkout that cannot see the tags
+builds a dev version — any job that builds a distribution needs
+`fetch-depth: 0`. `bump-my-version` reads the same tag via `git describe` to
+propose the next one; `[tool.bumpversion]` carries no `current_version` and no
+files to rewrite. The release workflow commits and tags itself, so `commit` and
+`tag` are both `false` there.
 
 The package is **not published to PyPI**. The guard is the literal comment
 `# Private :: Do Not Upload` in `pyproject.toml` — `.github/workflows/rhiza_release.yml`

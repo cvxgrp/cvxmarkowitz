@@ -179,7 +179,7 @@ will install and start marimo.
 
 `experiments/` holds standalone research scripts — backtests and the figures
 behind the talks — not part of the installed package. They pull in the `dev`
-dependency group (`yfinance`, `loguru`, `cvxsimulator`, `tinycta`, `plotly`),
+dependency group (`loguru`, `cvxsimulator`, `tinycta`, `plotly`),
 so run them against the full development environment:
 
 ```bash
